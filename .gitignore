@@ -1,0 +1,24 @@
+# Local agent instructions
+AGENTS.md
+
+# LaTeX build outputs
+build/
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+*.pdf
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+*.swp
+*~
