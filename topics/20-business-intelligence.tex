@@ -1,0 +1,60 @@
+\section{Business intelligence. Principy, technologické komponenty, nástroje}
+
+\subsection*{Smysl BI v podniku}
+Materiály vysvětlují BI jako technologii a přístup, který integruje data z podnikových oblastí a poskytuje managementu informace v požadované struktuře. Podniky uchovávají velké množství dat v systémech ERP, CRM, SCM a dalších aplikacích. Tato data jsou typicky v transakčních databázích OLTP, které jsou vhodné pro provozní změny, ale nevhodné pro složité souhrnné analýzy.
+
+BI řeší dva hlavní problémy:
+\begin{itemize}
+  \item analytická data pocházejí z různých systémů s odlišnou strukturou;
+  \item management potřebuje rychlé, přesné a srozumitelné informace pro rozhodování.
+\end{itemize}
+
+Bez BI mohou být informace nedostupné, získávané pomalu nebo nekonzistentní, což vede k intuitivnímu rozhodování nepodloženému fakty. BI má umožnit rozhodování založené na datech.
+
+\subsection*{Princip BI: multidimenzionální pohled}
+Základním principem BI je multidimenzionální pohled na data. To znamená, že sledované ukazatele lze zobrazovat podle různých dimenzí. Například tržby lze analyzovat podle času, regionu, produktu, zákazníka, prodejního kanálu nebo organizační jednotky.
+
+Technologie založená na multidimenzionálních databázích se nazývá OLAP - \textit{On-Line Analytical Processing}. OLAP umožňuje rychlé analytické dotazy, agregace, drill-down, roll-up a změnu pohledu na stejná data.
+
+\subsection*{Architektura BI}
+Materiály popisují tok dat ve zjednodušené podobě:
+\[
+\text{zdrojové systémy} \rightarrow \text{ETL} \rightarrow \text{datový sklad} \rightarrow \text{OLAP} \rightarrow \text{analýzy a reporting}
+\]
+
+\term{Produkční databáze} jsou zdrojové systémy, například ERP, SCM, CRM, finanční systémy nebo externí systémy. Jsou optimalizované pro provozní zpracování a ukládání dat v reálném čase, nikoli pro analytické úlohy.
+
+\term{ETL} je datová pumpa. Jejím úkolem je data získat, transformovat a nahrát do analytických struktur. Pracuje často dávkově v pravidelných intervalech.
+
+\term{DSA} je dočasné úložiště extrahovaných dat. Data zde bývají detailní, aktuální, často nekonzistentní a ve stejné struktuře jako ve zdrojových systémech.
+
+\term{ODS} je operativní úložiště aktuálních a konsolidovaných dat. Může sloužit pro jednoduché dotazy nad aktuálními daty nebo jako centrální databáze referenčních údajů.
+
+\term{Datový sklad} je integrovaný, subjektově orientovaný, stálý a časově rozlišený souhrn dat pro podporu managementu.
+
+\term{Datové tržiště} je menší datový sklad určený pro omezený okruh uživatelů nebo specifickou oblast.
+
+\term{OLAP databáze} obsahuje jednu nebo více OLAP kostek. Kostky často obsahují předzpracované agregace podle hierarchií dimenzí.
+
+\subsection*{Reporting a analýzy}
+Reporting je dotazování do databází a prezentace výsledků. Materiály rozlišují:
+\begin{itemize}
+  \item \term{standardní reporting} - předdefinované reporty v pravidelných intervalech;
+  \item \term{ad hoc reporting} - jednorázový specifický dotaz vytvořený uživatelem.
+\end{itemize}
+
+BI dále souvisí s data miningem. Datový sklad poskytuje kvalitní zdroj pro analytické metody, které hledají strategické informace a skryté vztahy v datech.
+
+\subsection*{Vazba BI na podnikové aplikace}
+Materiály uvádějí BI jako jednu z rozšiřujících oblastí ERP II vedle CRM a SCM. ERP poskytuje provozní data z financí, nákupu, výroby, logistiky a HR. CRM poskytuje zákaznická data. SCM poskytuje data o dodavatelském řetězci. BI tato data integruje a převádí do podoby vhodné pro rozhodování.
+
+\todohead
+\begin{itemize}
+  \item Doplnit hvězdicové a sněhové schéma, fact table a dimension table.
+  \item Doplnit OLAP operace: slice, dice, drill-down, roll-up, pivot.
+  \item Doplnit moderní BI nástroje: Power BI, Tableau, Qlik, Looker.
+  \item Doplnit rozdíl DWH, data lake a lakehouse.
+  \item Doplnit governance v BI: metadata, datový katalog, kvalita dat, vlastnictví dat.
+\end{itemize}
+
+\newpage

@@ -1,0 +1,584 @@
+\section{Ensemblové modelování v regresních a klasifikačních úlohách. Bagging a boosting}
+
+\subsection*{Základní idea ensemblů}
+
+Ensemble model kombinuje více jednodušších modelů do jednoho výsledného modelu. Místo jednoho klasifikátoru
+nebo regresoru použijeme skupinu modelů:
+\[
+f_1, f_2, \ldots, f_M.
+\]
+
+Výsledná predikce vznikne agregací.
+
+Pro regresi často průměrováním:
+\[
+\hat{y}(x)
+=
+\frac{1}{M}
+\sum_{m=1}^M
+f_m(x).
+\]
+
+Pro klasifikaci hlasováním:
+\[
+\hat{y}(x)
+=
+\operatorname{mode}
+\{f_1(x),\ldots,f_M(x)\}.
+\]
+
+\paragraph{Intuice.}
+Jeden model může být náhodně vychýlený nebo citlivý na konkrétní trénovací data. Pokud zkombinujeme více
+různých modelů, chyby jednotlivých modelů se mohou částečně vyrušit.
+
+\subsection*{Proč ensemble metody fungují}
+
+Ensemble metody pomáhají hlavně tehdy, když základní modely:
+\begin{itemize}
+    \item jsou lepší než náhoda,
+    \item nejsou úplně stejné,
+    \item dělají různé chyby.
+\end{itemize}
+
+Diverzita modelů je klíčová. Pokud by všechny modely byly totožné, ensemble by nepřinesl žádné zlepšení.
+
+\subsection*{Bias-variance intuice}
+
+Chybu modelu lze intuitivně rozložit na:
+\[
+\text{chyba}
+=
+\text{bias}
++
+\text{variance}
++
+\text{noise}.
+\]
+
+\begin{itemize}
+    \item \textbf{Bias} je chyba způsobená příliš jednoduchým modelem.
+    \item \textbf{Variance} je citlivost modelu na konkrétní trénovací data.
+    \item \textbf{Noise} je neodstranitelný šum v datech.
+\end{itemize}
+
+Bagging typicky snižuje hlavně varianci. Boosting typicky snižuje bias, ale při špatném nastavení může zvýšit
+riziko přeučení.
+
+\subsection*{Bagging}
+
+Bagging znamená \term{bootstrap aggregating}. Vytváříme více trénovacích množin pomocí výběru s navracením.
+
+\subsubsection*{Bootstrap sample}
+
+Z původních dat:
+\[
+D=\{(x_i,y_i)\}_{i=1}^n
+\]
+vytvoříme bootstrapový vzorek $D_m$ tak, že náhodně vybereme $n$ pozorování s navracením.
+
+Jedno pozorování se tedy může objevit vícekrát a jiné vůbec.
+
+\subsubsection*{Postup baggingu}
+
+\begin{enumerate}
+    \item vytvoř $M$ bootstrapových vzorků $D_1,\ldots,D_M$,
+    \item na každém vzorku natrénuj model $f_m$,
+    \item pro regresi průměruj predikce,
+    \item pro klasifikaci nech modely hlasovat.
+\end{enumerate}
+
+Regrese:
+\[
+\hat{y}(x)=
+\frac{1}{M}
+\sum_{m=1}^M
+f_m(x).
+\]
+
+Klasifikace:
+\[
+\hat{y}(x)
+=
+\underset{k}{\operatorname{argmax}}
+\sum_{m=1}^M
+I(f_m(x)=k).
+\]
+
+\subsection*{Kdy bagging pomáhá}
+
+Bagging je vhodný hlavně pro nestabilní modely, kde malá změna trénovacích dat může výrazně změnit model.
+Typický příklad jsou rozhodovací stromy.
+
+Bagging pomáhá:
+\begin{itemize}
+    \item snížit varianci,
+    \item omezit přeučení,
+    \item zlepšit robustnost,
+    \item stabilizovat predikce.
+\end{itemize}
+
+\subsection*{Out-of-bag error}
+
+Při bootstrapu se některá pozorování do daného bootstrapového vzorku nedostanou. Tato pozorování jsou
+\term{out-of-bag} pro daný model.
+
+OOB pozorování lze využít pro odhad testovací chyby bez samostatné validační množiny.
+
+\[
+Err_{OOB}
+=
+\frac{1}{n}
+\sum_{i=1}^n
+L(y_i,\hat{y}^{OOB}_i).
+\]
+
+\subsection*{Random subspaces, pasting a random patches}
+
+Materiály uvádějí i varianty baggingu:
+
+\begin{itemize}
+    \item \textbf{Pasting:}
+    vybírají se náhodné příklady bez navracení.
+    
+    \item \textbf{Random subspaces:}
+    pro každý model se vybírá náhodná podmnožina atributů.
+    
+    \item \textbf{Random patches:}
+    kombinuje se výběr náhodných příkladů i náhodných atributů.
+\end{itemize}
+
+\subsection*{Random forest}
+
+Random forest je ensemble rozhodovacích stromů. Používá dvě hlavní formy náhodnosti:
+
+\begin{enumerate}
+    \item bootstrapový výběr pozorování,
+    \item náhodný výběr části atributů při hledání nejlepšího splitu.
+\end{enumerate}
+
+Predikce v klasifikaci:
+\[
+\hat{y}(x)
+=
+\underset{k}{\operatorname{argmax}}
+\sum_{m=1}^M
+I(T_m(x)=k).
+\]
+
+Predikce v regresi:
+\[
+\hat{y}(x)
+=
+\frac{1}{M}
+\sum_{m=1}^M
+T_m(x).
+\]
+
+\paragraph{Proč nestačí jen bagging stromů?}
+Rozhodovací stromy mohou být mezi sebou silně korelované, hlavně pokud existuje několik velmi silných
+prediktorů. Random forest snižuje korelaci stromů tím, že při každém splitu zvažuje jen náhodnou podmnožinu
+atributů.
+
+\subsection*{Důležité hyperparametry random forest}
+
+\begin{itemize}
+    \item \texttt{n\_estimators} -- počet stromů,
+    \item \texttt{max\_features} -- počet atributů zvažovaných při splitu,
+    \item \texttt{max\_depth} -- maximální hloubka stromu,
+    \item \texttt{min\_samples\_leaf} -- minimální počet pozorování v listu,
+    \item \texttt{bootstrap} -- zda používat bootstrap,
+    \item \texttt{max\_samples} -- velikost bootstrapového vzorku.
+\end{itemize}
+
+\subsection*{Výhody a nevýhody random forest}
+
+Výhody:
+\begin{itemize}
+    \item vysoká predikční přesnost,
+    \item robustnost vůči šumu,
+    \item menší sklon k přeučení než jeden strom,
+    \item možnost měřit důležitost proměnných,
+    \item funguje pro klasifikaci i regresi.
+\end{itemize}
+
+Nevýhody:
+\begin{itemize}
+    \item nižší interpretovatelnost než jeden strom,
+    \item větší výpočetní náročnost,
+    \item u velmi nevyvážených dat je nutné řešit váhy tříd nebo sampling,
+    \item importance proměnných může být zkreslená.
+\end{itemize}
+
+\subsection*{Boosting}
+
+Boosting je ensemble metoda, která modely staví sekvenčně. Na rozdíl od baggingu nejsou modely nezávislé.
+
+Obecný tvar:
+\[
+\hat{y}_i
+=
+f(x_i)
+=
+\sum_{m=1}^M
+f_m(x_i;\Theta_m).
+\]
+
+Každý další model se snaží opravit chyby předchozích modelů.
+
+\paragraph{Intuice.}
+Bagging trénuje modely paralelně a potom je průměruje. Boosting trénuje modely postupně: první model udělá
+hrubou predikci, další model se učí na tom, co první nezvládl, další opravuje zbylé chyby atd.
+
+\subsection*{Weak learner}
+
+Boosting kombinuje mnoho slabých modelů do silného modelu.
+
+Slabý model je model, který je jen o něco lepší než náhodné hádání. Typicky se používají malé rozhodovací
+stromy, například decision stumps:
+\[
+\text{strom s hloubkou } 1.
+\]
+
+\subsection*{Forward stagewise additive fitting}
+
+Boosting lze chápat jako aditivní model:
+\[
+F_M(x)
+=
+F_0(x)
++
+\sum_{m=1}^M
+\nu f_m(x),
+\]
+kde $\nu$ je learning rate.
+
+Inicializace:
+\[
+F_0(x)=\bar{y}
+\]
+u regrese s kvadratickou ztrátou.
+
+V kroku $m$ se hledá nový model:
+\[
+\Theta_m
+=
+\underset{\Theta}{\operatorname{argmin}}
+\sum_{i=1}^n
+L
+\left(
+y_i,
+F_{m-1}(x_i)+f_m(x_i;\Theta)
+\right).
+\]
+
+Aktualizace:
+\[
+F_m(x_i)
+=
+F_{m-1}(x_i)
++
+\nu f_m(x_i;\Theta_m).
+\]
+
+\subsection*{Boosting u kvadratické ztráty}
+
+Pro regresi s kvadratickou ztrátou:
+\[
+L(y,\hat{y})=(y-\hat{y})^2.
+\]
+
+Rezidua po kroku $m-1$:
+\[
+r_{i,m-1}
+=
+y_i-F_{m-1}(x_i).
+\]
+
+Nový strom se učí predikovat rezidua:
+\[
+\Theta_m
+=
+\underset{\Theta}{\operatorname{argmin}}
+\sum_{i=1}^n
+\left(
+r_{i,m-1}-f_m(x_i;\Theta)
+\right)^2.
+\]
+
+Potom:
+\[
+F_m(x_i)
+=
+F_{m-1}(x_i)
++
+\nu f_m(x_i;\Theta_m).
+\]
+
+\paragraph{Intuice.}
+Pokud aktuální model u některých pozorování predikuje moc nízko, reziduum je kladné a další strom se je snaží
+zvýšit. Pokud predikuje moc vysoko, reziduum je záporné a další strom ho snižuje.
+
+\subsection*{Gradient boosting}
+
+Gradient boosting zobecňuje boosting na libovolnou diferencovatelnou ztrátovou funkci.
+
+Místo obyčejných reziduí se používá záporný gradient ztrátové funkce:
+\[
+r_{im}
+=
+-
+\left[
+\frac{\partial L(y_i,F(x_i))}
+{\partial F(x_i)}
+\right]_{F=F_{m-1}}.
+\]
+
+Nový slabý model se učí aproximovat tento záporný gradient:
+\[
+f_m
+\approx
+r_{im}.
+\]
+
+Aktualizace:
+\[
+F_m(x)
+=
+F_{m-1}(x)
++
+\nu f_m(x).
+\]
+
+\paragraph{Intuice.}
+Gradient ukazuje směr nejrychlejšího růstu ztráty. Záporný gradient ukazuje směr, kterým musíme predikce
+změnit, aby ztráta klesala.
+
+\subsection*{Learning rate}
+
+Learning rate $\nu$ určuje velikost kroku:
+\[
+F_m(x)=F_{m-1}(x)+\nu f_m(x).
+\]
+
+Malá hodnota $\nu$:
+\begin{itemize}
+    \item zpomaluje učení,
+    \item obvykle zlepšuje generalizaci,
+    \item vyžaduje více stromů.
+\end{itemize}
+
+Velká hodnota $\nu$:
+\begin{itemize}
+    \item rychle snižuje trénovací chybu,
+    \item zvyšuje riziko přeučení.
+\end{itemize}
+
+\subsection*{AdaBoost}
+
+AdaBoost je klasický boostingový algoritmus pro klasifikaci. Myšlenka je měnit váhy pozorování.
+
+Po každém modelu:
+\begin{itemize}
+    \item špatně klasifikovaným pozorováním se zvýší váha,
+    \item správně klasifikovaným pozorováním se váha sníží.
+\end{itemize}
+
+Chyba modelu:
+\[
+err_m
+=
+\frac{
+\sum_{i=1}^n w_i I(y_i\neq f_m(x_i))
+}{
+\sum_{i=1}^n w_i
+}.
+\]
+
+Váha modelu:
+\[
+\alpha_m
+=
+\frac{1}{2}
+\ln
+\left(
+\frac{1-err_m}{err_m}
+\right).
+\]
+
+Finální klasifikátor:
+\[
+F(x)
+=
+\operatorname{sign}
+\left(
+\sum_{m=1}^M
+\alpha_m f_m(x)
+\right).
+\]
+
+\subsection*{XGBoost}
+
+XGBoost je efektivní implementace gradient boostingu nad stromy. Je populární hlavně pro tabulková data.
+
+Používá regularizovanou ztrátovou funkci:
+\[
+Obj^{(m)}
+=
+\sum_{i=1}^n
+L
+\left(
+y_i,
+\hat{y}^{(m-1)}_i
++
+f_m(x_i)
+\right)
++
+\Omega(f_m).
+\]
+
+Regularizace stromu:
+\[
+\Omega(f)
+=
+\gamma J
++
+\frac{1}{2}
+\lambda
+\sum_{j=1}^J
+c_j^2.
+\]
+
+Kde:
+\begin{itemize}
+    \item $J$ je počet listů,
+    \item $c_j$ je predikce v listu $j$,
+    \item $\gamma$ penalizuje počet listů,
+    \item $\lambda$ penalizuje velikost predikcí v listech.
+\end{itemize}
+
+Cílem je nejen snížit chybu, ale i omezit složitost stromů.
+
+\subsection*{Důležité hyperparametry boostingu}
+
+\begin{itemize}
+    \item počet stromů $M$,
+    \item learning rate $\nu$,
+    \item maximální hloubka stromů,
+    \item minimální počet pozorování v listu,
+    \item subsampling pozorování,
+    \item subsampling atributů,
+    \item regularizační parametry,
+    \item early stopping.
+\end{itemize}
+
+\subsection*{Early stopping}
+
+Boosting může být citlivý na šum a extrémní hodnoty. Proto se sleduje chyba na validačních datech.
+
+\[
+Err_{\text{val}}(m).
+\]
+
+Pokud se validační chyba po určitou dobu nezlepšuje, trénování se zastaví.
+
+\subsection*{Bagging vs. boosting}
+
+\begin{itemize}
+    \item \textbf{Bagging:}
+    modely jsou trénovány paralelně a nezávisle.
+    
+    \item \textbf{Boosting:}
+    modely jsou trénovány sekvenčně a závisle.
+    
+    \item \textbf{Bagging:}
+    hlavně snižuje varianci.
+    
+    \item \textbf{Boosting:}
+    hlavně snižuje bias, ale může se přeučit.
+    
+    \item \textbf{Bagging:}
+    používá bootstrap a hlasování/průměrování.
+    
+    \item \textbf{Boosting:}
+    postupně opravuje chyby předchozího modelu.
+    
+    \item \textbf{Random forest:}
+    typický zástupce baggingu.
+    
+    \item \textbf{Gradient boosting / XGBoost:}
+    typičtí zástupci boostingu.
+\end{itemize}
+
+\subsection*{Stacking}
+
+Materiály zmiňují také stacking. Ten kombinuje různé modely pomocí meta-modelu.
+
+Máme modely:
+\[
+f_1(x), f_2(x), \ldots, f_M(x).
+\]
+
+Jejich predikce se použijí jako vstupy do meta-modelu:
+\[
+\hat{y}
+=
+g(f_1(x),f_2(x),\ldots,f_M(x)).
+\]
+
+Meta-model se učí, kterému základnímu modelu a v jaké situaci má věřit.
+
+\subsection*{Hodnocení ensemble modelů}
+
+Ensemble modely je nutné hodnotit na validačních nebo testovacích datech. U klasifikace:
+\[
+Accuracy,\quad Precision,\quad Recall,\quad F_1,\quad AUC.
+\]
+
+U regrese:
+\[
+MSE=
+\frac{1}{n}
+\sum_{i=1}^n
+(y_i-\hat{y}_i)^2,
+\]
+\[
+RMSE=
+\sqrt{MSE},
+\]
+\[
+MAE=
+\frac{1}{n}
+\sum_{i=1}^n
+|y_i-\hat{y}_i|.
+\]
+
+\subsection*{Interpretovatelnost ensemblů}
+
+Ensemble modely mají obvykle vyšší přesnost než jednotlivé stromy, ale nižší interpretovatelnost.
+
+Používají se:
+\begin{itemize}
+    \item feature importance,
+    \item permutation importance,
+    \item partial dependence plots,
+    \item ICE plots,
+    \item SHAP hodnoty,
+    \item LIME.
+\end{itemize}
+
+\paragraph{Praktický kompromis.}
+Pokud je cílem auditovatelnost a vysvětlitelnost, může být vhodnější menší strom nebo pravidlový model. Pokud
+je cílem predikční výkon, často vítězí random forest nebo gradient boosting.
+
+\subsection*{Shrnutí otázky}
+
+Ensemblové modely kombinují více modelů do jednoho výsledného modelu. Bagging vytváří více bootstrapových
+vzorků, na nich trénuje nezávislé modely a jejich predikce agreguje. Typickým příkladem je random forest,
+který kombinuje bootstrap pozorování s náhodným výběrem atributů.
+
+Boosting modely trénuje sekvenčně. Každý další model opravuje chyby předchozích. Gradient boosting chápe
+trénování jako postupné snižování ztrátové funkce ve směru záporného gradientu. XGBoost je efektivní
+regularizovaná implementace gradient boostingu, často velmi silná pro tabulková data. Bagging je robustnější
+a méně citlivý, boosting může dosáhnout vyšší přesnosti, ale vyžaduje pečlivé ladění.
+
+\newpage

@@ -1,0 +1,591 @@
+\section{Lineární regrese. Užití v deskriptivních, kauzálních a prediktivních úlohách, volba modelu, vlastnosti odhadů}
+
+\subsection*{Základní myšlenka}
+
+Lineární regrese je model, kterým popisujeme vztah mezi závisle proměnnou $y$ a jednou nebo více
+vysvětlujícími proměnnými $x_1,\ldots,x_k$. Základní populační model má tvar:
+\[
+y_i = \beta_0 + \beta_1x_{i1} + \cdots + \beta_kx_{ik} + u_i.
+\]
+
+V maticovém zápisu:
+\[
+y = X\beta + u.
+\]
+
+Kde:
+\begin{itemize}
+    \item $y_i$ je hodnota závisle proměnné u pozorování $i$,
+    \item $x_{ij}$ je hodnota $j$-té vysvětlující proměnné u pozorování $i$,
+    \item $\beta_0$ je konstanta,
+    \item $\beta_j$ je regresní koeficient,
+    \item $u_i$ je chyba modelu, tedy vše, co ovlivňuje $y_i$, ale není zachyceno v proměnných $x$.
+\end{itemize}
+
+Lineární regrese modeluje podmíněnou střední hodnotu:
+\[
+\mathrm{E}(y_i|x_i)=x_i^\top\beta.
+\]
+
+To znamená, že model neříká, že všechny body leží přesně na přímce nebo rovině. Říká pouze, že
+\emph{průměrná očekávaná hodnota} $y$ při daných hodnotách $x$ je lineární funkcí vysvětlujících proměnných.
+
+\subsection*{Interpretace koeficientů}
+
+Koeficient $\beta_j$ říká, o kolik se změní očekávaná hodnota $y$, pokud se $x_j$ zvýší o jednu jednotku
+a všechny ostatní vysvětlující proměnné zůstanou stejné:
+\[
+\frac{\partial \mathrm{E}(y|x)}{\partial x_j}=\beta_j.
+\]
+
+Toto je tzv. \textit{ceteris paribus} interpretace.
+
+\paragraph{Příklad.}
+Pokud odhadneme model:
+\[
+\widehat{price} = 500000 - 2 \cdot km,
+\]
+pak koeficient $-2$ znamená, že auto s o 1 km vyšším nájezdem má v průměru o 2 Kč nižší cenu.
+Pokud je $km$ v tisících kilometrů, znamená to pokles ceny o 2000 Kč při zvýšení nájezdu o 1000 km.
+
+\paragraph{Důležité.}
+Samotná regrese ještě neznamená kauzalitu. To, že auta s vyšším nájezdem mají nižší cenu, neznamená
+automaticky, že každý další kilometr přesně způsobí stejný pokles ceny. Může jít jen o popis vztahu v datech.
+
+\subsection*{Deskriptivní, prediktivní a kauzální použití}
+
+\subsubsection*{Deskriptivní použití}
+
+Cílem je popsat vztah mezi proměnnými. Ptáme se například:
+\[
+\text{Jak se v datech mění cena auta s počtem najetých kilometrů?}
+\]
+
+V deskriptivní úloze nám jde hlavně o shrnutí vztahu v datech. Nemusíme nutně tvrdit, že jde o příčinný
+efekt.
+
+\subsubsection*{Prediktivní použití}
+
+Cílem je co nejpřesněji predikovat nové hodnoty:
+\[
+\hat y_0 = x_0^\top \hat\beta.
+\]
+
+U predikce je méně důležité, zda má každý koeficient přesnou kauzální interpretaci. Důležité je, zda model
+dobře predikuje nové hodnoty, ideálně mimo trénovací data.
+
+\paragraph{Příklad.}
+Na základě nájezdu, roku výroby, modelu a paliva chceme odhadnout tržní cenu konkrétního auta.
+
+\subsubsection*{Kauzální použití}
+
+Cílem je zjistit příčinný efekt jedné proměnné na druhou. Například:
+\[
+\text{O kolik vzdělání skutečně zvyšuje mzdu?}
+\]
+
+Pro kauzální interpretaci nestačí korelace. Klíčová podmínka je exogenita:
+\[
+\mathrm{E}(u|X)=0.
+\]
+
+Tato podmínka říká, že chyba modelu nesmí systematicky souviset s vysvětlujícími proměnnými. Jinak řečeno,
+v chybě nesmí zůstat důležitý faktor, který zároveň ovlivňuje $y$ i některé $x$.
+
+\paragraph{Typický problém.}
+Chceme odhadnout efekt vzdělání na mzdu:
+\[
+wage = \beta_0 + \beta_1 educ + u.
+\]
+Pokud v chybě $u$ zůstane schopnost člověka, která ovlivňuje vzdělání i mzdu, pak odhad $\hat\beta_1$
+nebude čistý kauzální efekt vzdělání.
+
+\subsection*{OLS: metoda nejmenších čtverců}
+
+OLS volí takové koeficienty, aby minimalizovaly součet čtverců reziduí:
+\[
+SSR(\hat\beta)=\sum_{i=1}^n \hat u_i^2
+=
+\sum_{i=1}^n (y_i-x_i^\top\hat\beta)^2.
+\]
+
+Reziduum:
+\[
+\hat u_i = y_i-\hat y_i.
+\]
+
+Tedy reziduum je rozdíl mezi skutečnou hodnotou a hodnotou predikovanou modelem.
+
+OLS odhad:
+\[
+\hat\beta = (X^\top X)^{-1}X^\top y.
+\]
+
+Tento vzorec platí, pokud existuje inverze $(X^\top X)^{-1}$, tedy pokud mezi vysvětlujícími proměnnými
+není perfektní multikolinearita.
+
+\paragraph{Intuice OLS.}
+OLS hledá regresní přímku, rovinu nebo obecně hyperrovinu tak, aby byly odchylky skutečných hodnot od
+modelu co nejmenší. Čtverce se používají proto, aby se kladné a záporné odchylky nerušily a aby větší chyby
+dostaly větší váhu.
+
+\subsection*{Normální rovnice a vlastnosti reziduí}
+
+Z podmínek prvního řádu dostaneme:
+\[
+X^\top \hat u = 0.
+\]
+
+To znamená, že rezidua jsou v odhadnutém modelu nekorelovaná s každou vysvětlující proměnnou zahrnutou
+v modelu.
+
+Pokud model obsahuje konstantu, platí také:
+\[
+\sum_{i=1}^n \hat u_i = 0.
+\]
+
+Tedy průměr reziduí je nula.
+
+\subsection*{Předpoklady lineárního regresního modelu}
+
+\subsubsection*{1. Linearita v parametrech}
+
+Model je lineární v koeficientech:
+\[
+y_i = \beta_0+\beta_1x_{i1}+\cdots+\beta_kx_{ik}+u_i.
+\]
+
+Proměnné ale mohou být transformované. Model je stále lineární, pokud je lineární v parametrech:
+\[
+y = \beta_0+\beta_1x+\beta_2x^2+u.
+\]
+
+Tento model je lineární v $\beta$, i když vztah mezi $x$ a $y$ je nelineární.
+
+\subsubsection*{2. Náhodný výběr}
+
+Pozorování by měla být náhodně vybraná z populace. U průřezových dat se obvykle předpokládá, že jednotky
+jsou nezávislé.
+
+\subsubsection*{3. Žádná perfektní multikolinearita}
+
+Žádná vysvětlující proměnná nesmí být přesnou lineární kombinací ostatních.
+
+\paragraph{Příklad problému.}
+Pokud do modelu dáme zároveň všechny dummy proměnné pro kategorie a konstantu, vznikne perfektní
+multikolinearita. Proto se jedna kategorie vždy vynechává a slouží jako referenční.
+
+\subsubsection*{4. Exogenita}
+
+\[
+\mathrm{E}(u|X)=0.
+\]
+
+Toto je nejdůležitější předpoklad pro nestrannost a kauzální interpretaci. Znamená, že vysvětlující proměnné
+nejsou systematicky spojeny s nepozorovanou složkou $u$.
+
+Porušení exogenity vzniká například při:
+\begin{itemize}
+    \item vynechané relevantní proměnné,
+    \item simultánnosti,
+    \item reverzní kauzalitě,
+    \item chybě měření ve vysvětlující proměnné.
+\end{itemize}
+
+\subsubsection*{5. Homoskedasticita}
+
+\[
+\mathrm{Var}(u|X)=\sigma^2.
+\]
+
+Rozptyl chyb je konstantní pro všechny hodnoty $X$.
+
+Pokud rozptyl chyb závisí na $X$, jde o heteroskedasticitu:
+\[
+\mathrm{Var}(u|X)\neq\sigma^2.
+\]
+
+\subsubsection*{6. Normalita chyb}
+
+\[
+u|X \sim N(0,\sigma^2).
+\]
+
+Normalita je důležitá hlavně pro přesnou inferenci v malých výběrech. Ve velkých výběrech se často opíráme
+o asymptotickou normalitu.
+
+\subsection*{Vlastnosti OLS odhadů}
+
+\subsubsection*{Nestrannost}
+
+Pokud platí linearita, náhodný výběr, žádná perfektní multikolinearita a exogenita, potom:
+\[
+\mathrm{E}(\hat\beta|X)=\beta.
+\]
+
+To znamená, že OLS se v průměru trefuje do skutečné hodnoty parametru.
+
+\subsubsection*{Konzistence}
+
+Odhad je konzistentní, pokud se s rostoucím počtem pozorování přibližuje ke skutečné hodnotě:
+\[
+\operatorname{plim}\hat\beta=\beta.
+\]
+
+Konzistence je slabší než nestrannost. Odhad může být v malém vzorku vychýlený, ale pokud se s rostoucím
+$n$ blíží ke skutečné hodnotě, je konzistentní.
+
+\subsubsection*{Rozptyl OLS}
+
+Za homoskedasticity:
+\[
+\mathrm{Var}(\hat\beta|X)=\sigma^2(X^\top X)^{-1}.
+\]
+
+Odhad rozptylu chyb:
+\[
+\hat\sigma^2 = \frac{SSR}{n-k-1}.
+\]
+
+\subsubsection*{Gaussova-Markovova věta}
+
+Pokud platí předpoklady LRM včetně homoskedasticity, je OLS:
+\[
+BLUE = \text{Best Linear Unbiased Estimator}.
+\]
+
+To znamená, že mezi lineárními nestrannými odhady má nejmenší rozptyl.
+
+\paragraph{Pozor.}
+BLUE neznamená, že OLS je vždy nejlepší možný odhad mezi všemi odhady. Znamená to nejlepší mezi
+\emph{lineárními nestrannými} odhady za daných předpokladů.
+
+\subsection*{Statistická inference}
+
+Protože pracujeme se vzorkem, odhady se mezi různými vzorky liší. Standardní chyba říká, jak moc je odhad
+nejistý:
+\[
+se(\hat\beta_j).
+\]
+
+\subsubsection*{t-test jednoho koeficientu}
+
+Testujeme:
+\[
+H_0:\beta_j=0
+\]
+proti
+\[
+H_1:\beta_j\neq 0.
+\]
+
+Testová statistika:
+\[
+t=
+\frac{\hat\beta_j-\beta_{j,0}}{se(\hat\beta_j)}.
+\]
+
+Nejčastěji:
+\[
+t=
+\frac{\hat\beta_j}{se(\hat\beta_j)}.
+\]
+
+Pokud je $|t|$ velké, zamítáme nulovou hypotézu.
+
+\subsubsection*{Interval spolehlivosti}
+
+\[
+\hat\beta_j \pm c \cdot se(\hat\beta_j).
+\]
+
+Přibližně pro 95\% interval ve velkém výběru:
+\[
+\hat\beta_j \pm 1.96 \cdot se(\hat\beta_j).
+\]
+
+\subsubsection*{F-test více omezení}
+
+Používá se, když testujeme více koeficientů najednou, například:
+\[
+H_0:\beta_2=\beta_3=\beta_4=0.
+\]
+
+F-statistika:
+\[
+F=
+\frac{(SSR_r-SSR_u)/m}{SSR_u/(n-k-1)}.
+\]
+
+Kde:
+\begin{itemize}
+    \item $SSR_r$ je součet čtverců reziduí v restriktivním modelu,
+    \item $SSR_u$ je součet čtverců reziduí v neresktriktivním modelu,
+    \item $m$ je počet testovaných restrikcí.
+\end{itemize}
+
+\subsection*{Dobrota shody}
+
+Celková variabilita:
+\[
+SST=\sum_{i=1}^n (y_i-\bar y)^2.
+\]
+
+Nevysvětlená variabilita:
+\[
+SSR=\sum_{i=1}^n \hat u_i^2.
+\]
+
+Koeficient determinace:
+\[
+R^2=1-\frac{SSR}{SST}.
+\]
+
+$R^2$ říká, jakou část variability $y$ model vysvětluje.
+
+\paragraph{Pozor.}
+Vyšší $R^2$ neznamená automaticky lepší model pro kauzální interpretaci. Model může mít vysoké $R^2$,
+ale být špatně specifikovaný nebo trpět endogenitou.
+
+Adjusted $R^2$ penalizuje počet proměnných:
+\[
+\bar R^2
+=
+1-
+\frac{SSR/(n-k-1)}{SST/(n-1)}.
+\]
+
+\subsection*{Predikce}
+
+Bodová predikce:
+\[
+\hat y_0=x_0^\top\hat\beta.
+\]
+
+Je důležité rozlišovat dva typy nejistoty:
+
+\begin{itemize}
+    \item interval spolehlivosti pro průměrnou hodnotu $\mathrm{E}(y|x_0)$,
+    \item predikční interval pro konkrétní nové pozorování $y_0$.
+\end{itemize}
+
+Predikční interval je širší, protože obsahuje:
+\begin{itemize}
+    \item nejistotu v odhadu regresní funkce,
+    \item náhodnou individuální odchylku $u$.
+\end{itemize}
+
+Přibližně:
+\[
+\hat y_0
+\pm
+c
+\sqrt{
+x_0^\top \widehat{\mathrm{Var}}(\hat\beta)x_0
++
+\hat\sigma^2
+}.
+\]
+
+\subsection*{Volba modelu}
+
+Při volbě modelu řešíme:
+\begin{itemize}
+    \item které proměnné zahrnout,
+    \item jak je transformovat,
+    \item zda zahrnout interakce,
+    \item zda vztah není nelineární,
+    \item zda model slouží k popisu, predikci nebo kauzalitě.
+\end{itemize}
+
+\subsubsection*{Dummy proměnné}
+
+Kategoriální proměnné se do regrese dávají pomocí dummy proměnných.
+
+Pokud má proměnná tři kategorie, například:
+\[
+\text{Felicia, Octavia, Superb},
+\]
+vložíme do modelu jen dvě dummy proměnné. Jedna kategorie je referenční.
+
+Příklad:
+\[
+price = \beta_0+\beta_1 km+\beta_2 year+\beta_3 Octavia+\beta_4 Superb+u.
+\]
+
+Pokud je referenční kategorie Felicia, potom:
+\begin{itemize}
+    \item $\beta_3$ říká, o kolik se liší Octavia od Felicie při stejném $km$ a $year$,
+    \item $\beta_4$ říká, o kolik se liší Superb od Felicie při stejném $km$ a $year$.
+\end{itemize}
+
+\subsubsection*{Logaritmické transformace}
+
+Model:
+\[
+\log(y)=\beta_0+\beta_1x+u.
+\]
+
+Interpretace:
+\[
+100\beta_1
+\]
+je přibližná procentní změna $y$ při jednotkové změně $x$.
+
+Přesná procentní změna:
+\[
+100(e^{\beta_1}-1).
+\]
+
+Model:
+\[
+\log(y)=\beta_0+\beta_1\log(x)+u.
+\]
+
+Zde je $\beta_1$ elasticita:
+\[
+1\% \text{ změna } x
+\quad \Rightarrow \quad
+\beta_1\% \text{ změna } y.
+\]
+
+\subsubsection*{Kvadratický člen}
+
+Pokud vztah není lineární, můžeme přidat $x^2$:
+\[
+y=\beta_0+\beta_1x+\beta_2x^2+u.
+\]
+
+Marginální efekt:
+\[
+\frac{\partial \mathrm{E}(y|x)}{\partial x}
+=
+\beta_1+2\beta_2x.
+\]
+
+Bod obratu:
+\[
+x^*=-\frac{\beta_1}{2\beta_2}.
+\]
+
+\subsubsection*{Interakce}
+
+Interakce znamená, že efekt jedné proměnné závisí na hodnotě jiné proměnné:
+\[
+y=\beta_0+\beta_1x+\beta_2z+\beta_3xz+u.
+\]
+
+Efekt $x$:
+\[
+\frac{\partial \mathrm{E}(y|x,z)}{\partial x}
+=
+\beta_1+\beta_3z.
+\]
+
+\paragraph{Příklad.}
+Efekt vzdělání na mzdu se může lišit podle pohlaví. Potom do modelu přidáme interakci:
+\[
+wage=\beta_0+\beta_1educ+\beta_2female+\beta_3(educ\cdot female)+u.
+\]
+
+\subsection*{Vynechaná proměnná a omitted variable bias}
+
+Skutečný model:
+\[
+y=\beta_0+\beta_1x+\gamma z+u.
+\]
+
+Pokud ale odhadneme model bez $z$:
+\[
+y=\alpha_0+\alpha_1x+v,
+\]
+může vzniknout vychýlení.
+
+Vzorec pro omitted variable bias:
+\[
+\operatorname{plim}(\tilde\beta_1)
+=
+\beta_1
++
+\gamma\frac{\mathrm{Cov}(x,z)}{\mathrm{Var}(x)}.
+\]
+
+Bias vzniká, pokud platí obě podmínky:
+\begin{itemize}
+    \item $z$ ovlivňuje $y$, tedy $\gamma\neq 0$,
+    \item $z$ koreluje s $x$, tedy $\mathrm{Cov}(x,z)\neq 0$.
+\end{itemize}
+
+\paragraph{Intuice.}
+Pokud vynechaná proměnná souvisí s vysvětlující proměnnou, model její efekt mylně přičte proměnné $x$.
+
+\subsection*{Multikolinearita}
+
+Multikolinearita znamená, že vysvětlující proměnné jsou mezi sebou silně korelované.
+
+Rozptyl koeficientu:
+\[
+\mathrm{Var}(\hat\beta_j)
+=
+\frac{\sigma^2}{SST_j(1-R_j^2)}.
+\]
+
+Kde:
+\begin{itemize}
+    \item $SST_j$ je variabilita proměnné $x_j$,
+    \item $R_j^2$ je $R^2$ z pomocné regrese $x_j$ na ostatní vysvětlující proměnné.
+\end{itemize}
+
+Variance Inflation Factor:
+\[
+VIF_j=\frac{1}{1-R_j^2}.
+\]
+
+Vysoký $VIF$ znamená, že $x_j$ je silně vysvětlitelná ostatními regresory.
+
+\paragraph{Důsledek.}
+Multikolinearita obvykle nezpůsobuje vychýlení, ale zvyšuje standardní chyby. Koeficienty jsou pak
+nepřesné, intervaly spolehlivosti široké a proměnné mohou vycházet statisticky nevýznamné.
+
+\subsection*{Heteroskedasticita}
+
+Heteroskedasticita:
+\[
+\mathrm{Var}(u_i|X_i)\neq \sigma^2.
+\]
+
+Typicky se objevuje například u příjmových dat, kde lidé s vyšším příjmem mají často větší variabilitu.
+
+\paragraph{Důsledek.}
+Pokud platí exogenita, OLS koeficienty mohou být stále nestranné a konzistentní. Problém je ve standardních
+chybách:
+\[
+se(\hat\beta_j)
+\]
+mohou být špatně odhadnuté.
+
+Řešení:
+\begin{itemize}
+    \item heteroskedasticity-robust standard errors,
+    \item vážené nejmenší čtverce,
+    \item vhodná transformace proměnných.
+\end{itemize}
+
+\subsection*{Shrnutí otázky 9}
+
+Lineární regrese modeluje podmíněnou střední hodnotu $y$ pomocí lineární kombinace vysvětlujících
+proměnných. OLS minimalizuje součet čtverců reziduí:
+\[
+\hat\beta=(X^\top X)^{-1}X^\top y.
+\]
+Regrese může sloužit k deskripci, predikci i kauzální analýze, ale kauzální interpretace vyžaduje především
+exogenitu:
+\[
+\mathrm{E}(u|X)=0.
+\]
+Při splnění základních předpokladů je OLS nestranný a konzistentní; při homoskedasticitě je BLUE.
+Při praktickém použití je nutné řešit volbu modelu, vynechané proměnné, multikolinearitu,
+heteroskedasticitu a správnou interpretaci koeficientů.
+
+
+\newpage

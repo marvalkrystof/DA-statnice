@@ -28,3 +28,35 @@ Zaškrtnutí znamená, že je téma zpracované do použitelné podoby pro opako
 - [ ] 20. Business intelligence. Principy, technologické komponenty, nástroje.
 - [ ] 21. Řízení datového projektu. Životní cyklus, metodiky a standardy, organizace projektu a nástroje pro podporu řízení.
 - [ ] 22. Optimalizační modely pro podporu ekonomického rozhodování. Příklady typických úloh LP a MILP, heuristické optimalizační algoritmy.
+
+## Prerekvizity
+
+- `make`
+- TeX distribuce s `xelatex` a `latexmk`, například TeX Live
+
+## Struktura dokumentu
+
+Hlavní vstupní soubor je `main.tex`. Globální nastavení, balíčky a makra jsou
+v `preamble.tex`. Jednotlivé státnicové otázky jsou uložené samostatně v adresáři
+`topics/` a do hlavního dokumentu se skládají přes `\input`.
+
+## Kompilace
+
+Výchozí dokument je `main.tex`:
+
+```sh
+make
+```
+
+PDF vznikne jako `build/priprava.pdf`. Jiný vstupní soubor lze zkompilovat
+takto:
+
+```sh
+make TEX=soubor.tex
+```
+
+Pomocné soubory smažeš přes:
+
+```sh
+make clean
+```

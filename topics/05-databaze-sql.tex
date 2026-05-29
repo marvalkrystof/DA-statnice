@@ -1,0 +1,104 @@
+\section{Databáze. Relační databázové systémy, jazyk SQL, návrh obsahu datové základny}
+
+\subsection*{Základní pojmy}
+\term{Data} jsou formalizované a fyzicky zaznamenané poznatky, zkušenosti nebo výsledky pozorování. \term{Informace} je smysluplná interpretace dat. \term{Databáze} je integrovaná počítačově zpracovaná množina perzistentních dat. \term{Systém řízení báze dat} je software, který umožňuje databázi vytvořit, používat, spravovat a udržovat. \term{Databázový systém} je SŘBD společně s databází.
+
+Materiály rozlišují relační databáze, NoSQL databáze a specializované databáze. Pro toto téma je hlavní relační model.
+
+\subsection*{Relační databáze}
+Relační databáze ukládá data do tabulek. Tabulka má řádky a sloupce. Řádek odpovídá záznamu, sloupec odpovídá atributu. Tabulky jsou propojeny relacemi, typicky pomocí primárních a cizích klíčů.
+
+Relační model je založen na matematickém pojetí relací. Prakticky to znamená, že každá tabulka má schéma, tedy názvy a typy sloupců, a integritní omezení. Každá tabulka má mít primární klíč, který jednoznačně identifikuje záznam. Primární klíč může být jednoduchý nebo složený. Cizí klíč odkazuje na primární nebo kandidátní klíč jiné tabulky a zajišťuje referenční integritu.
+
+Důležité pojmy:
+\begin{itemize}
+  \item \term{entita} - typ objektů, o kterých chceme vést záznamy;
+  \item \term{atribut} - vlastnost entity nebo vztahu;
+  \item \term{vztah} - pojmenovaná spojitost mezi entitami;
+  \item \term{kardinalita} - četnost vazby, například 1:1, 1:N nebo M:N;
+  \item \term{parcialita} - volitelnost účasti entity ve vztahu;
+  \item \term{doména} - množina povolených hodnot atributu;
+  \item \term{integritní omezení} - pravidlo, které musí data splňovat.
+\end{itemize}
+
+\subsection*{Tři úrovně návrhu databáze}
+Materiály pracují s principem tří architektur: konceptuální, logická a fyzická úroveň.
+
+\term{Konceptuální model} popisuje realitu bez implementačních detailů. Zachycuje entity, jejich atributy, vztahy a omezení. Slouží jako zadání pro další fáze, dokumentace a nástroj kontroly konzistence. V ER modelování se snažíme vystihnout, jaké objekty v realitě existují a jak spolu souvisí.
+
+\term{Logický model} převádí konceptuální model do termínů konkrétního typu databázové technologie. U relační databáze to znamená tabulky, sloupce, primární klíče, cizí klíče a integritní omezení. Logický model je ještě relativně nezávislý na konkrétním produktu, ale už respektuje relační strukturu.
+
+\term{Fyzický model} popisuje realizaci v konkrétním prostředí. Řeší datové typy, indexy, způsob uložení, velikosti, rozmístění dat, výkon a technické parametry databáze.
+
+\subsection*{Postup konceptuálního návrhu}
+Metodologie konceptuálního návrhu databáze v materiálech zahrnuje tyto kroky:
+\begin{enumerate}
+  \item Identifikovat hlavní entity v organizaci nebo doméně.
+  \item Identifikovat vztahy mezi entitami a určit jejich kardinalitu a volitelnost.
+  \item Identifikovat atributy a přiřadit je k entitám nebo vztahům.
+  \item Určit domény atributů.
+  \item Vybrat kandidátní, primární a alternativní klíče.
+  \item Případně určit generalizaci a specializaci entit.
+  \item Zkontrolovat redundanci a odstranit zbytečné vztahy.
+  \item Ověřit, zda model podporuje uživatelské transakce.
+  \item Posoudit model s uživateli nebo doménovými experty.
+\end{enumerate}
+
+Tento postup je důležitý, protože databáze není jen technické úložiště. Má reprezentovat realitu tak, aby podporovala požadované operace a budoucí analytické použití.
+
+\subsection*{Transformace ER modelu do relačního modelu}
+Při převodu konceptuálního modelu do relačního se používají základní pravidla:
+\begin{itemize}
+  \item entitní množina se převede na tabulku;
+  \item atributy se převedou na sloupce;
+  \item identifikátory se stanou primárním klíčem;
+  \item vztah 1:N se obvykle řeší cizím klíčem na straně N;
+  \item vztah M:N se řeší spojovací tabulkou, která obsahuje dva cizí klíče a případně vlastní atributy;
+  \item volitelnost vztahu se promítá do možnosti hodnoty \texttt{NULL};
+  \item povinnost vztahu se promítá do \texttt{NOT NULL} a integritních omezení.
+\end{itemize}
+
+U generalizace a specializace existuje více možností: jedna tabulka pro celou hierarchii, tabulky jen pro specializované entity, nebo tabulka pro nadtyp i pro podtypy. Volba závisí na požadavcích na integritu, výkon, jednoduchost a množství společných atributů.
+
+\subsection*{Normalizace a denormalizace}
+Materiály zdůrazňují minimalizaci redundance pomocí normalizace. Normalizace je postup návrhu tabulek tak, aby se omezily duplicity, aktualizační anomálie a nekonzistence. V materiálech je zmíněna sada normálních forem: první, druhá, třetí, Boyce-Coddova, čtvrtá a pátá.
+
+Pro státnice je potřeba umět aspoň základní smysl:
+\begin{itemize}
+  \item 1NF - hodnoty v buňkách jsou atomické, neopakují se skupiny sloupců;
+  \item 2NF - neklíčové atributy závisí na celém složeném klíči, nejen na jeho části;
+  \item 3NF - neklíčové atributy nezávisí tranzitivně na jiných neklíčových atributech;
+  \item BCNF - silnější forma 3NF, kde determinant funkční závislosti má být kandidátním klíčem.
+\end{itemize}
+
+Denormalizace je naopak vědomé přidání redundance kvůli výkonu, typicky v analytických databázích nebo reportingu. Je nutné ji dělat kontrolovaně.
+
+\subsection*{SQL a databázové jazyky}
+\term{SQL} je standardizovaný dotazovací jazyk pro práci s relačními databázemi. Slouží pro definici struktury, manipulaci s daty, dotazování, řízení oprávnění a transakce.
+
+U zkoušky je vhodné rozlišit části SQL:
+\begin{itemize}
+  \item \term{DDL} - definice struktury, například \texttt{CREATE}, \texttt{ALTER}, \texttt{DROP};
+  \item \term{DML} - manipulace s daty, například \texttt{INSERT}, \texttt{UPDATE}, \texttt{DELETE};
+  \item \term{DQL} - dotazování, hlavně \texttt{SELECT};
+  \item \term{DCL} - oprávnění, například \texttt{GRANT}, \texttt{REVOKE};
+  \item \term{TCL} - transakční řízení, například \texttt{COMMIT}, \texttt{ROLLBACK}.
+\end{itemize}
+
+Základní dotaz v SQL vybírá sloupce z tabulek, filtruje řádky, spojuje tabulky a může agregovat hodnoty. U analytických dotazů se často používá \texttt{GROUP BY}, agregační funkce \texttt{COUNT}, \texttt{SUM}, \texttt{AVG}, \texttt{MIN}, \texttt{MAX}, třídění pomocí \texttt{ORDER BY} a spojování tabulek pomocí \texttt{JOIN}.
+
+Materiály zmiňují i další databázové jazyky: PL/SQL jako procedurální nadstavbu SQL, OQL pro objektové databáze, JPQL pro dotazování entit v Java Persistence API a XQuery pro práci s XML daty.
+
+\subsection*{Databázové transakce a souběh}
+Databáze musí řešit víceuživatelské zpracování. Pokud více transakcí pracuje se stejnými daty, mohou vznikat konflikty. Materiály uvádějí řešení pomocí zamykání. Zámky mohou být výlučné pro změny a sdílené pro čtení. Zamykat lze celou tabulku, stránku nebo řádek. Rizikem je deadlock, tedy zablokování, kdy dvě nebo více transakcí čekají na situaci, která nikdy nenastane.
+
+\todohead
+\begin{itemize}
+  \item Doplnit praktické SQL příklady: \texttt{JOIN}, \texttt{GROUP BY}, poddotazy, agregační funkce, \texttt{HAVING}.
+  \item Doplnit normální formy podrobněji na příkladu.
+  \item Doplnit indexy, optimalizaci dotazů a exekuční plán.
+  \item Doplnit integritní omezení: entitní, referenční a doménová integrita.
+  \item Doplnit rozdíl relační databáze versus datový sklad z hlediska modelování.
+\end{itemize}
+
+\newpage

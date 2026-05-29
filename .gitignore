@@ -22,3 +22,6 @@ build/
 Thumbs.db
 *.swp
 *~
+
+# Lecture materials
+materials/

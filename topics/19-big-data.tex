@@ -1,0 +1,39 @@
+\section{Big data. Charakteristika velkých dat, metody a nástroje pro jejich zpracování}
+
+\subsection*{Charakteristika velkých dat}
+Dodaný materiál téma big data pokrývá nepřímo přes datové zdroje, transakční databáze, NoSQL, BI, data mining a kvalitu dat. Z těchto částí lze postavit základní odpověď: big data jsou data, jejichž objem, rychlost vzniku, různorodost nebo složitost překračují možnosti běžného zpracování v tradičních relačních databázích.
+
+Velká data se obvykle popisují pomocí vlastností:
+\begin{itemize}
+  \item \term{Volume} - velký objem dat;
+  \item \term{Velocity} - vysoká rychlost vzniku, přenosu nebo požadované reakce;
+  \item \term{Variety} - různorodost datových typů, například tabulky, JSON, logy, texty, obrázky nebo streamy;
+  \item \term{Veracity} - nejistota, kvalita a důvěryhodnost dat;
+  \item \term{Value} - schopnost získat z dat použitelnou hodnotu pro rozhodování.
+\end{itemize}
+
+\subsection*{Vztah k dodaným materiálům}
+Materiály rozlišují interní a externí datové zdroje, strukturovaná, semistrukturovaná a nestrukturovaná data. To je pro big data důležité: velká data typicky nevznikají jen v jedné relační tabulce, ale kombinují transakce, logy, texty, JSON/XML dokumenty, webová data a případně senzorová data.
+
+\subsection*{NoSQL a specializované databáze}
+V materiálech se objevují NoSQL databáze a specializované databáze. NoSQL databáze často nepoužívají klasické tabulkové struktury, normalizaci a SQL v tradičním smyslu. Místo toho mohou ukládat dokumenty, klíč-hodnota páry, grafy nebo jiné specializované struktury. Výhodou bývá flexibilnější schéma a škálovatelnost, nevýhodou slabší návaznost na relační model a často jiný způsob zajištění konzistence.
+
+\begin{itemize}
+  \item dokumentové databáze - ukládají komplexní dokumenty, často JSON/BSON;
+  \item key-value databáze - rychlé ukládání hodnot podle klíče, často pro cache;
+  \item grafové databáze - pracují s uzly a hranami, hodí se pro vztahy a sítě;
+  \item specializované databáze - řeší konkrétní typ dat nebo přístupu.
+\end{itemize}
+
+\subsection*{Big data v analytice}
+Big data se v datové analytice využívají pro reporting ve velkém měřítku, strojové učení, doporučovací systémy, detekci anomálií, personalizaci, monitoring provozu a analýzu textu nebo webových dat. Základní problém je převést velký a různorodý datový zdroj na použitelnou datovou sadu se známou kvalitou, významem proměnných a reprodukovatelným zpracováním.
+
+\todohead
+\begin{itemize}
+  \item Doplnit Hadoop, HDFS, MapReduce, Spark a distribuované výpočty.
+  \item Doplnit data lake, lakehouse a cloudová datová úložiště.
+  \item Doplnit streamingové zpracování: Kafka, Spark Streaming, Flink.
+  \item Doplnit CAP teorém, eventual consistency a rozdíl oproti ACID.
+\end{itemize}
+
+\newpage

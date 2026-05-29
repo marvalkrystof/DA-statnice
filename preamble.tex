@@ -1,0 +1,44 @@
+% Globalni nastaveni dokumentu.
+\usepackage[a4paper,left=3.2cm,right=3.2cm,top=2.7cm,bottom=2.9cm,headheight=15pt]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{czech}
+\setmainfont{TeX Gyre Pagella}
+\setsansfont{TeX Gyre Heros}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\DeclareMathOperator*{\plim}{plim}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\setlength{\cftsecnumwidth}{2.6em}
+\usepackage{fancyhdr}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\linespread{1.08}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45\baselineskip plus 1pt}
+\setlength{\emergencystretch}{2em}
+
+\makeatletter
+\renewcommand*\l@section{\@dottedtocline{1}{0em}{2.4em}}
+\makeatother
+
+\setlist[itemize]{topsep=4pt,itemsep=2pt,parsep=0pt,leftmargin=1.4em}
+\setlist[enumerate]{topsep=4pt,itemsep=2pt,parsep=0pt,leftmargin=1.7em}
+\titleformat{\section}{\Large\bfseries\sffamily}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries\sffamily}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\sffamily}{\thesubsubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.2\baselineskip}{0.55\baselineskip}
+\titlespacing*{\subsection}{0pt}{0.9\baselineskip}{0.35\baselineskip}
+\titlespacing*{\subsubsection}{0pt}{0.7\baselineskip}{0.25\baselineskip}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Příprava ke státnicím - Data Analytics}
+\rhead{\small\thepage}
+\cfoot{}
+\newcommand{\term}[1]{\textbf{#1}}
+\newcommand{\uv}[1]{„#1“}
+\newcommand{\todohead}{\subsection*{Co doplnit mimo dodané materiály}}
+\newcommand{\pozor}{\subsection*{Pozor u zkoušky}}

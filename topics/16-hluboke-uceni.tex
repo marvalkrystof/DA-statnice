@@ -1,0 +1,1511 @@
+\section{Vícevrstvé neuronové sítě a hluboké učení. Koncepce, aplikace, technologie}
+
+\subsection*{Základní vymezení}
+
+\textbf{Neuronová síť} je model složený z propojených výpočetních jednotek -- neuronů. Každý neuron počítá
+vážený součet vstupů, přičte bias a použije aktivační funkci:
+\[
+z = w^\top x + b,
+\qquad
+a = \phi(z).
+\]
+
+Vícevrstvá neuronová síť skládá takových transformací více za sebou:
+\[
+x
+\rightarrow
+h^{(1)}
+\rightarrow
+h^{(2)}
+\rightarrow
+\cdots
+\rightarrow
+\hat y.
+\]
+
+\textbf{Hluboké učení} je část strojového učení založená na neuronových sítích s více skrytými vrstvami.
+Hluboké sítě se neučí jen přímý vztah mezi vstupem a výstupem, ale postupně se učí reprezentace dat.
+Nižší vrstvy zachycují jednoduché rysy, vyšší vrstvy složitější struktury.
+
+\paragraph{Intuice.}
+U obrázku mohou první vrstvy detekovat hrany a jednoduché tvary, další vrstvy části objektů a poslední vrstvy
+celé objekty. U textu mohou první vrstvy zachycovat tokeny/slova, další vrstvy syntaktické a významové vztahy.
+
+\subsection*{Mělká vs. hluboká síť}
+
+\begin{itemize}
+    \item \textbf{Mělká síť} má typicky jednu skrytou vrstvu.
+    \item \textbf{Hluboká síť} má více skrytých vrstev.
+    \item Více vrstev umožňuje skládat jednoduché nelineární transformace do složitějších funkcí.
+    \item Hluboké sítě jsou výkonné hlavně pro nestrukturovaná data: obraz, text, zvuk, video.
+\end{itemize}
+
+Obecný tvar dopředné hluboké sítě:
+\[
+h^{(0)} = x,
+\]
+\[
+z^{(\ell)} = W^{(\ell)}h^{(\ell-1)} + b^{(\ell)},
+\qquad
+h^{(\ell)} = \phi^{(\ell)}(z^{(\ell)}),
+\qquad
+\ell=1,\ldots,L.
+\]
+
+Výstup:
+\[
+\hat y = g(z^{(L)}),
+\]
+kde $g$ závisí na úloze:
+\begin{itemize}
+    \item regrese: lineární výstup,
+    \item binární klasifikace: sigmoid,
+    \item vícetřídní klasifikace: softmax.
+\end{itemize}
+
+\subsection*{Proč hluboké učení funguje}
+
+Hluboké sítě jsou úspěšné hlavně díky kombinaci několika faktorů:
+\begin{itemize}
+    \item dostupnost velkých datasetů,
+    \item vyšší výpočetní výkon, hlavně GPU/TPU,
+    \item lepší optimalizační algoritmy,
+    \item lepší inicializace vah,
+    \item regularizace a normalizace,
+    \item specializované architektury jako CNN, RNN a transformery,
+    \item transfer learning a předtrénované modely.
+\end{itemize}
+
+\paragraph{Důležité.}
+Hluboké učení není vhodné vždy. U malých tabulkových datasetů mohou být lepší jednodušší modely, například
+logistická regrese, rozhodovací strom, random forest nebo gradient boosting. Hluboké sítě se vyplatí hlavně
+tam, kde je hodně dat a složitá struktura vstupu.
+
+\subsection*{Vícevrstvý perceptron}
+
+Vícevrstvý perceptron, MLP, je základní dopředná neuronová síť. Každý neuron jedné vrstvy je typicky spojen
+se všemi neurony následující vrstvy. Takovým vrstvám se říká plně propojené vrstvy:
+\[
+\text{Dense layer}.
+\]
+
+Pro jednu skrytou vrstvu:
+\[
+h = \phi(W^{(1)}x+b^{(1)}),
+\]
+\[
+\hat y = g(W^{(2)}h+b^{(2)}).
+\]
+
+Pro více skrytých vrstev:
+\[
+h^{(1)} = \phi(W^{(1)}x+b^{(1)}),
+\]
+\[
+h^{(2)} = \phi(W^{(2)}h^{(1)}+b^{(2)}),
+\]
+\[
+\hat y = g(W^{(3)}h^{(2)}+b^{(3)}).
+\]
+
+\subsection*{Počet parametrů v hustých vrstvách}
+
+Počet parametrů mezi dvěma plně propojenými vrstvami:
+\[
+(n_{\text{in}}+1)n_{\text{out}},
+\]
+kde $+1$ odpovídá biasu.
+
+\paragraph{Příklad MNIST.}
+Obrázek má velikost:
+\[
+28 \times 28 = 784
+\]
+vstupních hodnot. Pokud má síť jednu skrytou vrstvu s 256 neurony a výstupní vrstvu s 10 neurony, počet
+parametrů je:
+\[
+784\cdot 256 + 256 + 256\cdot 10 + 10 = 203530.
+\]
+
+To ukazuje, že počet parametrů rychle roste. Proto se u obrázků nepoužívají pouze husté vrstvy, ale hlavně
+konvoluční sítě.
+
+\subsection*{Aktivační funkce}
+
+Aktivační funkce zavádějí nelinearitu. Bez nich by složení více vrstev bylo opět jen lineární transformací.
+
+\subsubsection*{Sigmoid}
+
+\[
+\sigma(z)=\frac{1}{1+e^{-z}}.
+\]
+
+Použití:
+\begin{itemize}
+    \item binární klasifikace,
+    \item výstup jako pravděpodobnost.
+\end{itemize}
+
+Nevýhoda:
+\begin{itemize}
+    \item pro velká kladná/záporná $z$ má velmi malý gradient, což může vést k problému mizejícího gradientu.
+\end{itemize}
+
+\subsubsection*{Tanh}
+
+\[
+\tanh(z)=\frac{e^z-e^{-z}}{e^z+e^{-z}}.
+\]
+
+Výstup je v intervalu:
+\[
+(-1,1).
+\]
+
+\subsubsection*{ReLU}
+
+\[
+\operatorname{ReLU}(z)=\max(0,z).
+\]
+
+Výhody:
+\begin{itemize}
+    \item jednoduchá,
+    \item výpočetně rychlá,
+    \item často funguje lépe ve skrytých vrstvách než sigmoid/tanh,
+    \item zmírňuje problém mizejícího gradientu.
+\end{itemize}
+
+Nevýhoda:
+\begin{itemize}
+    \item pro záporné vstupy má nulový gradient; neuron může přestat učit.
+\end{itemize}
+
+\subsubsection*{Softmax}
+
+Softmax se používá pro vícetřídní klasifikaci:
+\[
+\hat p_k =
+\frac{e^{z_k}}
+{\sum_{j=1}^{K} e^{z_j}}.
+\]
+
+Platí:
+\[
+0 \leq \hat p_k \leq 1,
+\qquad
+\sum_{k=1}^{K}\hat p_k=1.
+\]
+
+\subsection*{Ztrátové funkce}
+
+Neuronová síť se učí minimalizací ztrátové funkce:
+\[
+J(\theta)
+=
+\frac{1}{n}
+\sum_{i=1}^n
+L(y_i,\hat y_i),
+\]
+kde $\theta$ označuje všechny váhy a biasy.
+
+\subsubsection*{Regrese}
+
+Pro regresi se často používá MSE:
+\[
+L(y,\hat y)=(y-\hat y)^2.
+\]
+
+Celkově:
+\[
+MSE=
+\frac{1}{n}
+\sum_{i=1}^{n}
+(y_i-\hat y_i)^2.
+\]
+
+\subsubsection*{Binární klasifikace}
+
+Binary cross-entropy:
+\[
+L(y,\hat p)
+=
+-\left[
+y\log(\hat p)
++
+(1-y)\log(1-\hat p)
+\right].
+\]
+
+\subsubsection*{Vícetřídní klasifikace}
+
+Categorical cross-entropy:
+\[
+L(y,\hat p)
+=
+-\sum_{k=1}^{K} y_k\log(\hat p_k),
+\]
+kde $y_k$ je one-hot reprezentace skutečné třídy.
+
+\subsection*{Trénování hlubokých sítí}
+
+Trénování znamená hledání parametrů, které minimalizují ztrátovou funkci:
+\[
+\min_{\theta} J(\theta).
+\]
+
+Nejčastěji se používají gradientní metody:
+\[
+\theta^{(t+1)}
+=
+\theta^{(t)}
+-
+\eta \nabla J(\theta^{(t)}),
+\]
+kde $\eta$ je learning rate.
+
+\subsubsection*{Forward propagation}
+
+Dopředný průchod spočítá predikci:
+\[
+x \rightarrow \hat y.
+\]
+
+Například:
+\[
+z^{(1)}=W^{(1)}x+b^{(1)},
+\]
+\[
+h^{(1)}=\phi(z^{(1)}),
+\]
+\[
+z^{(2)}=W^{(2)}h^{(1)}+b^{(2)},
+\]
+\[
+\hat y=g(z^{(2)}).
+\]
+
+\subsubsection*{Backpropagation}
+
+Backpropagation efektivně počítá derivace ztráty podle všech vah pomocí řetězového pravidla:
+\[
+\frac{\partial L}{\partial w}
+=
+\frac{\partial L}{\partial \hat y}
+\cdot
+\frac{\partial \hat y}{\partial z}
+\cdot
+\frac{\partial z}{\partial w}.
+\]
+
+\paragraph{Intuice.}
+Síť nejprve udělá predikci, poté spočítá chybu a následně šíří informaci o chybě zpět přes jednotlivé vrstvy.
+Každá váha se upraví podle toho, jak přispěla k chybě.
+
+\subsection*{Gradientní optimalizátory}
+
+\subsubsection*{Batch gradient descent}
+
+Používá celý trénovací dataset pro jeden update:
+\[
+\nabla J(\theta)
+=
+\frac{1}{n}
+\sum_{i=1}^{n}
+\nabla L_i(\theta).
+\]
+
+Výhoda:
+\begin{itemize}
+    \item stabilní gradient.
+\end{itemize}
+
+Nevýhoda:
+\begin{itemize}
+    \item pomalé u velkých datasetů.
+\end{itemize}
+
+\subsubsection*{Stochastic gradient descent}
+
+Aktualizuje parametry po jednom pozorování:
+\[
+\theta
+\leftarrow
+\theta
+-
+\eta \nabla L_i(\theta).
+\]
+
+Výhody:
+\begin{itemize}
+    \item rychlé aktualizace,
+    \item šum v gradientu může pomoci uniknout z horších lokálních minim.
+\end{itemize}
+
+Nevýhody:
+\begin{itemize}
+    \item nestabilnější konvergence,
+    \item citlivost na learning rate.
+\end{itemize}
+
+\subsubsection*{Mini-batch gradient descent}
+
+Používá malou dávku pozorování:
+\[
+B\subset \{1,\ldots,n\}.
+\]
+
+Aktualizace:
+\[
+\theta
+\leftarrow
+\theta
+-
+\eta
+\frac{1}{|B|}
+\sum_{i\in B}
+\nabla L_i(\theta).
+\]
+
+Toto je nejběžnější varianta pro hluboké učení.
+
+\subsubsection*{Momentum}
+
+Momentum používá informaci o předchozích gradientech:
+\[
+v_t = \gamma v_{t-1} + \eta \nabla J(\theta_t),
+\]
+\[
+\theta_{t+1} = \theta_t - v_t.
+\]
+
+Pomáhá zrychlit učení ve stabilním směru a tlumit oscilace.
+
+\subsubsection*{Adam}
+
+Adam kombinuje momentum a adaptivní learning rate. Udržuje odhad prvního a druhého momentu gradientů.
+V praxi je jedním z nejpoužívanějších optimalizátorů pro neuronové sítě.
+
+\subsection*{Problémy při trénování}
+
+\subsubsection*{Mizející gradient}
+
+Mizející gradient znamená:
+\[
+\left|
+\frac{\partial L}{\partial w}
+\right|
+\approx 0.
+\]
+
+Potom se váhy v nižších vrstvách téměř neučí. Problém je častý u hlubokých sítí a aktivačních funkcí
+sigmoid/tanh.
+
+Řešení:
+\begin{itemize}
+    \item ReLU a její varianty,
+    \item vhodná inicializace vah,
+    \item batch normalization,
+    \item reziduální spojení,
+    \item LSTM/GRU u sekvenčních dat.
+\end{itemize}
+
+\subsubsection*{Explodující gradient}
+
+Explodující gradient znamená, že gradienty jsou příliš velké:
+\[
+\left|
+\frac{\partial L}{\partial w}
+\right|
+\gg 1.
+\]
+
+Řešení:
+\begin{itemize}
+    \item gradient clipping,
+    \item menší learning rate,
+    \item lepší inicializace,
+    \item normalizace.
+\end{itemize}
+
+\subsubsection*{Overfitting}
+
+Hluboké sítě mají mnoho parametrů, a proto se mohou přeučit:
+\[
+Err_{\text{train}} \ll Err_{\text{test}}.
+\]
+
+Řešení:
+\begin{itemize}
+    \item větší dataset,
+    \item regularizace,
+    \item dropout,
+    \item early stopping,
+    \item data augmentation,
+    \item jednodušší architektura,
+    \item transfer learning.
+\end{itemize}
+
+\subsection*{Regularizace}
+
+\subsubsection*{L2 regularizace}
+
+\[
+J_{\lambda}(\theta)
+=
+J(\theta)
++
+\lambda
+\sum_j w_j^2.
+\]
+
+L2 penalizuje velké váhy a tím omezuje složitost modelu.
+
+\subsubsection*{L1 regularizace}
+
+\[
+J_{\lambda}(\theta)
+=
+J(\theta)
++
+\lambda
+\sum_j |w_j|.
+\]
+
+L1 může vést k řídkým modelům, protože některé váhy tlačí k nule.
+
+\subsubsection*{Dropout}
+
+Dropout náhodně vypíná část neuronů během trénování:
+\[
+\tilde h = m \odot h,
+\qquad
+m_j \sim \operatorname{Bernoulli}(q).
+\]
+
+Model se tím učí nebýt příliš závislý na konkrétních neuronech.
+
+\subsubsection*{Batch normalization}
+
+Batch normalization normalizuje aktivace v dávce:
+\[
+\hat x =
+\frac{x-\mu_B}
+{\sqrt{\sigma_B^2+\varepsilon}},
+\]
+\[
+y=\gamma \hat x+\beta.
+\]
+
+Pomáhá stabilizovat a zrychlit trénování.
+
+\subsubsection*{Early stopping}
+
+Sledujeme validační chybu:
+\[
+Err_{\text{val}}.
+\]
+
+Pokud trénovací chyba klesá, ale validační chyba začne růst, model se začíná přeučovat:
+\[
+Err_{\text{train}}\downarrow
+\quad
+\text{a}
+\quad
+Err_{\text{val}}\uparrow.
+\]
+
+Trénování zastavíme v bodě s nejlepší validační chybou.
+
+\subsection*{Konvoluční neuronové sítě}
+
+Konvoluční neuronové sítě, CNN, jsou specializované hlavně na obrazová data. Obrázek lze chápat jako tensor:
+\begin{itemize}
+    \item černobílý obrázek: výška $\times$ šířka,
+    \item barevný RGB obrázek: výška $\times$ šířka $\times$ 3,
+    \item dávka obrázků: počet obrázků $\times$ výška $\times$ šířka $\times$ počet kanálů.
+\end{itemize}
+
+Například RGB batch:
+\[
+(256,128,128,3).
+\]
+
+\subsection*{Proč nestačí plně propojené vrstvy pro obrázky}
+
+U obrázku $32\times 32\times 3$ máme:
+\[
+32\cdot 32\cdot 3=3072
+\]
+vstupů. Pokud by byl každý neuron ve skryté vrstvě propojen se všemi pixely, počet parametrů by rychle
+rostl. Navíc by síť nevyužívala prostorovou strukturu obrázku.
+
+CNN používají:
+\begin{itemize}
+    \item lokální propojení,
+    \item sdílení parametrů,
+    \item konvoluční filtry,
+    \item pooling,
+    \item hierarchickou extrakci příznaků.
+\end{itemize}
+
+\subsection*{Konvoluce}
+
+Konvoluce aplikuje filtr, také kernel, na vstupní obrázek a vytváří feature mapu:
+\[
+S(i,j)=(I*K)(i,j).
+\]
+
+Pro více kanálů a více filtrů:
+\[
+S_{i,j,k}
+=
+\phi
+\left(
+b_k+
+\sum_{u=1}^{F_h}
+\sum_{v=1}^{F_w}
+\sum_{c=1}^{C_{\text{in}}}
+K_{u,v,c,k}X_{i+u,j+v,c}
+\right).
+\]
+
+Kde:
+\begin{itemize}
+    \item $X$ je vstupní obrázek nebo aktivace předchozí vrstvy,
+    \item $K$ je konvoluční filtr,
+    \item $S$ je výstupní feature mapa,
+    \item $C_{\text{in}}$ je počet vstupních kanálů,
+    \item $C_{\text{out}}$ je počet filtrů, tedy počet výstupních kanálů.
+\end{itemize}
+
+\subsection*{Velikost výstupu konvoluce}
+
+Pro výšku:
+\[
+H_{\text{out}}
+=
+\left\lfloor
+\frac{H+2P-F_h}{s_h}
+\right\rfloor
++1.
+\]
+
+Pro šířku:
+\[
+W_{\text{out}}
+=
+\left\lfloor
+\frac{W+2P-F_w}{s_w}
+\right\rfloor
++1.
+\]
+
+Kde:
+\begin{itemize}
+    \item $H,W$ jsou rozměry vstupu,
+    \item $F_h,F_w$ rozměry filtru,
+    \item $P$ padding,
+    \item $s_h,s_w$ stride.
+\end{itemize}
+
+\subsection*{Počet parametrů v konvoluční vrstvě}
+
+Počet trénovatelných parametrů:
+\[
+F_hF_wC_{\text{in}}C_{\text{out}}+C_{\text{out}}.
+\]
+
+První část jsou váhy filtrů, druhá část biasy.
+
+\paragraph{Příklad.}
+Konvoluce s filtrem $3\times 3$, jedním vstupním kanálem a 32 filtry má:
+\[
+3\cdot 3\cdot 1\cdot 32 + 32 = 320
+\]
+parametrů.
+
+\subsection*{Pooling}
+
+Pooling zmenšuje prostorové rozměry:
+\[
+H\times W \rightarrow H'\times W'.
+\]
+
+Nejčastější je max pooling, například filtr $2\times 2$ se stride 2:
+\[
+\max
+\begin{pmatrix}
+x_{11} & x_{12}\\
+x_{21} & x_{22}
+\end{pmatrix}.
+\]
+
+Pooling:
+\begin{itemize}
+    \item snižuje počet hodnot,
+    \item zmenšuje výpočetní náročnost,
+    \item zvyšuje určitou robustnost vůči malým posunům,
+    \item obvykle nemá trénovatelné parametry.
+\end{itemize}
+
+\subsection*{Typická CNN architektura}
+
+Základní konvoluční síť:
+\[
+\text{Input}
+\rightarrow
+\text{Convolution}
+\rightarrow
+\text{ReLU}
+\rightarrow
+\text{Pooling}
+\rightarrow
+\text{Convolution}
+\rightarrow
+\text{ReLU}
+\rightarrow
+\text{Pooling}
+\rightarrow
+\text{Flatten}
+\rightarrow
+\text{Dense}
+\rightarrow
+\text{Softmax}.
+\]
+
+\paragraph{Příklad MNIST CNN.}
+\[
+(28,28,1)
+\rightarrow
+(26,26,32)
+\rightarrow
+(13,13,32)
+\rightarrow
+(11,11,64)
+\rightarrow
+(5,5,64)
+\rightarrow
+(3,3,128)
+\rightarrow
+(1152,)
+\rightarrow
+(10,).
+\]
+
+Počet parametrů:
+\[
+3\cdot3\cdot1\cdot32+32
++
+3\cdot3\cdot32\cdot64+64
++
+3\cdot3\cdot64\cdot128+128
++
+3\cdot3\cdot128\cdot10+10
+=
+104202.
+\]
+
+\subsection*{Data augmentation}
+
+Data augmentation uměle rozšiřuje trénovací data transformacemi, které nemění třídu objektu.
+
+U obrázků:
+\begin{itemize}
+    \item otočení,
+    \item posun,
+    \item změna měřítka,
+    \item ořez,
+    \item horizontální překlopení,
+    \item šum,
+    \item změna jasu nebo kontrastu.
+\end{itemize}
+
+\paragraph{Intuice.}
+Pes zůstává psem i po mírném otočení nebo ořezu obrázku. Model se tím učí robustnější reprezentace.
+
+Existují dva přístupy:
+\begin{itemize}
+    \item \textbf{offline augmentation} -- nové obrázky se předem uloží na disk,
+    \item \textbf{on-the-fly augmentation} -- transformace se generují během trénování.
+\end{itemize}
+
+\subsection*{Moderní CNN architektury}
+
+\begin{itemize}
+    \item \textbf{LeNet} -- raná CNN pro rozpoznávání číslic.
+    \item \textbf{AlexNet} -- významný úspěch v počítačovém vidění, využití hlubší sítě a GPU.
+    \item \textbf{VGG} -- jednoduchá architektura s mnoha $3\times 3$ konvolucemi.
+    \item \textbf{Inception / GoogLeNet} -- paralelní konvoluce různých velikostí, efektivní využití parametrů.
+    \item \textbf{ResNet} -- reziduální spojení, umožňuje trénovat velmi hluboké sítě.
+\end{itemize}
+
+Reziduální blok:
+\[
+h^{(\ell+1)}
+=
+F(h^{(\ell)}) + h^{(\ell)}.
+\]
+
+Reziduální spojení pomáhá toku gradientu a řeší problém, že velmi hluboké sítě se jinak obtížně trénují.
+
+\subsection*{Rekurentní neuronové sítě}
+
+Rekurentní neuronové sítě, RNN, jsou určeny pro sekvenční data:
+\[
+x_1,x_2,\ldots,x_T.
+\]
+
+Příklady:
+\begin{itemize}
+    \item text,
+    \item řeč,
+    \item časové řady,
+    \item DNA sekvence,
+    \item video.
+\end{itemize}
+
+U sekvenčních dat záleží na pořadí. RNN umožňuje, aby zpracování aktuálního prvku záviselo na předchozí
+historii.
+
+\subsection*{Vstupní tensor u RNN}
+
+Pro jednu sekvenci:
+\[
+(x_1,\ldots,x_T),
+\]
+kde $x_t$ je vektor příznaků v čase $t$.
+
+Pro mini-batch:
+\[
+(\text{batch size},\text{time steps},\text{features}).
+\]
+
+\subsection*{Jednoduchá RNN}
+
+Skrytý stav:
+\[
+h_t = f_h(W_hh_{t-1}+W_xx_t+b).
+\]
+
+Výstup:
+\[
+y_t = f_o(W_oh_t+c).
+\]
+
+Kde:
+\begin{itemize}
+    \item $h_t$ shrnuje dosavadní historii,
+    \item $x_t$ je aktuální vstup,
+    \item stejné váhy se používají ve všech časových krocích.
+\end{itemize}
+
+\paragraph{Sdílení parametrů.}
+RNN používá stejné matice $W_h,W_x,W_o$ pro každý časový krok. Díky tomu může zpracovávat sekvence různé délky.
+
+\subsection*{Typy RNN úloh}
+
+\begin{itemize}
+    \item \textbf{One-to-one:}
+    jeden vstup a jeden výstup, běžná dopředná síť.
+    
+    \item \textbf{Many-to-one:}
+    sekvence na jeden výstup, například sentiment věty.
+    
+    \item \textbf{One-to-many:}
+    jeden vstup na sekvenci výstupů, například generování popisu obrázku.
+    
+    \item \textbf{Many-to-many:}
+    sekvence na sekvenci, například strojový překlad nebo značkování slov ve větě.
+\end{itemize}
+
+\subsection*{Problémy jednoduchých RNN}
+
+Jednoduché RNN mají problém s dlouhodobými závislostmi.
+
+\begin{itemize}
+    \item \textbf{Vanishing gradient:}
+    informace z dávné minulosti se při zpětném šíření ztrácí.
+    
+    \item \textbf{Exploding gradient:}
+    gradienty mohou prudce růst.
+    
+    \item \textbf{Sekvenční výpočet:}
+    časové kroky se zpracovávají postupně, což omezuje paralelizaci.
+\end{itemize}
+
+Řešení:
+\begin{itemize}
+    \item LSTM,
+    \item GRU,
+    \item bidirectional RNN,
+    \item attention mechanismus,
+    \item transformery.
+\end{itemize}
+
+\subsection*{LSTM}
+
+LSTM, Long Short-Term Memory, používá paměťovou buňku a brány, které řídí tok informací.
+
+Forget gate:
+\[
+f_t = \sigma(W_f[h_{t-1},x_t]+b_f).
+\]
+
+Input gate:
+\[
+i_t = \sigma(W_i[h_{t-1},x_t]+b_i).
+\]
+
+Kandidátní paměť:
+\[
+\tilde c_t = \tanh(W_c[h_{t-1},x_t]+b_c).
+\]
+
+Aktualizace paměti:
+\[
+c_t = f_t\odot c_{t-1}+i_t\odot \tilde c_t.
+\]
+
+Output gate:
+\[
+o_t = \sigma(W_o[h_{t-1},x_t]+b_o).
+\]
+
+Nový skrytý stav:
+\[
+h_t = o_t\odot \tanh(c_t).
+\]
+
+\paragraph{Intuice.}
+LSTM se učí, co zapomenout, co přidat do paměti a co poslat dál jako výstup. Díky tomu lépe zachycuje
+dlouhodobé závislosti než jednoduchá RNN.
+
+\subsection*{GRU}
+
+GRU, Gated Recurrent Unit, je jednodušší varianta bránové RNN.
+
+Update gate:
+\[
+z_t = \sigma(W_z[h_{t-1},x_t]+b_z).
+\]
+
+Reset gate:
+\[
+r_t = \sigma(W_r[h_{t-1},x_t]+b_r).
+\]
+
+Kandidátní stav:
+\[
+\tilde h_t =
+\tanh(W_h[r_t\odot h_{t-1},x_t]+b_h).
+\]
+
+Nový stav:
+\[
+h_t =
+(1-z_t)\odot h_{t-1}
++
+z_t\odot \tilde h_t.
+\]
+
+GRU má méně parametrů než LSTM, a proto může být rychlejší.
+
+\subsection*{Bidirectional RNN}
+
+Bidirectional RNN zpracovává sekvenci oběma směry:
+\[
+\overrightarrow{h_t}
+\quad \text{z minulosti do budoucnosti},
+\]
+\[
+\overleftarrow{h_t}
+\quad \text{z budoucnosti do minulosti}.
+\]
+
+Výstup může používat:
+\[
+h_t =
+[\overrightarrow{h_t},\overleftarrow{h_t}].
+\]
+
+Použití:
+\begin{itemize}
+    \item rozpoznávání řeči,
+    \item rozpoznávání rukopisu,
+    \item bioinformatika,
+    \item zpracování textu, kde známe celou větu.
+\end{itemize}
+
+\subsection*{Word embeddings}
+
+Text nelze přímo vložit do neuronové sítě jako slova. Je potřeba převod slov na vektory.
+
+\subsubsection*{One-hot encoding}
+
+Každé slovo je reprezentováno dlouhým řídkým vektorem:
+\[
+\text{pes} = (0,0,1,0,\ldots,0).
+\]
+
+Nevýhody:
+\begin{itemize}
+    \item vysoká dimenze,
+    \item řídkost,
+    \item žádná informace o významové podobnosti slov.
+\end{itemize}
+
+\subsubsection*{Embedding}
+
+Embedding je hustý nízkorozměrný vektor:
+\[
+\text{pes} \mapsto e_{\text{pes}}\in \mathbb{R}^d.
+\]
+
+Podobná slova by měla mít podobné vektory. Podobnost lze měřit například kosinovou podobností:
+\[
+\cos(e_i,e_j)=
+\frac{e_i^\top e_j}
+{\|e_i\|\|e_j\|}.
+\]
+
+\subsubsection*{Word2Vec}
+
+Word2Vec se učí reprezentace slov z kontextu.
+
+\begin{itemize}
+    \item \textbf{CBOW:}
+    z okolních slov predikuje prostřední slovo.
+    
+    \item \textbf{Skip-gram:}
+    z daného slova predikuje okolní slova.
+\end{itemize}
+
+Skip-gram bývá vhodnější pro méně častá slova a menší trénovací data. CBOW se obvykle trénuje rychleji.
+
+\subsection*{Transformery}
+
+Transformery jsou architektury založené na mechanismu attention. Vznikly jako řešení omezení RNN:
+\begin{itemize}
+    \item RNN zpracovávají sekvenci postupně,
+    \item obtížně zachycují dlouhé závislosti,
+    \item trpí mizejícím gradientem,
+    \item hůře se paralelizují.
+\end{itemize}
+
+Transformer reprezentuje prvky sekvence podle jejich vzájemné relevance.
+
+\subsection*{Self-attention}
+
+Máme sekvenci reprezentovanou maticí:
+\[
+X\in \mathbb{R}^{n\times d}.
+\]
+
+Z ní se vytvoří:
+\[
+Q=XW_Q,
+\qquad
+K=XW_K,
+\qquad
+V=XW_V.
+\]
+
+Kde:
+\begin{itemize}
+    \item $Q$ jsou queries,
+    \item $K$ jsou keys,
+    \item $V$ jsou values.
+\end{itemize}
+
+Scaled dot-product attention:
+\[
+\operatorname{Attention}(Q,K,V)
+=
+\operatorname{softmax}
+\left(
+\frac{QK^\top}{\sqrt{d_k}}
+\right)
+V.
+\]
+
+\paragraph{Intuice.}
+Každý token se ptá, na které ostatní tokeny se má dívat. Podobnost query a key určuje váhu. Výsledkem je
+vážený součet value vektorů.
+
+\subsection*{Multi-head attention}
+
+Místo jedné attention se použije více hlav:
+\[
+\operatorname{head}_i
+=
+\operatorname{Attention}
+(QW_i^Q,KW_i^K,VW_i^V).
+\]
+
+Výstup:
+\[
+\operatorname{MultiHead}(Q,K,V)
+=
+\operatorname{Concat}(\operatorname{head}_1,\ldots,\operatorname{head}_h)W^O.
+\]
+
+Každá hlava se může naučit jiný typ vztahu v sekvenci.
+
+\subsection*{Pozicové kódování}
+
+Self-attention sama o sobě nezná pořadí tokenů. Proto se přidává pozicové kódování:
+\[
+X_{\text{input}} = X_{\text{embedding}} + X_{\text{position}}.
+\]
+
+Bez pozicového kódování by transformer nerozlišil, zda slovo stojí na začátku nebo na konci věty.
+
+\subsection*{Encoder-decoder transformer}
+
+Původní transformer pro strojový překlad má dvě části:
+
+\begin{itemize}
+    \item \textbf{Encoder:}
+    převádí vstupní sekvenci na kontextové reprezentace.
+    
+    \item \textbf{Decoder:}
+    generuje výstupní sekvenci autoregresivně, tedy postupně token po tokenu.
+\end{itemize}
+
+V encoderu se používá self-attention nad vstupem. V decoderu se používá:
+\begin{itemize}
+    \item masked self-attention, aby model neviděl budoucí tokeny,
+    \item attention nad výstupem encoderu,
+    \item feed-forward vrstvy.
+\end{itemize}
+
+\subsection*{Typy transformerových modelů}
+
+\begin{itemize}
+    \item \textbf{Encoder-only:}
+    vhodné pro porozumění textu, klasifikaci, extrakci informací.
+    Příklad: BERT.
+    
+    \item \textbf{Decoder-only:}
+    vhodné pro generování textu.
+    Příklad: GPT modely.
+    
+    \item \textbf{Encoder-decoder:}
+    vhodné pro překlad, sumarizaci a transformaci jedné sekvence na druhou.
+    Příklad: T5.
+\end{itemize}
+
+\subsection*{Předtrénování a transfer learning}
+
+Hluboké modely často netrénujeme od nuly. Používáme předtrénované modely:
+\[
+\theta_{\text{pretrained}}.
+\]
+
+Poté je upravíme pro konkrétní úlohu:
+\[
+\theta_{\text{fine-tuned}}.
+\]
+
+\subsubsection*{Transfer learning u CNN}
+
+U obrázků se často použije předtrénovaná CNN jako extraktor příznaků:
+\[
+x \rightarrow \text{CNN backbone} \rightarrow z.
+\]
+
+Potom přidáme novou klasifikační hlavu:
+\[
+z \rightarrow \text{Dense} \rightarrow \hat y.
+\]
+
+Možnosti:
+\begin{itemize}
+    \item zmrazit původní vrstvy a trénovat jen novou hlavu,
+    \item částečně odemrazit vyšší vrstvy,
+    \item fine-tunovat celý model s malým learning rate.
+\end{itemize}
+
+\subsubsection*{Self-supervised learning}
+
+U velkých jazykových modelů se často využívá self-supervised učení. Model si vytváří cílovou proměnnou z
+dat samotných.
+
+Příklady:
+\begin{itemize}
+    \item predikce dalšího tokenu,
+    \item predikce maskovaného tokenu,
+    \item kontrastivní učení reprezentací.
+\end{itemize}
+
+\subsection*{Autoencodery}
+
+Autoencoder je neuronová síť, která se učí rekonstruovat vlastní vstup:
+\[
+x \rightarrow z \rightarrow \hat x.
+\]
+
+Encoder:
+\[
+z=f_{\theta}(x).
+\]
+
+Decoder:
+\[
+\hat x=g_{\phi}(z).
+\]
+
+Ztráta:
+\[
+L(x,\hat x)=\|x-\hat x\|^2.
+\]
+
+\paragraph{Bottleneck.}
+Nejužší skrytá vrstva se nazývá code nebo bottleneck. Pokud má malou dimenzi, autoencoder se musí naučit
+kompaktní reprezentaci dat.
+
+Použití:
+\begin{itemize}
+    \item redukce dimenze,
+    \item vizualizace dat,
+    \item denoising,
+    \item detekce anomálií,
+    \item inicializace reprezentací.
+\end{itemize}
+
+\subsection*{Denoising autoencoder}
+
+Denoising autoencoder dostane zašuměný vstup:
+\[
+\tilde x = x + \varepsilon,
+\]
+ale učí se rekonstruovat původní vstup:
+\[
+\hat x \approx x.
+\]
+
+Tím se učí robustnější reprezentace.
+
+\subsection*{Aplikace hlubokého učení}
+
+\subsubsection*{Obrazová data}
+
+\begin{itemize}
+    \item klasifikace obrázků,
+    \item detekce objektů,
+    \item segmentace obrazu,
+    \item OCR,
+    \item medicínské snímky,
+    \item detekce porušování lidských práv z obrazových dat,
+    \item kontrola kvality ve výrobě,
+    \item autonomní řízení.
+\end{itemize}
+
+\subsubsection*{Text a jazyk}
+
+\begin{itemize}
+    \item sentiment analysis,
+    \item strojový překlad,
+    \item sumarizace,
+    \item vyhledávání informací,
+    \item otázky a odpovědi,
+    \item klasifikace dokumentů,
+    \item extrakce entit,
+    \item generování textu.
+\end{itemize}
+
+\subsubsection*{Zvuk a řeč}
+
+\begin{itemize}
+    \item rozpoznávání řeči,
+    \item převod textu na řeč,
+    \item detekce řečníka,
+    \item klasifikace zvuků,
+    \item zpracování hudby.
+\end{itemize}
+
+\subsubsection*{Časové řady}
+
+\begin{itemize}
+    \item predikce poptávky,
+    \item predikce spotřeby energie,
+    \item detekce anomálií,
+    \item prediktivní údržba,
+    \item finanční časové řady,
+    \item senzory a IoT.
+\end{itemize}
+
+\subsubsection*{Business aplikace}
+
+\begin{itemize}
+    \item detekce fraudu,
+    \item scoring zákazníků,
+    \item churn prediction,
+    \item doporučovací systémy,
+    \item automatizace zákaznické podpory,
+    \item personalizovaný marketing,
+    \item analýza clickstreamů.
+\end{itemize}
+
+\subsection*{Technologie pro hluboké učení}
+
+\subsubsection*{Programovací jazyky a knihovny}
+
+Nejčastější technologie:
+\begin{itemize}
+    \item \textbf{Python} -- hlavní jazyk pro deep learning,
+    \item \textbf{NumPy, pandas} -- práce s daty,
+    \item \textbf{scikit-learn} -- klasické ML a preprocessing,
+    \item \textbf{TensorFlow / Keras} -- tvorba a trénování neuronových sítí,
+    \item \textbf{PyTorch} -- flexibilní framework, často používaný ve výzkumu i produkci,
+    \item \textbf{Hugging Face Transformers} -- předtrénované NLP a transformerové modely,
+    \item \textbf{OpenCV} -- počítačové vidění.
+\end{itemize}
+
+\subsubsection*{Hardware}
+
+Hluboké sítě jsou výpočetně náročné. Používají se:
+\begin{itemize}
+    \item CPU pro menší úlohy,
+    \item GPU pro paralelní výpočty matic a tensorů,
+    \item TPU pro specializované trénování neuronových sítí,
+    \item distribuované clustery pro velké modely.
+\end{itemize}
+
+GPU zrychluje zejména operace:
+\[
+XW,
+\qquad
+\text{konvoluce},
+\qquad
+\text{backpropagation}.
+\]
+
+\subsubsection*{Datové pipeline}
+
+Pro úspěšné hluboké učení nestačí jen model. Je potřeba i spolehlivá datová pipeline:
+\begin{itemize}
+    \item načítání dat,
+    \item čištění dat,
+    \item transformace,
+    \item augmentace,
+    \item batching,
+    \item caching,
+    \item monitoring kvality dat.
+\end{itemize}
+
+\subsubsection*{Nasazení modelu}
+
+Model lze nasadit například jako:
+\begin{itemize}
+    \item REST API,
+    \item batch scoring,
+    \item stream processing,
+    \item model běžící v mobilní aplikaci,
+    \item model v cloudové službě.
+\end{itemize}
+
+Produkční řešení typicky vyžaduje:
+\begin{itemize}
+    \item kontejnerizaci,
+    \item modularizaci,
+    \item škálování,
+    \item správu přístupů a tajemství,
+    \item CI/CD,
+    \item auditovatelnost,
+    \item možnost rollbacku,
+    \item monitoring výkonu a driftu.
+\end{itemize}
+
+\subsection*{MLOps}
+
+MLOps propojuje vývoj modelu, datové inženýrství a provoz.
+
+Typický proces:
+\begin{enumerate}
+    \item příprava dat,
+    \item trénování modelu,
+    \item validace,
+    \item registrace modelu,
+    \item nasazení,
+    \item monitoring,
+    \item retrénování,
+    \item správa verzí.
+\end{enumerate}
+
+\paragraph{Důležité.}
+Model v produkci není jednorázový výstup. Časem se mohou měnit data, chování uživatelů i business procesy.
+Proto je nutné sledovat:
+\begin{itemize}
+    \item predikční výkon,
+    \item datový drift,
+    \item konceptový drift,
+    \item latenci,
+    \item náklady,
+    \item chybovost služby.
+\end{itemize}
+
+\subsection*{Evaluace hlubokých modelů}
+
+Model se hodnotí na oddělených datech:
+\[
+D =
+D_{\text{train}}
+\cup
+D_{\text{validation}}
+\cup
+D_{\text{test}}.
+\]
+
+\begin{itemize}
+    \item \textbf{Trénovací data} slouží k učení vah.
+    \item \textbf{Validační data} slouží k výběru architektury a hyperparametrů.
+    \item \textbf{Testovací data} slouží k finálnímu nezávislému ověření.
+\end{itemize}
+
+U klasifikace:
+\[
+Accuracy,\quad Precision,\quad Recall,\quad F_1,\quad AUC.
+\]
+
+U regrese:
+\[
+MSE,\quad RMSE,\quad MAE.
+\]
+
+U generativních modelů je hodnocení obtížnější, protože kromě přesnosti řešíme také kvalitu, užitečnost,
+bezpečnost a věcnou správnost výstupu.
+
+\subsection*{Hyperparametry}
+
+Hyperparametry nejsou přímo naučené z dat, ale nastavují se před trénováním.
+
+Typické hyperparametry:
+\begin{itemize}
+    \item počet vrstev,
+    \item počet neuronů,
+    \item typ aktivační funkce,
+    \item learning rate,
+    \item batch size,
+    \item počet epoch,
+    \item dropout rate,
+    \item regularizační koeficient,
+    \item typ optimalizátoru,
+    \item velikost kernelu u CNN,
+    \item počet attention heads u transformeru.
+\end{itemize}
+
+Ladění:
+\begin{itemize}
+    \item grid search,
+    \item random search,
+    \item Bayesian optimization,
+    \item ruční ladění podle learning curves,
+    \item early stopping.
+\end{itemize}
+
+\subsection*{Interpretovatelnost a vysvětlitelnost}
+
+Neuronové sítě a hluboké modely jsou často \textbf{black-box} modely. Uživatel obvykle nevidí jednoduché
+pravidlo, proč model rozhodl právě takto.
+
+Rozlišujeme:
+\begin{itemize}
+    \item \textbf{globální interpretovatelnost} -- jak model funguje jako celek,
+    \item \textbf{lokální interpretovatelnost} -- proč model rozhodl u konkrétního pozorování.
+\end{itemize}
+
+Metody vysvětlování:
+\begin{itemize}
+    \item variable importance,
+    \item permutation importance,
+    \item partial dependence plots,
+    \item ICE plots,
+    \item LIME,
+    \item SHAP,
+    \item surrogate modely,
+    \item saliency maps u obrazových modelů,
+    \item attention visualization u transformerů.
+\end{itemize}
+
+\paragraph{Surrogate model.}
+Naučíme jednodušší model, například rozhodovací strom, který aproximuje predikce složitého modelu:
+\[
+\hat y_{\text{black-box}}
+\approx
+\hat y_{\text{surrogate}}.
+\]
+
+Potom interpretujeme jednodušší model. Je ale nutné kontrolovat fidelitu, tedy jak dobře surrogate skutečně
+napodobuje původní model.
+
+\subsection*{Rizika hlubokého učení}
+
+\begin{itemize}
+    \item potřeba velkého množství dat,
+    \item vysoké výpočetní náklady,
+    \item přeučení,
+    \item nízká interpretovatelnost,
+    \item citlivost na bias v datech,
+    \item data leakage,
+    \item adversariální příklady,
+    \item drift v produkci,
+    \item právní a etické požadavky,
+    \item riziko nadměrného spoléhání na výstupy AI.
+\end{itemize}
+
+U vysoce rizikových aplikací je nutná lidská kontrola, dokumentace, auditovatelnost a možnost zásahu člověka.
+
+\subsection*{Srovnání hlavních architektur}
+
+\begin{itemize}
+    \item \textbf{MLP:}
+    obecná dopředná síť pro tabulková data a jednoduché úlohy.
+    
+    \item \textbf{CNN:}
+    nejlepší pro obrazová data a úlohy, kde je důležitá lokální struktura.
+    
+    \item \textbf{RNN/LSTM/GRU:}
+    sekvenční modely, vhodné pro text, řeč a časové řady, ale hůře paralelizovatelné.
+    
+    \item \textbf{Transformer:}
+    attention-based architektura, výborná pro jazyk, text, multimodální modely a dlouhé závislosti.
+    
+    \item \textbf{Autoencoder:}
+    model pro učení reprezentací, redukci dimenze, rekonstrukci a detekci anomálií.
+\end{itemize}
+
+\subsection*{Co říct u státnic}
+
+Vícevrstvé neuronové sítě skládají více nelineárních transformací za sebou:
+\[
+h^{(\ell)}
+=
+\phi(W^{(\ell)}h^{(\ell-1)}+b^{(\ell)}).
+\]
+Díky tomu se mohou učit složité vztahy a hierarchické reprezentace dat. Hluboké učení je úspěšné hlavně díky
+velkým datům, GPU, lepším optimalizačním algoritmům, regularizaci a specializovaným architekturám.
+
+U obrázků se používají CNN, které využívají konvoluce, lokální propojení, sdílení parametrů a pooling.
+U sekvenčních dat se používají RNN, LSTM a GRU:
+\[
+h_t=f_h(W_hh_{t-1}+W_xx_t+b).
+\]
+Moderní jazykové a generativní modely stojí hlavně na transformerech a self-attention:
+\[
+\operatorname{Attention}(Q,K,V)
+=
+\operatorname{softmax}
+\left(
+\frac{QK^\top}{\sqrt{d_k}}
+\right)V.
+\]
+
+Hluboké modely se používají pro obraz, text, řeč, časové řady, fraud detection, doporučování nebo automatizaci
+business procesů. Prakticky je důležité nejen trénování, ale také příprava dat, validace, MLOps, nasazení,
+monitoring, škálování, bezpečnost a interpretovatelnost. Největší slabiny hlubokého učení jsou náročnost na
+data a výpočetní výkon, riziko přeučení, black-box povaha a potřeba kontroly biasu, driftu a právních/etických
+dopadů.
+
+\newpage

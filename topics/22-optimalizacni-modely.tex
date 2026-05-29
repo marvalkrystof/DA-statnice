@@ -1,0 +1,870 @@
+\section{Optimalizační modely pro podporu ekonomického rozhodování. Příklady typických úloh LP a MILP, heuristické optimalizační algoritmy}
+
+\subsection{Základní myšlenka optimalizace}
+
+Optimalizace slouží k tomu, abychom z množiny přípustných rozhodnutí vybrali takové, které je
+nejlepší vzhledem ke zvolenému kritériu. V ekonomii a managementu jde typicky o maximalizaci
+zisku, výnosu nebo užitku, případně minimalizaci nákladů, času, rizika, vzdálenosti či ztráty.
+
+Obecný optimalizační problém lze zapsat jako
+\[
+\begin{aligned}
+\min/\max \quad & f(x)\\
+\text{s.t.}\quad & g_i(x)\le 0,\quad i=1,\dots,m,\\
+& h_j(x)=0,\quad j=1,\dots,p,\\
+& x\in X.
+\end{aligned}
+\]
+
+Kde:
+\begin{itemize}
+    \item $x$ je vektor rozhodovacích proměnných,
+    \item $f(x)$ je účelová funkce,
+    \item $g_i(x)$ a $h_j(x)$ jsou omezení,
+    \item $X$ určuje typ proměnných, například spojité, celočíselné nebo binární.
+\end{itemize}
+
+Typický postup při tvorbě optimalizačního modelu:
+\[
+\text{reálný problém}
+\rightarrow
+\text{rozhodovací proměnné}
+\rightarrow
+\text{účelová funkce}
+\rightarrow
+\text{omezení}
+\rightarrow
+\text{výpočet a interpretace řešení}.
+\]
+
+Například firma může rozhodovat, kolik vyrobit jednotlivých produktů. Proměnné jsou vyráběná
+množství, účelová funkce je zisk a omezení vyjadřují dostupné zdroje, kapacity strojů nebo maximální
+poptávku.
+
+\subsection{Lineární programování}
+
+Lineární programování, zkráceně LP, řeší optimalizační úlohy, ve kterých je účelová funkce i všechna
+omezení lineární. Standardní maximalizační tvar je
+\[
+\begin{aligned}
+\max_x \quad & c^\top x\\
+\text{s.t.}\quad & Ax\le b,\\
+& x\ge 0.
+\end{aligned}
+\]
+
+Kde:
+\begin{itemize}
+    \item $c$ je vektor koeficientů účelové funkce, například jednotkových zisků,
+    \item $A$ je matice technologických nebo strukturálních koeficientů,
+    \item $b$ je vektor pravých stran, například dostupných kapacit,
+    \item $x$ je vektor rozhodovacích proměnných.
+\end{itemize}
+
+Nerovnosti lze převést na rovnosti pomocí doplňkových proměnných:
+\[
+Ax+s=b,\qquad s\ge 0.
+\]
+Proměnná $s_i$ říká, kolik zůstalo nevyužité kapacity v $i$-tém omezení. Pokud je $s_i=0$, dané
+omezení je aktivní; pokud je $s_i>0$, zdroj není plně využit.
+
+\subsubsection{Geometrická interpretace LP}
+
+Přípustná množina lineárního programu je průnik polorovin, tedy konvexní mnohostěn. Pro LP platí
+důležitá vlastnost:
+
+\[
+\text{pokud existuje optimální řešení, existuje také v některém vrcholu přípustné množiny.}
+\]
+
+Proto není nutné prohledávat všechny body přípustné množiny. Stačí se zaměřit na vrcholy, které
+odpovídají tzv. bazickým přípustným řešením.
+
+Možné koncové stavy LP:
+\begin{itemize}
+    \item jedno optimální řešení,
+    \item více optimálních řešení,
+    \item neomezené řešení,
+    \item žádné přípustné řešení.
+\end{itemize}
+
+\subsection{Bazické řešení a bazické přípustné řešení}
+
+Po převodu omezení do tvaru
+\[
+A'x=b,\qquad x\ge 0
+\]
+vybíráme určité proměnné jako bazické. Ostatní, nebazické proměnné, nastavíme na nulu.
+Pokud výsledné řešení splňuje nezápornost, jde o \textbf{bazické přípustné řešení}.
+
+Je-li v modelu po zavedení slack proměnných $n$ proměnných a $m$ omezení ve tvaru rovností,
+pak bázi tvoří $m$ lineárně nezávislých sloupců matice $A'$. Počet možných bází může být velmi
+velký:
+\[
+\binom{n}{m}.
+\]
+Proto by prosté vyzkoušení všech bazických řešení bylo pro větší úlohy nepraktické.
+
+\subsection{Simplexová metoda}
+
+Simplexová metoda je základní metoda řešení LP. Využívá fakt, že optimum LP leží v některém
+vrcholu přípustné množiny. Algoritmus tedy nepohybuje řešením náhodně uvnitř přípustné oblasti,
+ale přechází z jednoho bazického přípustného řešení do sousedního, přičemž v každém kroku zlepšuje
+hodnotu účelové funkce.
+
+Základní myšlenka:
+\[
+\text{vrchol}
+\rightarrow
+\text{sousední lepší vrchol}
+\rightarrow
+\cdots
+\rightarrow
+\text{optimální vrchol}.
+\]
+
+Pro úlohu
+\[
+\begin{aligned}
+\max_x \quad & c^\top x\\
+\text{s.t.}\quad & Ax\le b,\\
+& x\ge 0
+\end{aligned}
+\]
+po zavedení slack proměnných vytváříme počáteční simplexovou tabulku:
+\[
+\left[
+\begin{array}{ccc}
+A & I & b\\
+-c^\top & 0 & 0
+\end{array}
+\right].
+\]
+
+\subsubsection{Postup simplexového algoritmu}
+
+Pro maximalizační úlohu ve standardní tabulkové formě:
+
+\begin{enumerate}
+    \item Zkontrolujeme poslední řádek tabulky, tedy řádek účelové funkce.
+    \item Pokud v posledním řádku nejsou záporné koeficienty, aktuální řešení je optimální.
+    \item Pokud záporné koeficienty existují, vybereme vstupující proměnnou. Obvykle se bere sloupec
+    s nejvíce záporným koeficientem.
+    \item Tento sloupec se nazývá pivotní sloupec.
+    \item Pokud jsou všechny hodnoty v pivotním sloupci nekladné, úloha je neomezená.
+    \item Jinak provedeme poměrový test:
+    \[
+    \frac{b_i}{a_{ik}},\qquad a_{ik}>0.
+    \]
+    Řádek s nejmenším kladným poměrem určuje vystupující proměnnou.
+    \item Prvek v průniku pivotního řádku a pivotního sloupce je pivot.
+    \item Pomocí řádkových úprav převedeme pivotní sloupec na jednotkový sloupec.
+    \item Dostaneme novou bázi a nové bazické přípustné řešení.
+    \item Postup opakujeme.
+\end{enumerate}
+
+Intuitivně:
+\begin{itemize}
+    \item vstupující proměnná je proměnná, kterou se vyplatí začít vyrábět nebo využívat,
+    \item vystupující proměnná je proměnná, která se musí z báze odstranit, aby zůstala splněna omezení,
+    \item pivotní operace odpovídá přesunu do sousedního vrcholu přípustné množiny.
+\end{itemize}
+
+\subsubsection{Jednoduchý příklad LP}
+
+Firma vyrábí produkty $A$ a $B$:
+\[
+\begin{aligned}
+\max \quad & 2x_1+x_2\\
+\text{s.t.}\quad & x_1+2x_2\le 8,\\
+& x_1\le 6,\\
+& x_1,x_2\ge 0.
+\end{aligned}
+\]
+
+Po zavedení slack proměnných:
+\[
+\begin{aligned}
+x_1+2x_2+x_3&=8,\\
+x_1+x_4&=6.
+\end{aligned}
+\]
+
+Počáteční řešení je
+\[
+x=(0,0,8,6),
+\]
+tedy firma zatím nevyrábí nic, ale má nevyužité kapacity. Simplexová metoda postupně zjišťuje,
+který produkt se vyplatí zařadit do báze, a přepočítává řešení, dokud není dosaženo optima.
+
+\subsubsection{Poznámky ke simplexové metodě}
+
+\begin{itemize}
+    \item V nejhorším případě má simplexová metoda exponenciální složitost.
+    \item V praxi je však často velmi rychlá a efektivní.
+    \item Pokud není zřejmé počáteční bazické přípustné řešení, používá se dvoufázová simplexová metoda.
+    \item Revidovaná simplexová metoda neukládá celou tabulku, ale pracuje efektivněji s maticovou reprezentací báze.
+    \item Pro velké úlohy se používají i metody vnitřních bodů, které se nepohybují po hranici přípustné množiny,
+    ale uvnitř ní.
+\end{itemize}
+
+\subsection{Dualita a ekonomická interpretace}
+
+K primalní úloze
+\[
+\begin{aligned}
+(P)\quad \max_x \quad & c^\top x\\
+\text{s.t.}\quad & Ax\le b,\\
+& x\ge 0
+\end{aligned}
+\]
+existuje duální úloha
+\[
+\begin{aligned}
+(D)\quad \min_y \quad & b^\top y\\
+\text{s.t.}\quad & A^\top y\ge c,\\
+& y\ge 0.
+\end{aligned}
+\]
+
+Duální proměnné $y_i$ mají ekonomickou interpretaci jako \textbf{stínové ceny}. Stínová cena ukazuje,
+o kolik by se změnila optimální hodnota účelové funkce, pokud bychom zvýšili pravou stranu daného
+omezení o jednu jednotku:
+\[
+y_i^* \approx \frac{\partial z^*}{\partial b_i}.
+\]
+
+Například pokud je omezením počet hodin práce a stínová cena je $5$, znamená to, že jedna dodatečná
+hodina práce zvýší optimální zisk přibližně o $5$ jednotek. Tato interpretace platí jen v určitém
+intervalu změn, protože při větší změně se může změnit optimální báze.
+
+\subsubsection{Slabá a silná dualita}
+
+Slabá dualita říká, že pro každé přípustné řešení primalu a duálu platí
+\[
+c^\top x \le b^\top y.
+\]
+Duální úloha tedy poskytuje horní mez pro primalní maximalizační úlohu.
+
+Silná dualita říká, že pokud existuje optimální řešení, pak optimální hodnoty primalu a duálu jsou stejné:
+\[
+c^\top x^* = b^\top y^*.
+\]
+
+\subsection{Typické úlohy lineárního programování}
+
+\subsubsection{Výrobní plánování}
+
+Firma vyrábí produkty $j=1,\dots,n$ a využívá zdroje $i=1,\dots,m$:
+\[
+\begin{aligned}
+\max_x \quad & \sum_{j=1}^n p_jx_j\\
+\text{s.t.}\quad & \sum_{j=1}^n a_{ij}x_j\le b_i,\quad i=1,\dots,m,\\
+& x_j\ge 0.
+\end{aligned}
+\]
+
+Kde:
+\begin{itemize}
+    \item $x_j$ je množství produktu $j$,
+    \item $p_j$ je jednotkový zisk produktu $j$,
+    \item $a_{ij}$ je spotřeba zdroje $i$ na jednotku produktu $j$,
+    \item $b_i$ je dostupná kapacita zdroje $i$.
+\end{itemize}
+
+\subsubsection{Dopravní problém}
+
+Cílem je minimalizovat náklady přepravy ze skladů k odběratelům:
+\[
+\begin{aligned}
+\min_x \quad & \sum_i\sum_j c_{ij}x_{ij}\\
+\text{s.t.}\quad & \sum_j x_{ij}\le s_i,\quad \forall i,\\
+& \sum_i x_{ij}\ge d_j,\quad \forall j,\\
+& x_{ij}\ge 0.
+\end{aligned}
+\]
+
+\subsubsection{Směšovací a dietní úlohy}
+
+Cílem je najít nejlevnější kombinaci vstupů při splnění požadavků na složení:
+\[
+\begin{aligned}
+\min_x \quad & c^\top x\\
+\text{s.t.}\quad & Ax\ge q,\\
+& x\ge 0.
+\end{aligned}
+\]
+
+Použití:
+\begin{itemize}
+    \item krmné směsi,
+    \item energetický mix,
+    \item investiční portfolio,
+    \item plánování nákupu surovin.
+\end{itemize}
+
+\subsection{Celočíselné a smíšené celočíselné programování}
+
+Celočíselné lineární programování, zkráceně ILP, má lineární účelovou funkci a lineární omezení,
+ale některé proměnné musí být celočíselné:
+\[
+\begin{aligned}
+\max_x \quad & c^\top x\\
+\text{s.t.}\quad & Ax\le b,\\
+& x\in \mathbb{Z}^n.
+\end{aligned}
+\]
+
+Pokud jsou celočíselné pouze některé proměnné a ostatní jsou spojité, jde o smíšené celočíselné
+lineární programování, tedy MILP:
+\[
+\begin{aligned}
+\max_{x,y}\quad & c^\top x+d^\top y\\
+\text{s.t.}\quad & Ax+By\le b,\\
+& x\ge 0,\\
+& y\in \mathbb{Z}^p.
+\end{aligned}
+\]
+
+Zvlášť důležité jsou binární proměnné:
+\[
+y_j\in\{0,1\}.
+\]
+Ty reprezentují rozhodnutí typu ano/ne:
+\[
+y_j=
+\begin{cases}
+1, & \text{varianta se zvolí,}\\
+0, & \text{varianta se nezvolí.}
+\end{cases}
+\]
+
+\subsubsection{Proč nestačí zaokrouhlit LP řešení}
+
+U ILP nelze obecně vyřešit LP relaxaci a výsledek pouze zaokrouhlit. Důvody:
+\begin{itemize}
+    \item zaokrouhlené řešení může porušit omezení,
+    \item zaokrouhlené řešení může být přípustné, ale daleko od optima,
+    \item optimum LP relaxace často leží ve vrcholu, který není celočíselný.
+\end{itemize}
+
+Příklad: pokud omezení říká
+\[
+x_1+x_2\le 1
+\]
+a LP řešení je
+\[
+x_1=x_2=0.6,
+\]
+pak zaokrouhlení na
+\[
+x_1=x_2=1
+\]
+vede k porušení omezení.
+
+\subsection{LP relaxace a integrality gap}
+
+LP relaxace vznikne odstraněním celočíselných podmínek. Například:
+\[
+x_i\in\{0,1\}
+\quad\Rightarrow\quad
+0\le x_i\le 1.
+\]
+
+Pro maximalizační úlohu platí:
+\[
+z^*_{LP}\ge z^*_{ILP},
+\]
+protože LP relaxace má větší přípustnou množinu.
+
+Pro minimalizační úlohu platí:
+\[
+z^*_{LP}\le z^*_{ILP}.
+\]
+
+Při řešení ILP se pracuje s mezemi:
+\begin{itemize}
+    \item u minimalizace poskytuje LP relaxace dolní mez,
+    \item každé přípustné celočíselné řešení poskytuje horní mez,
+    \item u maximalizace je interpretace opačná.
+\end{itemize}
+
+Relativní mezera se často zapisuje jako
+\[
+gap=
+\frac{z_{UB}-z_{LB}}{|z_{UB}|},
+\]
+kde $z_{UB}$ je horní mez a $z_{LB}$ dolní mez. Pokud je mezera malá, lze řešení prakticky považovat
+za dostatečně dobré.
+
+\subsection{Branch-and-bound}
+
+Branch-and-bound je základní přesná metoda pro řešení ILP/MILP. Kombinuje řešení LP relaxací
+s postupným dělením problému na menší podproblémy.
+
+Postup pro maximalizační úlohu:
+\begin{enumerate}
+    \item Vyřešíme LP relaxaci původní úlohy.
+    \item Pokud je řešení celočíselné, je kandidátem na optimum.
+    \item Pokud řešení není celočíselné, vybereme neceločíselnou proměnnou $x_i^*$.
+    \item Provedeme větvení:
+    \[
+    x_i\le \lfloor x_i^*\rfloor,
+    \qquad
+    x_i\ge \lceil x_i^*\rceil.
+    \]
+    \item Vzniknou dva nové podproblémy.
+    \item Každý podproblém řešíme jako LP relaxaci.
+    \item Větev zahodíme, pokud:
+    \begin{itemize}
+        \item je nepřípustná,
+        \item její LP relaxace nemůže překonat nejlepší dosud nalezené celočíselné řešení,
+        \item její LP řešení je celočíselné a bylo vyhodnoceno.
+    \end{itemize}
+\end{enumerate}
+
+Důležitý pojem je \textbf{incumbent}, tedy nejlepší dosud nalezené celočíselné řešení. Branch-and-bound
+systematicky zmenšuje prostor řešení, dokud neprokáže optimálnost incumbentu nebo nedosáhne
+požadované mezery.
+
+\subsection{Cutting planes}
+
+Metoda cutting planes řeší ILP pomocí dodatečných lineárních omezení, tzv. řezů. Řez je omezení,
+které odstraní část přípustné množiny LP relaxace, ale neodstraní žádné přípustné celočíselné řešení.
+
+Formálně: nechť
+\[
+P_R=\{x\in\mathbb{R}^n:Ax\le b\}
+\]
+je relaxovaná přípustná množina a
+\[
+P_I=\{x\in\mathbb{Z}^n:Ax\le b\}
+\]
+je množina celočíselných řešení. Řez má tvar
+\[
+\alpha^\top x\le \beta
+\]
+a musí splňovat:
+\[
+\alpha^\top x\le \beta \quad \text{pro všechna } x\in P_I,
+\]
+ale současně má být porušen aktuálním neceločíselným LP řešením $x^R$:
+\[
+\alpha^\top x^R> \beta.
+\]
+
+Tím se aktuální neceločíselné řešení odřízne, ale všechna celočíselná řešení zůstanou zachována.
+
+\subsubsection{Algoritmus cutting plane}
+
+\begin{enumerate}
+    \item Vyřešíme LP relaxaci.
+    \item Pokud je optimální řešení celočíselné, končíme.
+    \item Pokud je řešení neceločíselné, najdeme platný řez, který jej odřízne.
+    \item Řez přidáme do modelu jako nové omezení.
+    \item Znovu řešíme LP relaxaci.
+\end{enumerate}
+
+Intuice:
+\[
+\text{velká LP oblast}
+\rightarrow
+\text{přidání řezů}
+\rightarrow
+\text{menší LP oblast}
+\rightarrow
+\text{vrcholy blíže celočíselným řešením}.
+\]
+
+Po konečném počtu vhodných řezů se může stát, že všechny vrcholy relaxované množiny jsou
+celočíselné. Potom řešení LP poskytne i řešení ILP.
+
+\subsubsection{Gomoryho řezy}
+
+Gomoryho řezy jsou jedním ze známých způsobů generování řezů. Vycházejí ze simplexové tabulky.
+Pokud má některá bazická proměnná neceločíselnou hodnotu, lze z jejího řádku vytvořit omezení,
+které aktuální neceločíselné řešení odřízne.
+
+Uvažujme řádek simplexové tabulky:
+\[
+x_{B_i}=b_i-\sum_{j\in N}a_{ij}x_j,
+\]
+kde $b_i$ není celé číslo. Označme zlomkovou část čísla jako
+\[
+\{r\}=r-\lfloor r\rfloor.
+\]
+Potom lze zapsat Gomoryho řez například ve tvaru
+\[
+\sum_{j\in N}\{a_{ij}\}x_j \ge \{b_i\}.
+\]
+
+Tento řez:
+\begin{itemize}
+    \item je platný pro všechna celočíselná řešení,
+    \item odřízne aktuální zlomkové řešení LP relaxace,
+    \item lze relativně efektivně generovat ze simplexové tabulky.
+\end{itemize}
+
+V praxi se samotné cutting planes často kombinují s branch-and-bound. Tato kombinace se nazývá
+\textbf{branch-and-cut}. Moderní MILP řešiče používají právě tento princip: v uzlech větvicího stromu
+řeší LP relaxace, přidávají řezy a teprve potom větví dál.
+
+\subsubsection{Řezy v TSP}
+
+U problému obchodního cestujícího se řezy používají například k eliminaci podcyklů. Pokud $S$ je
+podmnožina měst, pak nesmí vzniknout samostatný cyklus pouze uvnitř $S$:
+\[
+\sum_{\substack{i,j\in S\\ i<j}}x_{ij}\le |S|-1.
+\]
+
+Tato omezení se nazývají subtour elimination constraints. Protože jich je exponenciálně mnoho,
+nepřidávají se všechna najednou. Řešič nejprve vyřeší relaxovanou úlohu a potom přidává pouze ta
+omezení, která jsou aktuálním řešením porušena.
+
+\subsection{Typické úlohy MILP}
+
+\subsubsection{Batohový problém}
+
+Máme položky s hodnotou $p_i$ a váhou $w_i$. Chceme vybrat nejhodnotnější kombinaci, která se
+vejde do kapacity $W$:
+\[
+\begin{aligned}
+\max_x \quad & \sum_{i=1}^n p_ix_i\\
+\text{s.t.}\quad & \sum_{i=1}^n w_ix_i\le W,\\
+& x_i\in\{0,1\}.
+\end{aligned}
+\]
+
+Proměnná $x_i=1$ znamená, že položku vybereme. Ekonomická interpretace může být výběr projektů
+při omezeném rozpočtu.
+
+\subsubsection{Lokalizační úloha se fixními náklady}
+
+Rozhodujeme, která zařízení otevřít a jak k nim přiřadit zákazníky:
+\[
+\begin{aligned}
+\min_{x,y}\quad
+& \sum_j f_jy_j+\sum_i\sum_j c_{ij}x_{ij}\\
+\text{s.t.}\quad
+& \sum_j x_{ij}=1,\quad \forall i,\\
+& x_{ij}\le y_j,\quad \forall i,j,\\
+& y_j\in\{0,1\},\\
+& x_{ij}\ge 0.
+\end{aligned}
+\]
+
+Kde:
+\begin{itemize}
+    \item $y_j=1$ znamená, že zařízení $j$ otevřeme,
+    \item $x_{ij}$ vyjadřuje přiřazení zákazníka $i$ k zařízení $j$,
+    \item $f_j$ jsou fixní náklady otevření zařízení,
+    \item $c_{ij}$ jsou náklady obsluhy zákazníka.
+\end{itemize}
+
+Omezení
+\[
+x_{ij}\le y_j
+\]
+zajišťuje, že zákazníka nelze přiřadit k neotevřenému zařízení.
+
+\subsubsection{Modelování logických podmínek pomocí Big-M}
+
+Binární proměnné umožňují modelovat logická rozhodnutí. Například pokud výroba $x$ může probíhat
+pouze tehdy, pokud je aktivována varianta $y$, lze použít:
+\[
+x\le My,\qquad y\in\{0,1\}.
+\]
+
+Pokud $y=0$, potom $x\le 0$ a výroba neprobíhá. Pokud $y=1$, potom $x\le M$ a výroba je povolena.
+Konstanta $M$ má být dostatečně velká, ale ne zbytečně obrovská, protože příliš velké $M$ zhoršuje
+numerickou stabilitu a kvalitu LP relaxace.
+
+\subsection{Kombinatorická optimalizace}
+
+Kombinatorická optimalizace hledá nejlepší objekt z konečné množiny objektů. Typicky jde o cesty,
+cykly, množiny hran, rozvrhy nebo přiřazení. Často se používá v grafových úlohách.
+
+\subsubsection{Nejkratší cesta}
+
+Máme graf $G=(V,A)$ a délky hran $c_{ij}$. Chceme najít nejkratší cestu ze zdroje $s$ do cíle $t$:
+\[
+\min \sum_{(i,j)\in A} c_{ij}x_{ij}.
+\]
+
+Toková formulace:
+\[
+\sum_{j:(i,j)\in A}x_{ij}
+-
+\sum_{j:(j,i)\in A}x_{ji}
+=
+\begin{cases}
+1, & i=s,\\
+-1, & i=t,\\
+0, & \text{jinak.}
+\end{cases}
+\]
+
+Použití:
+\begin{itemize}
+    \item logistika,
+    \item navigace,
+    \item routing,
+    \item plánování toku materiálu.
+\end{itemize}
+
+\subsubsection{Minimální kostra grafu}
+
+Máme neorientovaný souvislý graf $G=(V,E)$ a chceme propojit všechny uzly s minimální celkovou
+vahou bez vytvoření cyklu:
+\[
+\min \sum_{e\in E} w_ex_e.
+\]
+
+Základní podmínky:
+\[
+\sum_{e\in E}x_e=|V|-1,
+\]
+\[
+\sum_{e\in E(S)}x_e\le |S|-1,\qquad \forall S\subseteq V.
+\]
+
+Interpretace:
+\begin{itemize}
+    \item návrh nejlevnější sítě,
+    \item propojení poboček,
+    \item návrh komunikační nebo distribuční infrastruktury.
+\end{itemize}
+
+\subsubsection{Problém obchodního cestujícího}
+
+Problém obchodního cestujícího, TSP, hledá nejkratší cyklus, který navštíví každé město právě jednou
+a vrátí se do výchozího města.
+
+Pro symetrický TSP:
+\[
+\begin{aligned}
+\min_x \quad & \sum_{i<j}d_{ij}x_{ij}\\
+\text{s.t.}\quad
+& \sum_{j<i}x_{ji}+\sum_{j>i}x_{ij}=2,\quad \forall i\in V,\\
+& \sum_{\substack{i,j\in S\\ i<j}}x_{ij}\le |S|-1,\quad \forall S\subset V,\; 3\le |S|\le |V|-1,\\
+& x_{ij}\in\{0,1\}.
+\end{aligned}
+\]
+
+První skupina omezení říká, že do každého města vstupují právě dvě hrany. Druhá skupina omezení
+eliminuje podcykly.
+
+TSP je důležitý, protože je jednoduchý na formulaci, ale výpočetně náročný. Slouží jako typický příklad
+NP-těžké úlohy a testovací problém pro obecné optimalizační metody.
+
+\subsection{Heuristiky a metaheuristiky}
+
+U velkých ILP/MILP a kombinatorických úloh může být přesné nalezení optima příliš časově náročné.
+Proto se používají heuristiky a metaheuristiky.
+
+\subsubsection{Heuristika}
+
+Heuristika je postup, který hledá dobré přípustné řešení, ale obvykle negarantuje nalezení globálního
+optima. Může být:
+\begin{itemize}
+    \item konstruktivní -- staví řešení od začátku,
+    \item zlepšovací -- začíná s existujícím řešením a snaží se ho vylepšit.
+\end{itemize}
+
+U minimalizační úlohy poskytuje každé přípustné heuristické řešení horní mez:
+\[
+z_{UB}=z(x^{heur}).
+\]
+
+\subsubsection{Metaheuristika}
+
+Metaheuristika je obecnější rámec, který není vázán jen na jeden konkrétní typ problému.
+Příklady:
+\begin{itemize}
+    \item lokální hledání,
+    \item simulované žíhání,
+    \item genetické algoritmy,
+    \item ant colony optimization.
+\end{itemize}
+
+Výhoda metaheuristik:
+\begin{itemize}
+    \item použitelnost pro mnoho typů úloh,
+    \item schopnost najít dobré řešení u velkých problémů,
+    \item možnost pracovat i tam, kde přesné metody selhávají časově.
+\end{itemize}
+
+Nevýhoda:
+\begin{itemize}
+    \item bez záruky globálního optima,
+    \item výsledek závisí na parametrech a počátečním řešení,
+    \item často je vhodné provádět více běhů algoritmu.
+\end{itemize}
+
+\subsection{Lokální hledání}
+
+Lokální hledání vychází z aktuálního řešení a zkoumá jeho okolí:
+\[
+x^{(t+1)}\in N(x^{(t)}).
+\]
+
+Okolí $N(x)$ je množina řešení, která se od aktuálního řešení liší jen malou změnou.
+
+Příklady okolí:
+\begin{itemize}
+    \item u TSP prohození dvou hran,
+    \item u binárního programu změna jedné proměnné z $0$ na $1$ nebo opačně,
+    \item u rozvrhování prohození dvou úloh.
+\end{itemize}
+
+Postup:
+\begin{enumerate}
+    \item začneme z nějakého přípustného řešení,
+    \item najdeme lepší řešení v jeho okolí,
+    \item přesuneme se do něj,
+    \item opakujeme, dokud nelze najít zlepšení.
+\end{enumerate}
+
+Problémem je lokální optimum. Lokální optimum je řešení, které je nejlepší ve svém okolí, ale nemusí být
+globálně nejlepší.
+
+\subsection{Simulované žíhání}
+
+Simulované žíhání rozšiřuje lokální hledání tím, že občas přijme i horší řešení. To umožňuje uniknout
+z lokálního optima.
+
+Pro minimalizační úlohu označme:
+\[
+\Delta=f(x')-f(x).
+\]
+
+Nové řešení $x'$ přijmeme, pokud:
+\[
+\Delta<0,
+\]
+nebo s pravděpodobností
+\[
+P=\exp\left(-\frac{\Delta}{T}\right),
+\]
+kde $T$ je teplota.
+
+Interpretace:
+\begin{itemize}
+    \item při vysoké teplotě algoritmus více experimentuje,
+    \item při nízké teplotě se chová podobně jako lokální hledání,
+    \item postupné snižování teploty se nazývá cooling schedule.
+\end{itemize}
+
+\subsection{Genetický algoritmus}
+
+Genetický algoritmus je inspirován biologickou evolucí. Nepracuje s jedním řešením, ale s celou
+populací řešení.
+
+Pojmy:
+\begin{itemize}
+    \item jedinec = jedno kandidátní řešení,
+    \item populace = množina kandidátních řešení,
+    \item fitness = kvalita řešení,
+    \item generace = jedna iterace vývoje populace.
+\end{itemize}
+
+Základní kroky:
+\begin{enumerate}
+    \item inicializace počáteční populace,
+    \item výpočet fitness,
+    \item výběr rodičů,
+    \item křížení,
+    \item mutace,
+    \item vytvoření nové generace,
+    \item elitismus -- zachování nejlepších řešení.
+\end{enumerate}
+
+Mutace udržuje diverzitu populace. Křížení kombinuje vlastnosti dvou dobrých řešení.
+Elitismus zajišťuje, že se nejlepší dosud nalezené řešení neztratí.
+
+\subsection{Ant Colony Optimization}
+
+Ant colony optimization je metaheuristika inspirovaná chováním mravenců. Mravenci při hledání potravy
+zanechávají feromonové stopy. Cesty, které vedou k dobrým řešením, jsou postupně posilovány.
+
+U TSP si lze představit, že každý umělý mravenec postupně konstruuje trasu. Pravděpodobnost přechodu
+z města $i$ do města $j$ může být úměrná:
+\[
+p_{ij}\propto \tau_{ij}^{\alpha}\eta_{ij}^{\beta},
+\]
+kde:
+\begin{itemize}
+    \item $\tau_{ij}$ je množství feromonu na hraně,
+    \item $\eta_{ij}$ je heuristická informace, například $\eta_{ij}=1/d_{ij}$,
+    \item $\alpha$ a $\beta$ určují váhu feromonu a heuristiky.
+\end{itemize}
+
+Aktualizace feromonu:
+\[
+\tau_{ij}\leftarrow (1-\rho)\tau_{ij}+\Delta\tau_{ij},
+\]
+kde $\rho$ je míra vypařování feromonu. Vypařování brání tomu, aby algoritmus příliš brzy zafixoval
+špatnou cestu.
+
+\subsection{Penalizace omezení}
+
+Pokud je obtížné pracovat přímo s omezeními, lze je zahrnout do účelové funkce pomocí penalizace.
+Pro problém
+\[
+\min f(x)
+\quad \text{s.t.}\quad
+g_i(x)\le 0
+\]
+lze vytvořit penalizovanou funkci:
+\[
+F(x)=f(x)+c\sum_{i=1}^m \max\{0,g_i(x)\}^2.
+\]
+
+Pokud je omezení splněno, člen $\max\{0,g_i(x)\}$ je nulový. Pokud je omezení porušeno, účelová
+funkce se zhorší. Parametr $c$ určuje sílu penalizace.
+
+\subsection{Gradientní metody}
+
+U spojitých nelineárních úloh lze použít numerické metody. Gradientní sestup aktualizuje řešení podle
+vzorce:
+\[
+x^{new}=x^{old}-\eta\nabla f(x^{old}),
+\]
+kde:
+\begin{itemize}
+    \item $\nabla f(x)$ je gradient,
+    \item $\eta$ je velikost kroku.
+\end{itemize}
+
+Gradient ukazuje směr největšího růstu funkce, proto při minimalizaci postupujeme opačným směrem.
+Příliš malý krok vede k pomalé konvergenci, příliš velký krok může způsobit oscilace nebo divergenci.
+
+Newtonova metoda navíc využívá Hessovu matici:
+\[
+H(f)=
+\left(
+\frac{\partial^2 f}{\partial x_i\partial x_j}
+\right).
+\]
+Díky informaci o zakřivení může konvergovat rychleji, ale je výpočetně náročnější.
+
+\subsection{Shrnutí ke zkoušce}
+
+\begin{itemize}
+    \item Optimalizační model má rozhodovací proměnné, účelovou funkci a omezení.
+    \item LP má lineární účelovou funkci a lineární omezení.
+    \item Přípustná množina LP je konvexní a optimum, pokud existuje, leží ve vrcholu.
+    \item Simplexová metoda postupuje mezi bazickými přípustnými řešeními a zlepšuje účelovou funkci.
+    \item Duální proměnné LP lze interpretovat jako stínové ceny zdrojů.
+    \item ILP/MILP přidává celočíselné a binární proměnné, čímž umožňuje modelovat výběr, fixní náklady,
+    logické podmínky a kombinatorické struktury.
+    \item LP relaxace odstraňuje celočíselnost a poskytuje mez pro původní celočíselnou úlohu.
+    \item Branch-and-bound řeší ILP pomocí LP relaxací, větvení a ořezávání neperspektivních větví.
+    \item Cutting planes přidávají platná omezení, která odříznou neceločíselné LP řešení, ale zachovají všechna
+    celočíselná řešení.
+    \item Moderní řešiče často kombinují branch-and-bound a cutting planes do metody branch-and-cut.
+    \item Typické úlohy: výrobní plánování, dopravní problém, batoh, lokalizace zařízení, nejkratší cesta,
+    minimální kostra a TSP.
+    \item Heuristiky a metaheuristiky hledají dobrá řešení bez záruky optima, ale jsou prakticky důležité u velkých
+    a výpočetně těžkých úloh.
+\end{itemize}

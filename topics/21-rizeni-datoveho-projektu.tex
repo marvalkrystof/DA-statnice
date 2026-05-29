@@ -1,0 +1,68 @@
+\section{Řízení datového projektu. Životní cyklus, metodiky a standardy, organizace projektu a nástroje pro podporu řízení}
+
+\subsection*{Datový projekt jako projekt dobývání znalostí}
+Dodaný materiál nemá samostatnou kapitolu „řízení datového projektu“, ale obsahuje CRISP-DM, metodiky budování IS, životní cyklus aplikace, agilní metodiky, Scrum a části o organizaci analytické práce. Pro datovou analytiku je nejlépe použitelný CRISP-DM.
+
+Datový projekt typicky nezačíná modelem, ale problémem zadavatele. Cílem je převést business otázku na analytickou úlohu, získat a připravit data, vytvořit výstup nebo model, vyhodnotit ho a zajistit využití v praxi.
+
+\subsection*{Životní cyklus podle CRISP-DM}
+CRISP-DM lze použít jako hlavní kostru řízení datového projektu:
+
+\begin{enumerate}
+  \item \term{Porozumění businessu} - domluvit cíl, očekávání, kritéria úspěchu, omezení, cenu analýzy a rizika. V materiálech je zdůrazněna komunikace s vlastníkem dat a doménovým expertem.
+  \item \term{Porozumění datům} - zjistit dostupná data, jejich strukturu, rozsah, formát, význam polí, granularitu a kvalitu.
+  \item \term{Příprava dat} - čistit data, řešit chybějící hodnoty, duplicity, chybná data, transformovat formáty, diskretizovat, vytvářet odvozené proměnné a doplňovat externí data.
+  \item \term{Modelování} - vybrat analytické metody odpovídající cíli a povaze dat. Modelování je jen jedna část projektu, ne celý projekt.
+  \item \term{Vyhodnocení} - posoudit, zda výsledky odpovídají business cíli, zda jsou srozumitelné a důvěryhodné.
+  \item \term{Nasazení / využití} - předat výstupy, zapracovat do rozhodování, reportingu, procesu nebo aplikace.
+\end{enumerate}
+
+Materiály uvádějí, že příprava dat a komunikace se zadavatelem jsou velmi pracné části. Samotné modelování může tvořit menší část práce než čištění, pochopení problému a interpretace.
+
+\subsection*{Organizace projektu a role}
+Z materiálů k MMDIS a projektům lze odvodit role použitelné i pro datový projekt:
+\begin{itemize}
+  \item \term{zadavatel / sponzor} - určuje smysl projektu, rozhoduje o zdrojích a očekávaném přínosu;
+  \item \term{vlastník business procesu} - zná proces, ve kterém mají být výsledky použity;
+  \item \term{vlastník dat} - odpovídá za dostupnost a význam dat;
+  \item \term{doménový expert} - pomáhá interpretovat proměnné a výsledky;
+  \item \term{datový analytik / data scientist} - provádí analýzu, modelování a interpretaci;
+  \item \term{datový inženýr} - připravuje datové pipeline, integraci a úložiště;
+  \item \term{uživatel výstupu} - používá report, dashboard, model nebo doporučení.
+\end{itemize}
+
+Důležitá je průběžná komunikace. Materiály u CRISP-DM zdůrazňují budování důvěry vlastníka dat a doménového experta, protože bez důvěry se výsledky nemusí použít.
+
+\subsection*{Metodiky řízení: rigorózní a agilní přístup}
+Materiály rozlišují rigorózní a agilní metodiky. Pro datový projekt je užitečné znát rozdíl.
+
+\term{Rigorózní metodiky} předpokládají, že procesy lze popsat, plánovat, řídit a měřit. Mají více dokumentace, formalit a předem definovaných kroků. Hodí se pro stabilnější prostředí, větší projekty a situace s nutností silné kontroly.
+
+\term{Agilní metodiky} kladou důraz na fungující výstup, častou komunikaci, reakci na změnu, spolupráci se zákazníkem, krátké iterace a samoorganizující se týmy. V datových projektech se hodí, protože data i požadavky se často během práce zpřesňují.
+
+Scrum lze popsat jako rámec s Product Ownerem, týmem a Scrum Masterem. Práce probíhá ve sprintech, na začátku se plánuje sprint backlog, každý den probíhá krátká porada a na konci sprintu review a retrospektiva.
+
+\subsection*{Standardy a výstupy}
+Z dodaných materiálů lze jako standard pro data mining uvést CRISP-DM. Dále materiály uvádějí metodiky IS/ICT a IT governance rámce jako ITIL a COBIT, ale ty jsou pro datový projekt spíše doplňkové.
+
+Typické výstupy datového projektu:
+\begin{itemize}
+  \item zadání a business cíle;
+  \item popis dat a datových zdrojů;
+  \item datový slovník;
+  \item dokumentace čištění a transformací;
+  \item analytický dataset;
+  \item model nebo report;
+  \item vyhodnocení kvality modelu;
+  \item doporučení a plán využití výsledků.
+\end{itemize}
+
+\todohead
+\begin{itemize}
+  \item Doplnit standardy a metodiky mimo CRISP-DM: SEMMA, TDSP, případně DAMA-DMBOK pro data management.
+  \item Doplnit nástroje řízení projektu: Jira, Trello, MS Project, Git, GitLab/GitHub, MLflow, DVC, Airflow.
+  \item Doplnit MLOps a životní cyklus modelu po nasazení: monitoring, drift, retraining, verzování dat a modelů.
+  \item Doplnit rizika datového projektu: nedostupná data, nízká kvalita, nejasný cíl, právní omezení, nepřijetí uživateli.
+\end{itemize}
+
+\newpage

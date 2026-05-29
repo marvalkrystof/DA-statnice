@@ -1,0 +1,608 @@
+\section{Strojové učení. Druhy úloh strojového učení, klasifikace algoritmů, dostupné nástroje}
+
+
+\subsection*{Vymezení strojového učení}
+
+Strojové učení je oblast umělé inteligence, ve které se systém učí ze vzorových dat a na jejich základě
+zlepšuje své rozhodování, predikce nebo rozpoznávání vzorů. Rozdíl proti klasickému programování je v tom,
+že pravidla nejsou plně ručně naprogramována, ale jsou odhadnuta z dat.
+
+Typicky máme:
+\[
+X = (x_1,\ldots,x_p)
+\]
+jako vstupní atributy, prediktory nebo features, a u učení s učitelem také cílovou proměnnou:
+\[
+y.
+\]
+
+Cílem modelu je naučit se funkci:
+\[
+\hat{f}: X \rightarrow y,
+\]
+která dobře funguje nejen na trénovacích datech, ale hlavně na nových datech.
+
+\paragraph{Intuice.}
+U klasického programování řekneme počítači přesná pravidla. U strojového učení mu dáme příklady a algoritmus
+se pokusí pravidla najít sám. Například místo ruční definice, co je spam, model dostane mnoho označených
+e-mailů a učí se, jaké vlastnosti se spamem souvisí.
+
+\subsection*{Pattern recognition a data mining}
+
+V materiálech se objevuje pojem \term{pattern recognition}, tedy rozpoznávání vzorů. Na vstupu jsou surová
+data a na výstupu je akce, klasifikace nebo doporučení podle nalezených vzorů.
+
+Příklady:
+\begin{itemize}
+    \item detekce podvodné platby,
+    \item rozpoznávání řeči nebo obrazu,
+    \item klasifikace zákazníků,
+    \item predikce spotřeby elektřiny,
+    \item analýza clickstreamů v e-shopu,
+    \item text mining.
+\end{itemize}
+
+\term{Data mining} neboli dobývání znalostí z databází je proces hledání netriviálních, potenciálně
+užitečných a srozumitelných vztahů v rozsáhlých datech. V praxi je silně propojen s datovými sklady,
+datovou kvalitou, business znalostí a interpretací výsledků.
+
+\subsection*{Základní druhy úloh strojového učení}
+
+\subsubsection*{Učení s učitelem}
+
+Učení s učitelem má k dispozici trénovací data:
+\[
+\{(x_i,y_i)\}_{i=1}^n.
+\]
+
+U každého objektu známe cílovou proměnnou $y_i$. Model se učí vztah mezi vstupy $x_i$ a výstupem $y_i$.
+
+\paragraph{Klasifikace.}
+Cílová proměnná je kategoriální:
+\[
+y_i \in \{1,\ldots,K\}.
+\]
+
+Příklady:
+\begin{itemize}
+    \item schválit / neschválit úvěr,
+    \item spam / ne-spam,
+    \item zákazník odejde / neodejde,
+    \item diagnóza pacienta,
+    \item segment zákazníka.
+\end{itemize}
+
+\paragraph{Regrese.}
+Cílová proměnná je číselná:
+\[
+y_i \in \mathbb{R}.
+\]
+
+Příklady:
+\begin{itemize}
+    \item predikce ceny nemovitosti,
+    \item predikce spotřeby energie,
+    \item odhad tržeb,
+    \item predikce pojistných nákladů.
+\end{itemize}
+
+\subsubsection*{Učení bez učitele}
+
+Učení bez učitele nemá cílovou proměnnou. Máme pouze:
+\[
+\{x_i\}_{i=1}^n.
+\]
+
+Cílem je najít strukturu v datech.
+
+Typické úlohy:
+\begin{itemize}
+    \item \term{shlukování} -- hledání skupin podobných objektů,
+    \item \term{asociační pravidla} -- hledání souvislostí mezi položkami,
+    \item \term{redukce dimenze} -- PCA, autoenkodéry,
+    \item \term{detekce anomálií} -- hledání neobvyklých pozorování.
+\end{itemize}
+
+\paragraph{Příklad.}
+U zákazníků neznáme předem segmenty. Shlukovací algoritmus se pokusí najít skupiny zákazníků podle podobného
+chování, nákupů nebo demografie.
+
+\subsubsection*{Doporučování}
+
+Doporučovací systémy predikují, jaké položky by uživatele mohly zajímat. V materiálech se objevuje
+\term{collaborative filtering}, například doporučování filmů podle matice uživatel--položka.
+
+Typická vstupní matice:
+\[
+R =
+\begin{pmatrix}
+r_{11} & r_{12} & \cdots & r_{1m}\\
+r_{21} & r_{22} & \cdots & r_{2m}\\
+\vdots & \vdots & \ddots & \vdots\\
+r_{n1} & r_{n2} & \cdots & r_{nm}
+\end{pmatrix},
+\]
+kde $r_{ij}$ je hodnocení položky $j$ uživatelem $i$.
+
+Jedna možnost je rozklad:
+\[
+R \approx U \Sigma V^\top,
+\]
+tedy singulární rozklad, který hledá latentní faktory uživatelů a položek.
+
+\subsubsection*{Detekce anomálií}
+
+Detekce anomálií hledá pozorování, která se výrazně liší od běžných dat. Může být:
+\begin{itemize}
+    \item supervised, pokud máme označené podvody/anomálie,
+    \item unsupervised, pokud označení nemáme.
+\end{itemize}
+
+Příklad z praxe je detekce podvodných plateb. Pokud není k dispozici dostatek označených podvodů, lze použít
+například \term{Isolation Forest}. Ten izoluje neobvyklé body pomocí náhodných stromů; anomálie bývají
+izolovány menším počtem dělení.
+
+\subsection*{Klasifikace algoritmů}
+
+\subsubsection*{Podle typu úlohy}
+
+\begin{itemize}
+    \item \textbf{Klasifikační algoritmy:}
+    rozhodovací stromy, logistická regrese, k-NN, Naive Bayes, SVM, random forest, boosting,
+    neuronové sítě.
+    
+    \item \textbf{Regresní algoritmy:}
+    lineární regrese, regresní stromy, random forest regressor, gradient boosting regressor,
+    support vector regression, neuronové sítě.
+    
+    \item \textbf{Shlukovací algoritmy:}
+    k-means, hierarchické shlukování, DBSCAN, aglomerativní metody.
+    
+    \item \textbf{Asociační pravidla:}
+    Apriori, FP-Growth, GUHA, 4FT-Miner.
+    
+    \item \textbf{Redukce dimenze:}
+    PCA, SVD, t-SNE, UMAP, autoenkodéry.
+\end{itemize}
+
+\subsubsection*{Podle interpretovatelnosti}
+
+\begin{itemize}
+    \item \textbf{White-box modely:}
+    lineární/logistická regrese, malé rozhodovací stromy, pravidla, rozhodovací tabulky.
+    
+    \item \textbf{Black-box modely:}
+    random forest, gradient boosting, SVM s nelineárním kernelem, neuronové sítě.
+\end{itemize}
+
+White-box model je srozumitelnější, ale nemusí mít nejlepší predikční výkon. Black-box model může být přesnější,
+ale často vyžaduje dodatečné vysvětlovací metody, například LIME, SHAP nebo parciální závislosti.
+
+\paragraph{No-Free-Lunch princip.}
+Neexistuje jeden algoritmus, který by byl nejlepší pro všechny problémy. Algoritmus se vybírá podle cíle,
+povahy dat, velikosti datasetu, požadavků na interpretaci, nákladů chyb a výpočetních omezení.
+
+\subsection*{Vybrané algoritmy}
+
+\subsubsection*{Rozhodovací strom}
+
+Rozhodovací strom rozděluje data pomocí pravidel typu:
+\[
+x_j \leq c.
+\]
+
+Výsledkem je strom, jehož listy obsahují predikci třídy nebo hodnoty. Výhodou je vysoká interpretovatelnost.
+Nevýhodou je sklon k přeučení.
+
+\subsubsection*{k-nearest neighbours}
+
+k-NN klasifikuje nový objekt podle nejbližších trénovacích objektů. Pro nový objekt $x$ najdeme $k$ nejbližších
+sousedů a zvolíme nejčastější třídu:
+\[
+\hat{y}(x)=\operatorname{mode}\{y_i: x_i \in N_k(x)\}.
+\]
+
+Typická vzdálenost pro numerická data:
+\[
+d(x,z)=\sqrt{\sum_{j=1}^p (x_j-z_j)^2}.
+\]
+
+Výhody:
+\begin{itemize}
+    \item jednoduchý princip,
+    \item žádný silný předpoklad o tvaru rozhodovací hranice,
+    \item přirozená lokální interpretace přes podobné příklady.
+\end{itemize}
+
+Nevýhody:
+\begin{itemize}
+    \item citlivost na škálování proměnných,
+    \item vysoká paměťová a výpočetní náročnost při predikci,
+    \item curse of dimensionality: ve vysoké dimenzi se vzdálenosti stávají méně informativní.
+\end{itemize}
+
+\subsubsection*{Naive Bayes}
+
+Naive Bayes vychází z Bayesovy věty:
+\[
+P(c|x)=\frac{P(x|c)P(c)}{P(x)}.
+\]
+
+Pro klasifikaci stačí maximalizovat čitatel:
+\[
+\hat{c}
+=
+\underset{c}{\operatorname{argmax}}
+\,
+P(c)P(x|c).
+\]
+
+Protože $x=(x_1,\ldots,x_p)$ může mít mnoho atributů, Naive Bayes zavádí zjednodušující předpoklad
+podmíněné nezávislosti:
+\[
+P(x|c)=\prod_{j=1}^p P(x_j|c).
+\]
+
+Potom:
+\[
+\hat{c}
+=
+\underset{c}{\operatorname{argmax}}
+\,
+P(c)\prod_{j=1}^p P(x_j|c).
+\]
+
+Je „naivní“, protože atributy obvykle nezávislé nejsou. Přesto často funguje dobře, hlavně v textové
+klasifikaci.
+
+\paragraph{Laplace correction.}
+Pokud se některá kombinace ve trénovacích datech nevyskytne, pravděpodobnost by byla nulová. Proto se používá
+vyhlazení:
+\[
+\hat{P}(x_j=a|c)=
+\frac{n_{a,c}+\alpha}{n_c+\alpha m},
+\]
+kde $m$ je počet možných hodnot atributu a $\alpha$ je obvykle 1.
+
+\subsubsection*{SVM}
+
+Support Vector Machine hledá nadrovinu, která odděluje třídy a maximalizuje margin:
+\[
+w^\top x + b = 0.
+\]
+
+U lineárně separovatelných dat:
+\[
+y_i(w^\top x_i+b)\geq 1.
+\]
+
+Optimalizační úloha hard-margin SVM:
+\[
+\min_{w,b}\frac{1}{2}\|w\|^2
+\quad
+\text{s.t.}
+\quad
+y_i(w^\top x_i+b)\geq 1.
+\]
+
+Šířka marginu je:
+\[
+\frac{2}{\|w\|}.
+\]
+
+U neseparovatelných dat se používá soft-margin SVM se slack proměnnými:
+\[
+\min_{w,b,\xi}
+\frac{1}{2}\|w\|^2 + C\sum_{i=1}^n \xi_i
+\]
+\[
+y_i(w^\top x_i+b)\geq 1-\xi_i,
+\qquad
+\xi_i\geq 0.
+\]
+
+Parametr $C$ řídí kompromis mezi širokým marginem a chybami klasifikace.
+
+Pro nelineární data lze použít kernel:
+\[
+K(x_i,x_j).
+\]
+
+Příklady:
+\[
+K(x,z)=x^\top z
+\quad \text{lineární kernel},
+\]
+\[
+K(x,z)=(x^\top z+r)^d
+\quad \text{polynomiální kernel},
+\]
+\[
+K(x,z)=\exp(-\gamma\|x-z\|^2)
+\quad \text{RBF kernel}.
+\]
+
+\subsubsection*{Neuronové sítě}
+
+Neuronové sítě skládají mnoho jednoduchých výpočtových jednotek. U mělké sítě máme vstupní vrstvu, jednu
+skrytou vrstvu a výstupní vrstvu. Detailněji jsou popsány v otázce 15.
+
+\subsection*{CRISP-DM jako metodika analytického projektu}
+
+CRISP-DM je standardní metodika pro data mining projekty. Má šest fází:
+
+\begin{enumerate}
+    \item \term{Business understanding}:
+    pochopení problému, cíle, omezení, nákladů chyb a očekávaného využití.
+    
+    \item \term{Data understanding}:
+    získání dat, pochopení atributů, kvality, rozsahu a omezení.
+    
+    \item \term{Data preparation}:
+    čištění, spojování dat, imputace, odstranění duplicit, transformace, feature engineering.
+    
+    \item \term{Modeling}:
+    volba algoritmů, trénování modelů, ladění hyperparametrů.
+    
+    \item \term{Evaluation}:
+    ověření kvality modelu, kontrola, zda model řeší původní business problém.
+    
+    \item \term{Deployment}:
+    nasazení modelu, reporting, API, automatizace, monitoring a údržba.
+\end{enumerate}
+
+V praxi bývá nejvíce práce v komunikaci s vlastníkem dat, čištění, přípravě dat, interpretaci a zajištění
+důvěry ve výsledky, ne v samotném spuštění algoritmu.
+
+\subsection*{Příprava dat}
+
+Před modelováním je nutné řešit:
+
+\begin{itemize}
+    \item \textbf{Chybějící hodnoty:}
+    odstranění řádků, imputace průměrem/mediánem, regresní imputace, modelová imputace.
+    
+    \item \textbf{Škálování:}
+    důležité pro k-NN, SVM, neuronové sítě a clustering.
+    
+    \item \textbf{Kódování kategorií:}
+    dummy proměnné, one-hot encoding, ordinal encoding.
+    
+    \item \textbf{Feature engineering:}
+    tvorba nových atributů z doménové znalosti.
+    
+    \item \textbf{Feature selection:}
+    výběr relevantních proměnných.
+    
+    \item \textbf{Data leakage:}
+    nesmí se použít informace, která by v okamžiku predikce nebyla dostupná.
+\end{itemize}
+
+Standardizace:
+\[
+z_{ij}=\frac{x_{ij}-\bar{x}_j}{s_j}.
+\]
+
+Min-max škálování:
+\[
+x_{ij}^{*}=
+\frac{x_{ij}-\min(x_j)}
+{\max(x_j)-\min(x_j)}.
+\]
+
+\subsection*{Rozdělení dat a validace}
+
+Dostupná označená data se obvykle rozdělí na:
+
+\begin{itemize}
+    \item \term{trénovací množinu} -- model se na ní učí,
+    \item \term{validační množinu} -- ladění hyperparametrů a výběr modelu,
+    \item \term{testovací množinu} -- finální nezávislé ověření kvality.
+\end{itemize}
+
+Jednoduché rozdělení:
+\[
+D = D_{\text{train}} \cup D_{\text{test}}.
+\]
+
+\subsubsection*{Křížová validace}
+
+U $K$-fold cross-validation se data rozdělí na $K$ částí. Model se $K$krát natrénuje, vždy na $K-1$ částech,
+a ověří na zbývající části.
+
+Průměrná chyba:
+\[
+CV_K
+=
+\frac{1}{K}
+\sum_{k=1}^K Err_k.
+\]
+
+\paragraph{Stratifikace.}
+U nevyvážených tříd je vhodné zachovat podíly tříd v každém foldu.
+
+\paragraph{Time-based split.}
+U časově závislých dat se nesmí náhodně míchat minulost a budoucnost. Trénujeme na minulosti a testujeme
+na pozdějších datech.
+
+\subsection*{Hodnocení klasifikačních modelů}
+
+Pro binární klasifikaci:
+
+\[
+\begin{array}{c|cc}
+ & \text{Skutečně pozitivní} & \text{Skutečně negativní}\\
+\hline
+\text{Predikováno pozitivní} & TP & FP\\
+\text{Predikováno negativní} & FN & TN
+\end{array}
+\]
+
+\subsubsection*{Accuracy}
+
+\[
+Accuracy=
+\frac{TP+TN}{TP+TN+FP+FN}.
+\]
+
+Accuracy může být zavádějící u nevyvážených tříd.
+
+\subsubsection*{Precision}
+
+\[
+Precision=
+\frac{TP}{TP+FP}.
+\]
+
+Říká, jaká část pozitivních predikcí byla skutečně pozitivní.
+
+\subsubsection*{Recall / sensitivity}
+
+\[
+Recall=
+\frac{TP}{TP+FN}.
+\]
+
+Říká, jaká část skutečně pozitivních případů byla nalezena.
+
+\subsubsection*{Specificity}
+
+\[
+Specificity=
+\frac{TN}{TN+FP}.
+\]
+
+Říká, jaká část skutečně negativních případů byla správně označena jako negativní.
+
+\subsubsection*{F1 score}
+
+\[
+F_1=
+2\cdot
+\frac{Precision\cdot Recall}
+{Precision+Recall}.
+\]
+
+F1 je vhodné, pokud chceme vyvážit precision a recall.
+
+\subsubsection*{ROC a AUC}
+
+ROC křivka zobrazuje vztah:
+\[
+TPR = \frac{TP}{TP+FN}
+\]
+proti:
+\[
+FPR = \frac{FP}{FP+TN}.
+\]
+
+AUC shrnuje ROC křivku do jednoho čísla:
+\[
+AUC=1
+\]
+znamená perfektní klasifikátor,
+\[
+AUC=0.5
+\]
+odpovídá náhodnému klasifikátoru.
+
+\subsection*{Cost-sensitive evaluation}
+
+Ne všechny chyby mají stejný náklad. Například v medicíně může být falešně negativní chyba mnohem
+dražší než falešně pozitivní.
+
+Celkový náklad:
+\[
+Cost
+=
+C_{TP}TP+C_{FP}FP+C_{FN}FN+C_{TN}TN.
+\]
+
+Klasifikační práh lze zvolit tak, aby minimalizoval náklad:
+\[
+t^*
+=
+\underset{t}{\operatorname{argmin}}
+\,
+Cost(t).
+\]
+
+\subsection*{Overfitting a underfitting}
+
+\term{Underfitting} znamená, že model je příliš jednoduchý a špatně zachytí strukturu dat.
+Má vysokou chybu na trénovacích i testovacích datech.
+
+\term{Overfitting} znamená, že model se naučil i šum a náhodné zvláštnosti trénovací množiny.
+Má nízkou chybu na trénovacích datech, ale vysokou chybu na testovacích datech.
+
+\[
+Err_{\text{train}} \ll Err_{\text{test}}
+\quad \Rightarrow \quad
+\text{podezření na overfitting}.
+\]
+
+Řešení:
+\begin{itemize}
+    \item jednodušší model,
+    \item regularizace,
+    \item pruning stromů,
+    \item více dat,
+    \item cross-validation,
+    \item ensemble metody,
+    \item správné ladění hyperparametrů.
+\end{itemize}
+
+\subsection*{Ladění hyperparametrů}
+
+Parametry se učí z dat. Hyperparametry nastavujeme před učením.
+
+Příklady:
+\begin{itemize}
+    \item počet sousedů $k$ u k-NN,
+    \item hloubka stromu,
+    \item počet stromů v random forest,
+    \item learning rate u boostingu nebo neuronových sítí,
+    \item parametr $C$ a kernel u SVM.
+\end{itemize}
+
+Metody ladění:
+\begin{itemize}
+    \item grid search,
+    \item random search,
+    \item cross-validation,
+    \item nested cross-validation.
+\end{itemize}
+
+\subsection*{Dostupné nástroje}
+
+\begin{itemize}
+    \item \textbf{Python:}
+    pandas, numpy, scikit-learn, matplotlib, seaborn, scipy, xgboost, lightgbm, tensorflow, pytorch.
+    
+    \item \textbf{R:}
+    caret, tidymodels, randomForest, e1071, nnet, rpart.
+    
+    \item \textbf{GUI nástroje:}
+    Weka, RapidMiner, KNIME, IBM SPSS Modeler, SAS Enterprise Miner.
+    
+    \item \textbf{Akademické a specializované nástroje:}
+    LISp-Miner, GUHA, 4FT-Miner.
+    
+    \item \textbf{Cloud a produkční nástroje:}
+    BigML, cloudové ML služby, kontejnery, API, CI/CD, monitoring modelů.
+\end{itemize}
+
+Materiály zmiňují práci v Pythonu a scikit-learn, cloudové nástroje, BigML pro stromy a LISp-Miner jako
+systém navazující na GUHA.
+
+\subsection*{Shrnutí otázky}
+
+Strojové učení je přístup, kdy se model učí ze vzorových dat. Základní dělení je učení s učitelem,
+učení bez učitele, doporučování a detekce anomálií. Učení s učitelem zahrnuje klasifikaci a regresi,
+učení bez učitele shlukování, asociační pravidla a redukci dimenze.
+
+Typický ML projekt se řídí logikou CRISP-DM: pochopení businessu, pochopení dat, příprava dat, modelování,
+vyhodnocení a nasazení. Kvalita modelu se nehodnotí na trénovacích datech, ale na validačních/testovacích
+datech pomocí vhodných metrik. Je nutné hlídat overfitting, data leakage, nevyvážené třídy a náklady chyb.
+
+\newpage

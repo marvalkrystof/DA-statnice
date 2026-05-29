@@ -1,0 +1,1535 @@
+\section{Ekonometrické modely pro časové řady a panelová data}
+
+\subsection*{Základní rámec}
+
+Ekonometrické modely pro \textbf{časové řady} a \textbf{panelová data} rozšiřují klasickou regresi o situace,
+kdy pozorování nejsou jednoduše nezávislá. U časových řad záleží na pořadí pozorování v čase,
+protože minulost často ovlivňuje současnost. U panelových dat sledujeme stejné jednotky opakovaně
+v čase, a proto můžeme kontrolovat nepozorované vlastnosti jednotek, které se v čase nemění.
+
+\begin{itemize}
+    \item \textbf{Časová řada:} jedna proměnná nebo více proměnných pozorovaných v čase.
+    \[
+        y=\{y_t,\ t\in T\}.
+    \]
+    Typicky řešíme trend, sezónnost, autokorelaci, nestacionaritu a predikci.
+
+    \item \textbf{Panelová data:} stejné jednotky $i=1,\dots,N$ pozorované v čase $t=1,\dots,T$.
+    \[
+        y_{it}, \qquad i=1,\dots,N,\quad t=1,\dots,T.
+    \]
+    Typicky řešíme nepozorovanou heterogenitu jednotek, fixed effects, random effects a dynamické panely.
+\end{itemize}
+
+\subsection*{1. Časové řady}
+
+\subsubsection*{1.1 Co je časová řada}
+
+Časová řada je posloupnost hodnot pozorovaných v pravidelných časových intervalech, například denně,
+měsíčně, kvartálně nebo ročně. Důležité je, že pozorování nelze libovolně přeházet. Hodnota HDP v roce
+2024 logicky navazuje na hodnotu z roku 2023, cena akcie dnes souvisí s cenou včera a nezaměstnanost
+v jednom měsíci souvisí s nezaměstnaností v předchozích měsících.
+
+\[
+    y_t,\qquad t=1,\dots,T.
+\]
+
+Hlavní cíle analýzy časových řad jsou:
+\begin{itemize}
+    \item \textbf{pochopení mechanismu} generujícího data,
+    \item \textbf{predikce budoucích hodnot},
+    \item \textbf{testování hypotéz} o dynamice procesu,
+    \item \textbf{modelování vztahů mezi proměnnými v čase}.
+\end{itemize}
+
+Oproti průřezovým datům je problém v tom, že pozorování v čase často nejsou nezávislá:
+\[
+    y_t \text{ může záviset na } y_{t-1}, y_{t-2}, \dots
+\]
+
+\subsubsection*{1.2 Komponenty časové řady}
+
+Časovou řadu si často představujeme jako kombinaci několika složek:
+\[
+    y_t = Tr_t + S_t + C_t + u_t,
+\]
+kde:
+\begin{itemize}
+    \item $Tr_t$ je trend,
+    \item $S_t$ je sezónní složka,
+    \item $C_t$ je cyklická složka,
+    \item $u_t$ je náhodná složka.
+\end{itemize}
+
+V jednodušší podobě:
+\[
+    y_t = Tr_t + u_t.
+\]
+
+\paragraph{Trend}
+
+Trend znamená dlouhodobý růst nebo pokles časové řady. Může být deterministický nebo stochastický.
+
+\textbf{Lineární deterministický trend:}
+\[
+    y_t = \alpha + \beta t + u_t.
+\]
+
+\textbf{Kvadratický trend:}
+\[
+    y_t = \alpha + \beta t + \gamma t^2 + u_t.
+\]
+
+Pokud trend odhadneme, detrendovaná řada je:
+\[
+    \widetilde y_t = y_t - \widehat{Tr}_t.
+\]
+
+Intuice: pokud chceme zkoumat vztah dvou ekonomických proměnných, neměli bychom ho zaměňovat
+za fakt, že obě proměnné pouze rostou v čase. Například počet televizních seriálů i nějaký společenský
+ukazatel mohou růst současně, ale to samo o sobě neznamená ekonomickou souvislost.
+
+\paragraph{Zdánlivá regrese}
+
+U nestacionárních časových řad může vzniknout \textbf{spurious regression}, tedy zdánlivá regrese.
+Regrese může mít vysoké $R^2$ a statisticky významné koeficienty, přestože mezi proměnnými není
+skutečný vztah. Často je důvodem společný trend.
+
+Typický příklad:
+\[
+    y_t = \alpha + \beta x_t + u_t,
+\]
+kde $y_t$ i $x_t$ mají trend. Model pak může zachycovat hlavně to, že obě řady rostou s časem.
+
+Řešení:
+\begin{itemize}
+    \item zahrnout trend $t$ do modelu,
+    \item použít detrendovaná data,
+    \item diferencovat časovou řadu,
+    \item testovat jednotkový kořen a kointegraci.
+\end{itemize}
+
+\paragraph{Sezónnost}
+
+Sezónnost znamená pravidelně se opakující vzorec v rámci roku, týdne nebo jiného cyklu.
+Například maloobchodní tržby bývají vyšší v prosinci, spotřeba elektřiny se liší mezi zimou a létem.
+
+Sezónnost lze modelovat pomocí dummy proměnných:
+\[
+    y_t =
+    \alpha+\beta t+\delta_2D_{2t}+\cdots+\delta_sD_{st}+u_t.
+\]
+
+Pokud máme například měsíční data, používáme typicky 11 dummy proměnných, protože jedna sezóna
+slouží jako referenční kategorie. Použití všech 12 dummy proměnných spolu s konstantou by vedlo
+k perfektní multikolinearitě.
+
+\subsubsection*{1.3 Stacionarita}
+
+Stacionarita je jedna z nejdůležitějších vlastností časových řad. Obecně znamená, že základní
+pravděpodobnostní vlastnosti procesu se v čase nemění. Pro ekonometrické modelování je důležitá
+hlavně \textbf{slabá stacionarita}.
+
+Proces $\{y_t\}$ je slabě stacionární, pokud:
+\[
+    E(y_t)=\mu
+\]
+je konstantní pro všechna $t$,
+
+\[
+    Var(y_t)=\gamma(0)
+\]
+je konstantní a
+
+\[
+    Cov(y_t,y_{t-h})=\gamma(h)
+\]
+závisí pouze na délce zpoždění $h$, nikoliv na konkrétním čase $t$.
+
+Jinými slovy:
+\begin{itemize}
+    \item řada nemá měnící se průměr,
+    \item řada nemá měnící se varianci,
+    \item vztah mezi současností a minulostí závisí pouze na vzdálenosti v čase.
+\end{itemize}
+
+\paragraph{Bílý šum}
+
+Bílý šum je základní stavební kámen mnoha modelů časových řad:
+\[
+    e_t \sim WN(0,\sigma^2).
+\]
+
+Platí:
+\[
+    E(e_t)=0,
+\]
+\[
+    Var(e_t)=\sigma^2,
+\]
+\[
+    Cov(e_t,e_s)=0 \quad \text{pro } t\neq s.
+\]
+
+Bílý šum je tedy posloupnost náhodných chyb bez autokorelace.
+
+\subsubsection*{1.4 Autokorelace, ACF a PACF}
+
+Autokorelace znamená korelaci časové řady se svou vlastní minulostí.
+
+Autokovariance:
+\[
+    \gamma(h)=Cov(y_t,y_{t-h}).
+\]
+
+Autokorelace:
+\[
+    \rho(h)=\frac{\gamma(h)}{\gamma(0)}.
+\]
+
+\paragraph{ACF}
+
+ACF, tedy autocorrelation function, ukazuje korelaci mezi $y_t$ a $y_{t-h}$ pro různá zpoždění $h$.
+Používá se k odhalení persistence, sezónnosti a nestacionarity.
+
+U stacionární řady ACF obvykle rychle klesá k nule. U nestacionární řady ACF často klesá velmi pomalu.
+
+\paragraph{PACF}
+
+PACF, tedy partial autocorrelation function, měří vztah mezi $y_t$ a $y_{t-h}$ po očištění vlivu
+mezilehlých zpoždění $y_{t-1},\dots,y_{t-h+1}$.
+
+\paragraph{Použití ACF a PACF při volbě modelu}
+
+\begin{center}
+\begin{tabular}{|p{0.35\textwidth}|p{0.55\textwidth}|}
+\hline
+\textbf{Chování ACF/PACF} & \textbf{Typický model} \\
+\hline
+PACF se po určitém zpoždění utne, ACF postupně doznívá & AR($p$) \\
+\hline
+ACF se po určitém zpoždění utne, PACF postupně doznívá & MA($q$) \\
+\hline
+ACF i PACF postupně doznívají & ARMA($p,q$) \\
+\hline
+ACF klesá velmi pomalu & podezření na nestacionaritu nebo jednotkový kořen \\
+\hline
+\end{tabular}
+\end{center}
+
+V praxi se ACF/PACF používají společně s informačními kritérii, jako jsou AIC a BIC, a s kontrolou reziduí.
+
+\subsubsection*{1.5 Základní lineární modely časových řad}
+
+\paragraph{MA(q) model}
+
+Moving average model řádu $q$:
+\[
+    y_t = \alpha + e_t+\theta_1e_{t-1}+\cdots+\theta_qe_{t-q}.
+\]
+
+Současná hodnota závisí na současném a minulých náhodných šocích.
+
+\paragraph{AR(p) model}
+
+Autoregresní model řádu $p$:
+\[
+    y_t = \alpha+\phi_1y_{t-1}+\cdots+\phi_py_{t-p}+e_t.
+\]
+
+Současná hodnota závisí na vlastních minulých hodnotách. Například AR(1):
+\[
+    y_t=\alpha+\phi y_{t-1}+e_t.
+\]
+
+AR(1) je stacionární, pokud:
+\[
+    |\phi|<1.
+\]
+
+Pokud $\phi$ leží blízko jedné, proces je velmi perzistentní. Pokud $\phi=1$, dostáváme jednotkový
+kořen a proces je nestacionární.
+
+\paragraph{ARMA(p,q) model}
+
+ARMA model kombinuje autoregresní a moving average složku:
+\[
+    y_t =
+    \alpha+
+    \sum_{i=1}^{p}\phi_i y_{t-i}
+    +
+    \sum_{j=1}^{q}\theta_j e_{t-j}
+    +e_t.
+\]
+
+Používá se pro stacionární časové řady. Pokud řada není stacionární, je nutné ji nejprve transformovat,
+například diferencováním.
+
+\paragraph{ARIMA(p,d,q) model}
+
+ARIMA model je rozšířením ARMA modelu pro nestacionární řady, které se stanou stacionárními po
+diferencování.
+
+První diference:
+\[
+    \Delta y_t = y_t-y_{t-1}.
+\]
+
+Druhá diference:
+\[
+    \Delta^2 y_t = \Delta y_t-\Delta y_{t-1}.
+\]
+
+ARIMA model:
+\[
+    \Delta^d y_t =
+    \alpha+
+    \sum_{i=1}^{p}\phi_i \Delta^d y_{t-i}
+    +
+    \sum_{j=1}^{q}\theta_j e_{t-j}
+    +e_t.
+\]
+
+Parametry:
+\begin{itemize}
+    \item $p$ = počet autoregresních zpoždění,
+    \item $d$ = počet diferencování nutných ke stacionaritě,
+    \item $q$ = počet zpožděných šoků.
+\end{itemize}
+
+Speciální případ:
+\[
+    y_t=y_{t-1}+e_t
+\]
+je random walk, tedy ARIMA$(0,1,0)$.
+
+\paragraph{SARIMA}
+
+Pokud má řada sezónnost, používá se SARIMA:
+\[
+    SARIMA(p,d,q)\times(P,D,Q)_s,
+\]
+kde:
+\begin{itemize}
+    \item $s$ je délka sezóny,
+    \item $P,D,Q$ jsou sezónní analogie parametrů $p,d,q$.
+\end{itemize}
+
+Například pro měsíční data bývá:
+\[
+    s=12.
+\]
+
+\subsubsection*{1.6 Jednotkový kořen a ADF test}
+
+Jednotkový kořen znamená, že časová řada je nestacionární a šoky mají trvalý efekt. Typickým příkladem
+je random walk:
+\[
+    y_t=y_{t-1}+e_t.
+\]
+
+Základní AR(1) proces:
+\[
+    y_t=\alpha+\phi y_{t-1}+e_t.
+\]
+
+Odečteme $y_{t-1}$:
+\[
+    y_t-y_{t-1}=\alpha+(\phi-1)y_{t-1}+e_t.
+\]
+
+Tedy:
+\[
+    \Delta y_t=\alpha+\beta_1y_{t-1}+e_t,
+\]
+kde:
+\[
+    \beta_1=\phi-1.
+\]
+
+Dickey--Fullerův test testuje:
+\[
+    H_0:\beta_1=0
+\]
+řada má jednotkový kořen, tedy je nestacionární,
+
+\[
+    H_1:\beta_1<0
+\]
+řada je stacionární.
+
+ADF test, tedy augmented Dickey--Fuller test, přidává zpožděné diference, aby odstranil autokorelaci:
+\[
+    \Delta y_t =
+    \alpha+\beta_1 y_{t-1}+\beta_2t
+    +\delta_1\Delta y_{t-1}
+    +\cdots+
+    \delta_p\Delta y_{t-p}
+    +e_t.
+\]
+
+Varianty testu:
+\begin{itemize}
+    \item bez konstanty,
+    \item s konstantou,
+    \item s konstantou a trendem.
+\end{itemize}
+
+Volba varianty závisí na povaze dat. Pokud řada viditelně roste v čase, je vhodné uvažovat variantu
+s trendem.
+
+\subsubsection*{1.7 Regrese s časovými řadami a autokorelace chyb}
+
+Základní regresní model pro časové řady:
+\[
+    y_t=\beta_0+\beta_1x_{t1}+\cdots+\beta_kx_{tk}+u_t.
+\]
+
+Maticově:
+\[
+    y=X\beta+u.
+\]
+
+OLS odhad:
+\[
+    \hat\beta=(X^\top X)^{-1}X^\top y.
+\]
+
+Pro časové řady jsou důležité zejména tyto předpoklady:
+\begin{itemize}
+    \item linearita v parametrech,
+    \item žádná perfektní multikolinearita,
+    \item striktní exogenita:
+    \[
+        E(u_t\mid X)=0,
+    \]
+    \item homoskedasticita:
+    \[
+        Var(u_t\mid X)=\sigma^2,
+    \]
+    \item žádná autokorelace chyb:
+    \[
+        Cor(u_t,u_s\mid X)=0,\qquad t\neq s.
+    \]
+\end{itemize}
+
+Pokud jsou chyby autokorelované, například:
+\[
+    u_t=\rho u_{t-1}+e_t,
+\]
+pak při splnění exogenity může být OLS stále nestranný a konzistentní, ale:
+\begin{itemize}
+    \item není efektivní,
+    \item není BLUE,
+    \item běžné směrodatné chyby jsou špatně,
+    \item t-testy a F-testy mohou vést k chybným závěrům.
+\end{itemize}
+
+\paragraph{Durbin--Watsonův test}
+
+Testuje hlavně AR(1) autokorelaci reziduí:
+\[
+    DW=
+    \frac{\sum_{t=2}^{T}(\hat u_t-\hat u_{t-1})^2}
+    {\sum_{t=1}^{T}\hat u_t^2}
+    \approx 2(1-\hat\rho).
+\]
+
+Interpretace:
+\begin{itemize}
+    \item $DW\approx 2$: žádná autokorelace,
+    \item $DW<2$: pozitivní autokorelace,
+    \item $DW>2$: negativní autokorelace.
+\end{itemize}
+
+\paragraph{Breusch--Godfreyův test}
+
+Obecnější test autokorelace řádu $p$:
+\[
+    u_t=\rho_1u_{t-1}+\cdots+\rho_pu_{t-p}+e_t.
+\]
+
+Pomocná regrese typicky vysvětluje rezidua $\hat u_t$ pomocí původních regresorů a zpožděných reziduí.
+
+\paragraph{Řešení autokorelace}
+
+\begin{itemize}
+    \item \textbf{HAC / Newey--West směrodatné chyby:} neopravují samotný model, ale opravují inferenci.
+    \item \textbf{GLS/FGLS:} transformují model tak, aby chyby byly blíže nekorelovaným a homoskedastickým.
+    \item \textbf{Cochrane--Orcutt:} používá odhad $\rho$ a transformuje model:
+    \[
+        \widetilde y_t=y_t-\hat\rho y_{t-1},
+    \]
+    \[
+        \widetilde x_{tj}=x_{tj}-\hat\rho x_{t-1,j}.
+    \]
+\end{itemize}
+
+\subsubsection*{1.8 Regresní modely se zpožděnými proměnnými}
+
+V ekonomii často účinky nevznikají okamžitě. Například změna úrokové sazby může ovlivnit investice
+až s několikaměsíčním zpožděním. Proto používáme modely se zpožděnými proměnnými.
+
+\paragraph{Regrese s ARMA chybami}
+
+Model:
+\[
+    y_t=\alpha+\beta x_t+u_t,
+\]
+kde chyba má vlastní dynamiku:
+\[
+    u_t=
+    \sum_{i=1}^{p}\phi_i u_{t-i}
+    +
+    \sum_{j=1}^{q}\theta_j e_{t-j}
+    +e_t.
+\]
+
+Tento model říká, že $x_t$ působí současně, ale nevysvětlená část modelu má časovou strukturu.
+
+\paragraph{ARMAX model}
+
+ARMA model s exogenní proměnnou:
+\[
+    y_t=
+    \alpha+\beta x_t
+    +
+    \sum_{i=1}^{p}\phi_i y_{t-i}
+    +
+    \sum_{j=1}^{q}\theta_j e_{t-j}
+    +e_t.
+\]
+
+Rozdíl proti regresi s ARMA chybami je v interpretaci. V ARMAX modelu může $x_t$ působit i nepřímo
+přes zpožděné hodnoty $y_t$.
+
+\paragraph{FDL model}
+
+Finite distributed lag model:
+\[
+    y_t=\alpha+\sum_{j=0}^{q}\delta_j x_{t-j}+u_t.
+\]
+
+Koeficient:
+\[
+    \delta_0
+\]
+je okamžitý efekt změny $x_t$ na $y_t$.
+
+Dlouhodobý efekt permanentní změny $x$:
+\[
+    \delta=\sum_{j=0}^{q}\delta_j.
+\]
+
+Příklad interpretace: pokud $x$ trvale vzroste o jednu jednotku, potom se po odeznění všech zpoždění
+$y$ změní o součet všech $\delta_j$.
+
+\paragraph{ADL model}
+
+Autoregressive distributed lag model:
+\[
+    y_t=
+    \alpha+
+    \sum_{i=1}^{p}\rho_i y_{t-i}
+    +
+    \sum_{j=0}^{q}\delta_j x_{t-j}
+    +u_t.
+\]
+
+Tento model kombinuje:
+\begin{itemize}
+    \item zpožděné hodnoty závislé proměnné,
+    \item současné i zpožděné hodnoty vysvětlující proměnné.
+\end{itemize}
+
+Dlouhodobý multiplikátor v ADL modelu je:
+\[
+    \frac{\sum_{j=0}^{q}\delta_j}{1-\sum_{i=1}^{p}\rho_i},
+\]
+pokud je model stabilní.
+
+\subsubsection*{1.9 Predikce a volba modelu}
+
+U časových řad je predikce velmi častým cílem. Predikce může být:
+\begin{itemize}
+    \item \textbf{bodová}, tedy jedna odhadnutá hodnota,
+    \item \textbf{intervalová}, tedy interval možných hodnot.
+\end{itemize}
+
+Pro $h$-krokovou predikci označujeme:
+\[
+    \widehat y_{T+h}.
+\]
+
+Při delším predikčním horizontu obvykle roste nejistota, proto se intervaly predikce rozšiřují.
+
+Modely se často porovnávají pomocí:
+\[
+    AIC=-2\ell+2K,
+\]
+\[
+    BIC=-2\ell+K\ln(T),
+\]
+kde $\ell$ je log-likelihood a $K$ počet parametrů.
+
+Nižší AIC/BIC znamená lepší kompromis mezi přesností a složitostí modelu.
+
+Pro vyhodnocení predikcí se používají například:
+\[
+    MAE=\frac{1}{n}\sum_{t=1}^{n}|y_t-\hat y_t|,
+\]
+\[
+    RMSE=\sqrt{\frac{1}{n}\sum_{t=1}^{n}(y_t-\hat y_t)^2}.
+\]
+
+Důležité je rozlišovat:
+\begin{itemize}
+    \item \textbf{in-sample fit}: jak model sedí na datech, na kterých byl odhadnut,
+    \item \textbf{out-of-sample predikci}: jak model predikuje nová data.
+\end{itemize}
+
+\subsection*{2. Vícerozměrné časové řady, VAR a kointegrace}
+
+\subsubsection*{2.1 Vícerozměrné časové řady}
+
+Pokud sledujeme více časových řad současně, používáme vektor:
+\[
+    \mathbf y_t=(y_{t1},\dots,y_{tM})^\top.
+\]
+
+Například:
+\[
+    \mathbf y_t =
+    \begin{pmatrix}
+    HDP_t\\
+    inflace_t\\
+    urokova\ sazba_t
+    \end{pmatrix}.
+\]
+
+Vícerozměrné modely jsou důležité, protože ekonomické veličiny se často ovlivňují navzájem.
+Například úrokové sazby ovlivňují inflaci, ale zároveň centrální banka reaguje na inflaci úrokovými sazbami.
+
+\subsubsection*{2.2 VAR model}
+
+VAR model, tedy vector autoregression, modeluje více endogenních proměnných najednou.
+Každá proměnná je vysvětlována vlastními zpožděními i zpožděními ostatních proměnných.
+
+VAR($p$):
+\[
+    \mathbf y_t
+    =
+    \boldsymbol\alpha
+    +
+    \Phi_1\mathbf y_{t-1}
+    +\cdots+
+    \Phi_p\mathbf y_{t-p}
+    +
+    \mathbf e_t.
+\]
+
+Pro dvě proměnné a jedno zpoždění:
+\[
+    y_{1t}=\alpha_1+\phi_{11}y_{1,t-1}+\phi_{12}y_{2,t-1}+e_{1t},
+\]
+\[
+    y_{2t}=\alpha_2+\phi_{21}y_{1,t-1}+\phi_{22}y_{2,t-1}+e_{2t}.
+\]
+
+Výhoda VAR modelu:
+\begin{itemize}
+    \item nemusíme předem určit jednu závislou a jednu nezávislou proměnnou,
+    \item všechny proměnné mohou být endogenní,
+    \item model zachycuje dynamické vazby mezi proměnnými.
+\end{itemize}
+
+Nevýhoda:
+\begin{itemize}
+    \item rychle roste počet parametrů,
+    \item interpretace může být složitá,
+    \item model vyžaduje dostatek dat.
+\end{itemize}
+
+\paragraph{Redukovaná a strukturální forma}
+
+Redukovaná forma VAR neobsahuje současné hodnoty ostatních endogenních proměnných na pravé straně.
+Současné vztahy jsou schovány v korelaci chyb.
+
+Strukturální VAR může mít podobu:
+\[
+    A_0\mathbf y_t
+    =
+    \mathbf a
+    +
+    A_1\mathbf y_{t-1}
+    +\cdots+
+    A_p\mathbf y_{t-p}
+    +
+    \boldsymbol\varepsilon_t.
+\]
+
+Strukturální forma ale vyžaduje identifikační omezení, protože současné vztahy mezi proměnnými
+nelze odhadnout automaticky bez dodatečných předpokladů.
+
+\paragraph{Impulse response function}
+
+Impulse response function popisuje, jak celý systém reaguje na jednorázový šok v jedné proměnné.
+Například můžeme zkoumat, jak šok v úrokové sazbě ovlivní inflaci v dalších obdobích.
+
+\subsubsection*{2.3 Grangerova kauzalita}
+
+Proměnná $x$ Grangerovsky způsobuje proměnnou $y$, pokud minulost $x$ pomáhá predikovat $y$
+nad rámec minulosti samotné proměnné $y$.
+
+Ve VAR modelu testujeme, zda jsou koeficienty u zpožděných hodnot $x$ v rovnici pro $y$ nulové:
+\[
+    H_0:\phi_1=\phi_2=\cdots=\phi_p=0.
+\]
+
+Pokud $H_0$ zamítneme, minulost $x$ zlepšuje predikci $y$.
+
+Důležité: Grangerova kauzalita není kauzalita v experimentálním smyslu. Znamená predikční vztah,
+nikoliv nutně skutečný příčinný efekt.
+
+\subsubsection*{2.4 Integrace a kointegrace}
+
+Řada je integrována řádu $d$, značíme:
+\[
+    y_t \sim I(d),
+\]
+pokud je nutné ji $d$-krát diferencovat, aby byla stacionární.
+
+Příklady:
+\[
+    I(0) = \text{stacionární řada},
+\]
+\[
+    I(1) = \text{řada stacionární po první diferenci}.
+\]
+
+Random walk:
+\[
+    y_t=y_{t-1}+e_t
+\]
+je typický příklad $I(1)$ procesu.
+
+\paragraph{Kointegrace}
+
+Předpokládejme, že $y_t$ a $x_t$ jsou obě $I(1)$.
+Regrese:
+\[
+    y_t=\alpha+\beta x_t+u_t
+\]
+může být zdánlivá. Pokud ale reziduum:
+\[
+    u_t=y_t-\alpha-\beta x_t
+\]
+je stacionární, tedy $I(0)$, potom jsou $y_t$ a $x_t$ kointegrované.
+
+Intuice: jednotlivé řady mohou dlouhodobě růst nebo bloudit, ale existuje mezi nimi dlouhodobý
+rovnovážný vztah, od kterého se neodchylují trvale.
+
+\subsubsection*{2.5 Error Correction Model}
+
+Pokud jsou dvě řady kointegrované, lze použít ECM:
+\[
+    \Delta y_t =
+    \mu+\gamma\Delta x_t
+    +\delta(y_{t-1}-\alpha-\beta x_{t-1})
+    +e_t.
+\]
+
+Interpretace:
+\begin{itemize}
+    \item $\gamma$ zachycuje krátkodobý efekt změny $x$,
+    \item $\alpha+\beta x_{t-1}$ zachycuje dlouhodobou rovnováhu,
+    \item výraz $(y_{t-1}-\alpha-\beta x_{t-1})$ je odchylka od rovnováhy,
+    \item $\delta$ je rychlost návratu k rovnováze.
+\end{itemize}
+
+Obvykle očekáváme:
+\[
+    \delta<0.
+\]
+
+Pokud je $y_{t-1}$ nad dlouhodobou rovnováhou, záporné $\delta$ tlačí $\Delta y_t$ dolů.
+
+\subsubsection*{2.6 VECM}
+
+VECM je vícerozměrná verze ECM pro kointegrované proměnné:
+\[
+    \Delta\mathbf y_t
+    =
+    \Pi\mathbf y_{t-1}
+    +
+    \Gamma_1\Delta\mathbf y_{t-1}
+    +\cdots+
+    \Gamma_{p-1}\Delta\mathbf y_{t-p+1}
+    +
+    \mathbf e_t.
+\]
+
+Pokud:
+\[
+    0<rank(\Pi)<M,
+\]
+existuje kointegrace a můžeme psát:
+\[
+    \Pi=\gamma\beta^\top.
+\]
+
+Zde:
+\begin{itemize}
+    \item $\beta^\top \mathbf y_t$ jsou kointegrační vztahy,
+    \item $\gamma$ zachycuje rychlosti přizpůsobení k rovnováze.
+\end{itemize}
+
+\paragraph{Volba mezi VAR a VECM}
+
+\begin{center}
+\begin{tabular}{|p{0.42\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{Situace} & \textbf{Vhodný model} \\
+\hline
+Všechny proměnné jsou $I(0)$ & VAR v úrovních \\
+\hline
+Proměnné jsou $I(1)$ a nejsou kointegrované & VAR v diferencích \\
+\hline
+Proměnné jsou $I(1)$ a jsou kointegrované & VECM \\
+\hline
+Jedna závislá proměnná a vysvětlující proměnné se zpožděními & FDL, ADL, ARMAX nebo ECM \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{3. Panelová data}
+
+\subsubsection*{3.1 Co jsou panelová data}
+
+Panelová data kombinují průřezovou a časovou dimenzi. Sledujeme stejné jednotky v čase:
+\[
+    y_{it},\qquad i=1,\dots,N,\quad t=1,\dots,T.
+\]
+
+Příklady:
+\begin{itemize}
+    \item stejní lidé sledovaní několik let,
+    \item firmy sledované po kvartálech,
+    \item země EU sledované po letech,
+    \item kraje sledované v čase.
+\end{itemize}
+
+Rozdíl mezi pooled daty a panelem:
+\begin{itemize}
+    \item \textbf{Pooled cross sections:} v různých letech sledujeme různé jednotky.
+    \item \textbf{Panelová data:} v různých letech sledujeme stejné jednotky.
+\end{itemize}
+
+\subsubsection*{3.2 Typy panelů}
+
+\begin{itemize}
+    \item \textbf{Vyvážený panel:} každá jednotka má pozorování ve všech obdobích.
+    \item \textbf{Nevyvážený panel:} některá pozorování chybí.
+    \item \textbf{Krátký panel:} velké $N$, malé $T$.
+    \item \textbf{Dlouhý panel:} malé $N$, velké $T$.
+    \item \textbf{Velký panel:} velké $N$ i velké $T$.
+\end{itemize}
+
+U krátkých panelů se často používají FE, RE, FD a související metody. U dlouhých panelů se více
+objevují problémy podobné časovým řadám, například stacionarita a autokorelace.
+
+\subsubsection*{3.3 Základní panelový model}
+
+Základní panelová regrese:
+\[
+    y_{it}
+    =
+    \alpha
+    +
+    \mathbf x_{it}^\top\beta
+    +
+    \mathbf z_i^\top\gamma
+    +
+    u_{it}.
+\]
+
+Kde:
+\begin{itemize}
+    \item $\mathbf x_{it}$ jsou proměnné měnící se v čase,
+    \item $\mathbf z_i$ jsou časově neměnné charakteristiky jednotky,
+    \item $u_{it}$ je chyba.
+\end{itemize}
+
+Často ale některé důležité časově neměnné vlastnosti nepozorujeme. Pak píšeme:
+\[
+    y_{it}
+    =
+    \alpha
+    +
+    \mathbf x_{it}^\top\beta
+    +
+    c_i
+    +
+    u_{it}.
+\]
+
+Zde:
+\[
+    c_i
+\]
+je nepozorovaná heterogenita jednotky.
+
+Příklady $c_i$:
+\begin{itemize}
+    \item vrozené schopnosti člověka,
+    \item firemní kultura,
+    \item geografická poloha regionu,
+    \item instituce nebo historické faktory země.
+\end{itemize}
+
+Hlavní výhoda panelových dat je, že dokážou kontrolovat časově neměnné nepozorované faktory.
+
+\subsubsection*{3.4 Pooled OLS}
+
+Pooled OLS ignoruje panelovou strukturu a odhaduje obyčejnou regresi:
+\[
+    y_{it}=\alpha+\mathbf x_{it}^\top\beta+v_{it},
+\]
+kde:
+\[
+    v_{it}=c_i+u_{it}.
+\]
+
+Pooled OLS je problematický, pokud:
+\[
+    Cor(c_i,\mathbf x_{it})\neq 0.
+\]
+
+Pak je $c_i$ vynechaná proměnná korelovaná s regresory a odhad $\hat\beta$ je vychýlený.
+
+Pooled OLS může být použitelný, pokud:
+\[
+    Cor(c_i,\mathbf X_i)=0,
+\]
+ale v praxi je to často silný předpoklad.
+
+\subsubsection*{3.5 LSDV}
+
+LSDV, tedy least squares dummy variables, přidává dummy proměnné pro jednotky:
+\[
+    y_{it}
+    =
+    \alpha_1I\{i=1\}
+    +
+    \alpha_2I\{i=2\}
+    +\cdots+
+    \alpha_NI\{i=N\}
+    +
+    \mathbf x_{it}^\top\beta
+    +
+    u_{it}.
+\]
+
+Každá jednotka má vlastní intercept:
+\[
+    \alpha_i=\alpha+c_i.
+\]
+
+Výhoda:
+\begin{itemize}
+    \item explicitně kontroluje nepozorovanou heterogenitu jednotek.
+\end{itemize}
+
+Nevýhoda:
+\begin{itemize}
+    \item při velkém $N$ je mnoho dummy proměnných,
+    \item nelze pohodlně odhadovat efekty časově neměnných proměnných.
+\end{itemize}
+
+LSDV a FE dávají stejné odhady koeficientů $\beta$.
+
+\subsubsection*{3.6 First Difference estimator}
+
+Model:
+\[
+    y_{it}
+    =
+    \alpha
+    +
+    \mathbf x_{it}^\top\beta
+    +
+    c_i
+    +
+    u_{it}.
+\]
+
+Pro období $t-1$:
+\[
+    y_{i,t-1}
+    =
+    \alpha
+    +
+    \mathbf x_{i,t-1}^\top\beta
+    +
+    c_i
+    +
+    u_{i,t-1}.
+\]
+
+Odečtením dostaneme:
+\[
+    y_{it}-y_{i,t-1}
+    =
+    (\mathbf x_{it}-\mathbf x_{i,t-1})^\top\beta
+    +
+    (u_{it}-u_{i,t-1}).
+\]
+
+Tedy:
+\[
+    \Delta y_{it}
+    =
+    \Delta \mathbf x_{it}^\top\beta
+    +
+    \Delta u_{it}.
+\]
+
+Výhoda:
+\[
+    c_i
+\]
+zmizí, protože je v čase konstantní.
+
+Nevýhody:
+\begin{itemize}
+    \item ztratíme první období,
+    \item časově neměnné proměnné nelze odhadnout,
+    \item pokud je chyba silně autokorelovaná, může být FD méně vhodný.
+\end{itemize}
+
+FD je přirozený zejména pro panel s $T=2$.
+
+\subsubsection*{3.7 Fixed Effects estimator}
+
+FE používá tzv. within transformaci. Nejprve vezmeme průměr přes čas pro jednotku $i$:
+\[
+    \bar y_i
+    =
+    \alpha
+    +
+    \bar{\mathbf x}_i^\top\beta
+    +
+    c_i
+    +
+    \bar u_i.
+\]
+
+Poté odečteme průměr od původní rovnice:
+\[
+    y_{it}-\bar y_i
+    =
+    (\mathbf x_{it}-\bar{\mathbf x}_i)^\top\beta
+    +
+    (u_{it}-\bar u_i).
+\]
+
+Člen $c_i$ zmizí.
+
+FE tedy využívá pouze změny uvnitř jednotky v čase. Neptá se, proč mají některé jednotky vyšší
+hodnoty než jiné, ale ptá se, co se stane, když se u téže jednotky změní $x$.
+
+Interpretace:
+\[
+    \beta_j
+\]
+říká, jak se změní $y$ při změně $x_j$ uvnitř stejné jednotky v čase, po kontrole všech časově
+neměnných vlastností jednotky.
+
+Příklad: Pokud zkoumáme vliv vzdělání na mzdu a používáme individuální FE, kontrolujeme všechny
+časově neměnné vlastnosti člověka, například schopnosti nebo rodinné zázemí, pokud se v čase nemění.
+
+Nevýhody FE:
+\begin{itemize}
+    \item nelze odhadnout efekt časově neměnných proměnných,
+    \item využívá jen vnitřní variabilitu,
+    \item pokud se proměnná v čase téměř nemění, její efekt se odhaduje nepřesně.
+\end{itemize}
+
+\subsubsection*{3.8 Between estimator}
+
+Between estimator používá pouze rozdíly mezi jednotkami. Odhaduje regresi časových průměrů:
+\[
+    \bar y_i
+    =
+    \alpha
+    +
+    \bar{\mathbf x}_i^\top\beta
+    +
+    e_i.
+\]
+
+Nevyužívá změny v čase, pouze to, že některé jednotky mají v průměru vyšší $x$ a jiné nižší $x$.
+Proto neumí dobře kontrolovat nepozorovanou heterogenitu korelovanou s regresory.
+
+Obecně je méně důležitý než FE a RE, ale pomáhá pochopit rozdíl mezi:
+\begin{itemize}
+    \item within variabilitou,
+    \item between variabilitou.
+\end{itemize}
+
+\subsubsection*{3.9 Random Effects estimator}
+
+Random effects model opět vychází z:
+\[
+    y_{it}
+    =
+    \alpha
+    +
+    \mathbf x_{it}^\top\beta
+    +
+    c_i
+    +
+    u_{it}.
+\]
+
+Rozdíl proti FE je v předpokladu:
+\[
+    Cor(c_i,\mathbf X_i)=0.
+\]
+
+Tedy nepozorovaná heterogenita jednotky nesmí korelovat s vysvětlujícími proměnnými.
+
+Pokud tento předpoklad platí, RE je efektivnější než FE, protože využívá:
+\begin{itemize}
+    \item variabilitu uvnitř jednotek,
+    \item variabilitu mezi jednotkami.
+\end{itemize}
+
+Navíc RE umožňuje odhadovat efekty časově neměnných proměnných.
+
+Složená chyba:
+\[
+    v_{it}=c_i+u_{it}.
+\]
+
+RE používá quasi-demeaning:
+\[
+    y_{it}-\lambda\bar y_i
+    =
+    \alpha(1-\lambda)
+    +
+    (\mathbf x_{it}-\lambda\bar{\mathbf x}_i)^\top\beta
+    +
+    v_{it}-\lambda\bar v_i.
+\]
+
+Kde:
+\[
+    \lambda
+    =
+    1
+    -
+    \sqrt{
+    \frac{1}{1+T\frac{Var(c_i)}{Var(u_{it})}}
+    }.
+\]
+
+Pokud:
+\[
+    \lambda=0,
+\]
+RE se podobá pooled OLS.
+
+Pokud:
+\[
+    \lambda=1,
+\]
+RE se blíží FE transformaci.
+
+\subsubsection*{3.10 Hausmanův test}
+
+Hausmanův test porovnává FE a RE.
+
+Hypotéza:
+\[
+    H_0: Cor(c_i,\mathbf X_i)=0.
+\]
+
+Pokud platí $H_0$, RE je konzistentní a efektivnější než FE.
+Pokud $H_0$ neplatí, RE je nekonzistentní a měli bychom preferovat FE.
+
+Testová statistika:
+\[
+    H
+    =
+    (\hat\beta_{FE}-\hat\beta_{RE})^\top
+    \left[
+    Var(\hat\beta_{FE})-Var(\hat\beta_{RE})
+    \right]^{-1}
+    (\hat\beta_{FE}-\hat\beta_{RE}).
+\]
+
+Rozhodnutí:
+\begin{itemize}
+    \item nezamítneme $H_0$: RE je přijatelný,
+    \item zamítneme $H_0$: preferujeme FE.
+\end{itemize}
+
+Praktická intuice:
+\begin{itemize}
+    \item FE je bezpečnější, pokud se bojíme korelace mezi $c_i$ a regresory,
+    \item RE je efektivnější, ale stojí na silnějším předpokladu.
+\end{itemize}
+
+\subsubsection*{3.11 Correlated Random Effects}
+
+CRE, tedy correlated random effects nebo Mundlakův přístup, dovoluje, aby nepozorovaná heterogenita
+souvisela s průměry regresorů.
+
+Model:
+\[
+    y_{it}
+    =
+    \alpha
+    +
+    \mathbf x_{it}^\top\beta
+    +
+    \bar{\mathbf x}_i^\top\theta
+    +
+    a_i
+    +
+    u_{it}.
+\]
+
+Zde:
+\[
+    \bar{\mathbf x}_i
+\]
+jsou časové průměry regresorů pro jednotku $i$.
+
+Pokud jsou koeficienty $\theta$ významné, naznačuje to, že běžný RE předpoklad je problematický.
+CRE je užitečný kompromis, protože umožňuje:
+\begin{itemize}
+    \item testovat korelaci mezi heterogenitou a regresory,
+    \item interpretovat within i between efekty,
+    \item někdy zachovat možnost odhadnout časově neměnné proměnné.
+\end{itemize}
+
+\subsubsection*{3.12 Časové efekty a two-way fixed effects}
+
+Někdy existují šoky společné pro všechny jednotky v určitém čase. Například:
+\begin{itemize}
+    \item ekonomická krize,
+    \item pandemie,
+    \item změna regulace,
+    \item technologická změna.
+\end{itemize}
+
+Model s časovými efekty:
+\[
+    y_{it}
+    =
+    \alpha
+    +
+    \mathbf x_{it}^\top\beta
+    +
+    c_i
+    +
+    d_t
+    +
+    u_{it}.
+\]
+
+Kde:
+\[
+    d_t
+\]
+je efekt společný pro všechny jednotky v čase $t$.
+
+Pokud model obsahuje individuální efekty $c_i$ i časové efekty $d_t$, mluvíme o:
+\[
+    \text{two-way fixed effects}.
+\]
+
+Tento model kontroluje:
+\begin{itemize}
+    \item všechny časově neměnné rozdíly mezi jednotkami,
+    \item všechny šoky společné pro jednotky v daném čase.
+\end{itemize}
+
+\subsubsection*{3.13 Robustní inference v panelech}
+
+V panelových modelech často vzniká:
+\begin{itemize}
+    \item heteroskedasticita mezi jednotkami,
+    \item autokorelace uvnitř jednotek,
+    \item korelace mezi jednotkami ve stejném čase.
+\end{itemize}
+
+Proto se často používají robustní nebo clusterované směrodatné chyby.
+
+\paragraph{Clusterování podle jednotek}
+
+Umožňuje libovolnou korelaci chyb uvnitř jednotky v čase:
+\[
+    E(u_{it}u_{is})\neq 0.
+\]
+
+To je typické, pokud pozorování jedné firmy, osoby nebo země v čase spolu souvisí.
+
+\paragraph{Clusterování podle času}
+
+Umožňuje korelaci mezi jednotkami ve stejném období:
+\[
+    E(u_{it}u_{jt})\neq 0.
+\]
+
+To je důležité při společných makroekonomických šocích.
+
+\paragraph{Two-way clustering}
+
+Kombinuje clusterování podle jednotek i podle času.
+
+Po odhadu panelového modelu je vhodné testovat autokorelaci reziduí, například:
+\begin{itemize}
+    \item Wooldridgeovým testem pro FE modely,
+    \item Breusch--Godfreyho testem pro RE modely.
+\end{itemize}
+
+Pokud existuje korelace chyb, lze použít:
+\begin{itemize}
+    \item robustní/clusterované směrodatné chyby,
+    \item FGLS,
+    \item vhodnější specifikaci modelu.
+\end{itemize}
+
+\subsubsection*{3.14 Dynamické panelové modely}
+
+Dynamický panel obsahuje zpožděnou závisle proměnnou:
+\[
+    y_{it}
+    =
+    \alpha
+    +
+    \rho y_{i,t-1}
+    +
+    \mathbf x_{it}^\top\beta
+    +
+    c_i
+    +
+    u_{it}.
+\]
+
+Tento model je vhodný, pokud má závislá proměnná setrvačnost. Například:
+\begin{itemize}
+    \item současná nezaměstnanost závisí na minulé nezaměstnanosti,
+    \item současný zisk firmy závisí na minulém zisku,
+    \item současná kriminalita závisí na minulé kriminalitě.
+\end{itemize}
+
+Problém: běžný FE odhad je v krátkých panelech vychýlený, protože zpožděná závislá proměnná
+koreluje s transformovanou chybou. Tomu se říká dynamická panelová bias, často také Nickell bias.
+
+\paragraph{Arellano--Bond estimator}
+
+Začneme modelem:
+\[
+    y_{it}
+    =
+    \alpha
+    +
+    \rho y_{i,t-1}
+    +
+    \mathbf x_{it}^\top\beta
+    +
+    c_i
+    +
+    u_{it}.
+\]
+
+Nejprve diferencujeme, čímž odstraníme $c_i$:
+\[
+    \Delta y_{it}
+    =
+    \rho \Delta y_{i,t-1}
+    +
+    \Delta \mathbf x_{it}^\top\beta
+    +
+    \Delta u_{it}.
+\]
+
+Ale:
+\[
+    \Delta y_{i,t-1}=y_{i,t-1}-y_{i,t-2}
+\]
+je korelováno s:
+\[
+    \Delta u_{it}=u_{it}-u_{i,t-1}.
+\]
+
+Proto používáme instrumenty, typicky hlubší zpoždění:
+\[
+    y_{i,t-2},\ y_{i,t-3},\dots
+\]
+
+Odhad se provádí pomocí GMM.
+
+Důležité diagnostiky:
+\begin{itemize}
+    \item test autokorelace v diferencovaných reziduích,
+    \item u Arellano--Bond odhadu očekáváme AR(1) v diferencích,
+    \item neměli bychom mít AR(2) v diferencích,
+    \item používá se také Sarganův nebo Hansenův test instrumentů.
+\end{itemize}
+
+\subsection*{4. Shrnutí rozdílů mezi hlavními modely}
+
+\begin{center}
+\begin{tabular}{|p{0.36\textwidth}|p{0.54\textwidth}|}
+\hline
+\textbf{Situace} & \textbf{Vhodný přístup} \\
+\hline
+Jedna stacionární časová řada & AR, MA, ARMA \\
+\hline
+Nestacionární řada, která se po diferencování stane stacionární & ARIMA \\
+\hline
+Sezónní časová řada & Sezónní dummy nebo SARIMA \\
+\hline
+Regrese časových řad s autokorelací chyb & HAC SE, GLS/FGLS, ARMA chyby \\
+\hline
+Efekt proměnné se zpožděním & FDL, ADL, ARMAX \\
+\hline
+Více vzájemně propojených endogenních časových řad & VAR \\
+\hline
+Nestacionární, ale kointegrované řady & ECM nebo VECM \\
+\hline
+Panel s nepozorovanou heterogenitou korelovanou s regresory & FE nebo FD \\
+\hline
+Panel s heterogenitou nekorelovanou s regresory & RE \\
+\hline
+Volba mezi FE a RE & Hausmanův test a věcná argumentace \\
+\hline
+Panel s šoky společnými pro všechna období & časové efekty nebo two-way FE \\
+\hline
+Dynamický panel se zpožděným $y$ & Arellano--Bond / GMM \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{5. Nejdůležitější rovnice k zapamatování}
+
+\[
+    \text{AR(p):}\qquad
+    y_t=\alpha+\sum_{i=1}^{p}\phi_i y_{t-i}+e_t.
+\]
+
+\[
+    \text{ARMA(p,q):}\qquad
+    y_t=
+    \alpha+
+    \sum_{i=1}^{p}\phi_i y_{t-i}
+    +
+    \sum_{j=1}^{q}\theta_j e_{t-j}
+    +e_t.
+\]
+
+\[
+    \text{ARIMA(p,d,q):}\qquad
+    \Delta^d y_t=
+    \alpha+
+    \sum_{i=1}^{p}\phi_i\Delta^d y_{t-i}
+    +
+    \sum_{j=1}^{q}\theta_j e_{t-j}
+    +e_t.
+\]
+
+\[
+    \text{ADF test:}\qquad
+    \Delta y_t =
+    \alpha+\beta_1 y_{t-1}+\beta_2t
+    +\delta_1\Delta y_{t-1}
+    +\cdots+
+    \delta_p\Delta y_{t-p}
+    +e_t.
+\]
+
+\[
+    \text{FDL:}\qquad
+    y_t=\alpha+\sum_{j=0}^{q}\delta_jx_{t-j}+u_t.
+\]
+
+\[
+    \text{ADL:}\qquad
+    y_t=
+    \alpha+
+    \sum_{i=1}^{p}\rho_i y_{t-i}
+    +
+    \sum_{j=0}^{q}\delta_jx_{t-j}
+    +u_t.
+\]
+
+\[
+    \text{VAR(p):}\qquad
+    \mathbf y_t
+    =
+    \boldsymbol\alpha
+    +
+    \sum_{i=1}^{p}\Phi_i\mathbf y_{t-i}
+    +
+    \mathbf e_t.
+\]
+
+\[
+    \text{ECM:}\qquad
+    \Delta y_t =
+    \mu+\gamma\Delta x_t
+    +\delta(y_{t-1}-\alpha-\beta x_{t-1})
+    +e_t.
+\]
+
+\[
+    \text{Panel FE:}\qquad
+    y_{it}-\bar y_i
+    =
+    (\mathbf x_{it}-\bar{\mathbf x}_i)^\top\beta
+    +
+    (u_{it}-\bar u_i).
+\]
+
+\[
+    \text{Panel FD:}\qquad
+    \Delta y_{it}
+    =
+    \Delta \mathbf x_{it}^\top\beta
+    +
+    \Delta u_{it}.
+\]
+
+\[
+    \text{Panel RE:}\qquad
+    y_{it}-\lambda\bar y_i
+    =
+    \alpha(1-\lambda)
+    +
+    (\mathbf x_{it}-\lambda\bar{\mathbf x}_i)^\top\beta
+    +
+    v_{it}-\lambda\bar v_i.
+\]
+
+\[
+    \text{Dynamický panel:}\qquad
+    y_{it}
+    =
+    \alpha
+    +
+    \rho y_{i,t-1}
+    +
+    \mathbf x_{it}^\top\beta
+    +
+    c_i
+    +
+    u_{it}.
+\]
+
+
+\newpage
