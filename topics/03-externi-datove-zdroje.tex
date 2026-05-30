@@ -1,45 +1,323 @@
 \section{Externí datové a informační zdroje. Sekundární zdroje dat a informací, role competitive intelligence, přístup k externím zdrojům}
 
-\subsection*{Primární a sekundární zdroje}
-Materiály rozlišují primární a sekundární prameny informací. \term{Primární zdroj} přináší původní data nebo původní informaci. V analytice to mohou být přímo naměřená data, odpovědi respondentů, interní transakční záznamy, výsledky experimentu, logy nebo dokumenty vzniklé v organizaci.
+\subsection*{Smysl externích zdrojů}
+Externí datový nebo informační zdroj je zdroj, který nevzniká primárně uvnitř analyzované organizace.
+Může jít o veřejnou statistickou databázi, registr veřejné správy, otevřená data, placenou databázi,
+oborový report, data z API, webové stránky, dokumenty konkurentů, vědecké publikace nebo mediální
+monitoring.
 
-\term{Sekundární zdroj} nepřináší původní data, ale pomáhá se zorientovat, kde primární informace hledat, nebo shrnuje již existující poznání. V materiálech jsou jako příklady sekundárních pramenů uvedeny slovníky, encyklopedie, lexikony, přehledové texty a informační zdroje sloužící k orientaci v tématu.
+Externí zdroje se v datové analytice používají hlavně k tomu, aby interní data dostala širší kontext.
+Samotné interní tržby například neřeknou, zda firma roste díky vlastní výkonnosti, nebo jen kopíruje
+růst celého trhu. Po doplnění externích dat lze porovnávat výkon firmy s trhem, hodnotit regionální
+potenciál, odhadovat poptávku, sledovat makroekonomické vlivy, obohacovat zákaznická data nebo
+vytvářet varovné signály o změnách v okolí podniku.
 
-Pro datovou analytiku je dobré sekundární zdroje chápat šířeji: veřejné statistické databáze, open data portály, výroční zprávy, registry, akademické studie, oborové reporty, ceníky, katalogy, webové stránky institucí, dokumentace API a datové katalogy. Materiály zmiňují také externí data jako open data, tedy data, ke kterým lze získat přístup mimo firmu.
-
-\subsection*{Ověřování kvality externích zdrojů}
-U externích zdrojů je nutné ověřovat, zda jsou důvěryhodné a použitelné. Materiály doporučují ptát se zejména:
+\subsection*{Data, informace a zdroje}
+Pro zkoušku je dobré rozlišit tři roviny:
 \begin{itemize}
-  \item kdo je autorem zdroje a zda je autor dohledatelný;
-  \item zda je autor spojen s relevantní institucí;
-  \item zda jde o seriózní zdroj, například univerzitu, úřad, vědeckou instituci nebo odbornou organizaci;
-  \item jak aktuální je stránka nebo datový soubor;
-  \item zda je interpretace kompetentní a ověřitelná;
-  \item zda text není příliš subjektivní a jednostranný;
-  \item zda zdroj uvádí další odkazy, metodiku, metadata nebo dokumentaci.
+  \item \term{data} - jednotlivé hodnoty nebo záznamy, například počet obyvatel obce, IČO firmy,
+  kurz měny nebo cena produktu;
+  \item \term{informace} - data zasazená do významu, například pokles počtu zákazníků v regionu
+  s klesající kupní silou;
+  \item \term{znalost pro rozhodnutí} - interpretace informace ve vztahu k cíli, například zda má
+  firma otevřít novou pobočku, změnit cenu nebo upravit segmentaci zákazníků.
 \end{itemize}
 
-V analytickém projektu se musí kontrolovat i datová kvalita: úplnost, soulad formátů, konzistence, přesnost, unikátnost, integrita, včasnost a validita. Externí data mohou mít jiné definice proměnných, jinou granularitu, jiný časový rozsah a jiný způsob sběru než interní data.
+Externí zdroj proto nemá hodnotu jen tím, že existuje. Hodnotu má tehdy, když je důvěryhodný,
+srozumitelný, legálně použitelný, technicky dostupný a relevantní pro konkrétní analytickou otázku.
+
+\subsection*{Primární a sekundární zdroje}
+\term{Primární zdroj} přináší původní data nebo původní informaci. V datové analytice to mohou být
+přímo naměřená data, odpovědi respondentů, experimentální data, provozní logy, interní transakce,
+senzorová měření nebo originální dokumenty organizace. U externích zdrojů mohou být primárním zdrojem
+například úřední registry, účetní závěrky ve sbírce listin, oficiální statistické časové řady,
+meteorologická měření nebo data publikovaná institucí, která je sama vytváří.
+
+\term{Sekundární zdroj} původní data nevytváří, ale shrnuje, interpretuje, agreguje nebo odkazuje
+na jiné zdroje. Patří sem slovníky, encyklopedie, lexikony, přehledové články, analytické reporty,
+tržní studie, oborové databáze, agregátory cen, katalogy datových sad nebo rešerše.
+
+Rozdíl není vždy absolutní. Datový portál může být sekundárním zdrojem metadat, protože katalogizuje
+datové sady jiných institucí, ale samotná datová sada zveřejněná přes tento portál může být primárním
+zdrojem pro analýzu. U zkoušky je dobré vysvětlit nejen typ zdroje, ale i to, kdo data vytvořil,
+kdo je publikuje a zda jde o originální měření, nebo o odvozenou interpretaci.
+
+\subsection*{Typy externích zdrojů}
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.24\textwidth}
+                >{\raggedright\arraybackslash}p{0.35\textwidth}
+                >{\raggedright\arraybackslash}p{0.30\textwidth}@{}}
+\hline
+\term{Typ zdroje} & \term{Příklady} & \term{Analytické využití} \\
+\hline
+Oficiální statistiky & ČSÚ, Eurostat, OECD, World Bank, ČNB ARAD &
+makroekonomické proměnné, regiony, demografie, benchmarky \\
+Veřejné registry & ARES, veřejný rejstřík, registr smluv, RÚIAN, insolvenční rejstřík &
+identifikace firem, vlastnické vazby, sídla, veřejné zakázky, riziko partnera \\
+Open data portály & data.gov.cz, data.europa.eu, městské a krajské portály &
+strojově čitelné datové sady, geodata, doprava, životní prostředí \\
+Komerční databáze & tržní databáze, ratingové databáze, kreditní informace, panelová data &
+tržní podíly, bonita, konkurence, cílení kampaní \\
+Web a dokumenty & weby firem, ceníky, e-shopy, výroční zprávy, tiskové zprávy, nabídky práce &
+competitive intelligence, cenový monitoring, signály růstu nebo změny strategie \\
+Sociální a mediální data & sociální sítě, zprávy, recenze, diskuse, mediální monitoring &
+sentiment, reputace, témata zákazníků, krizové signály \\
+Geografická a senzorová data & mapy, družicová data, počasí, dopravní data, IoT zdroje &
+lokalizační analýzy, logistika, predikce poptávky, rizika počasí \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Příklady veřejných zdrojů pro ČR a EU}
+U státnic je užitečné umět uvést konkrétní zdroje a říct, k čemu se hodí:
+\begin{itemize}
+  \item \term{ČSÚ} - oficiální statistiky o obyvatelstvu, ekonomice, regionech, cenách, trhu práce
+  a podnikatelském sektoru; část dat je dostupná přes veřejnou databázi a otevřená data.
+  \item \term{Eurostat} - evropské statistiky pro srovnání států a regionů; data lze stahovat přes
+  Data Browser i API.
+  \item \term{data.gov.cz} - Národní katalog otevřených dat, který pomáhá najít datové sady veřejné
+  správy a jejich metadata.
+  \item \term{data.europa.eu} - oficiální evropský portál dat; sjednocuje metadata z institucí EU
+  i členských států a obsahuje také datové sady s vysokou hodnotou.
+  \item \term{ARES} - administrativní registr ekonomických subjektů; umožňuje vyhledávat údaje
+  o ekonomických subjektech registrovaných v ČR a nabízí veřejné API.
+  \item \term{Veřejný rejstřík a sbírka listin} - zákonem stanovené údaje o právnických osobách,
+  výpisy, účetní závěrky, výroční zprávy a další listiny.
+  \item \term{ČNB ARAD} - veřejná databáze časových řad z oblasti měnové, finanční a ekonomické
+  statistiky; pro automatizované použití existuje ARAD-REST-API.
+  \item \term{RÚIAN a geodata ČÚZK} - adresy, územní prvky, parcely a další prostorová data.
+  \item \term{Registr smluv, NEN a Věstník veřejných zakázek} - veřejné smlouvy a zakázky, vhodné
+  pro analýzu veřejných výdajů, dodavatelů a trhu B2G.
+\end{itemize}
+
+\subsection*{Otevřená data}
+\term{Otevřená data} jsou data zveřejněná tak, aby je bylo možné snadno najít, stáhnout, strojově
+zpracovat a znovu použít. Důležité vlastnosti otevřených dat jsou:
+\begin{itemize}
+  \item dostupnost na webu bez zbytečných překážek;
+  \item strojově čitelný a otevřený formát, například CSV, JSON, XML nebo RDF;
+  \item jasné podmínky užití nebo licence;
+  \item evidence v datovém katalogu;
+  \item metadata, dokumentace a kontakt na správce dat;
+  \item možnost hromadného stažení nebo přístupu přes API, pokud to povaha dat vyžaduje.
+\end{itemize}
+
+Je potřeba odlišit otevřená data od běžné webové stránky. Vyhledávací formulář, PDF určené pro čtení
+člověkem nebo mapa bez možnosti získat datovou vrstvu nejsou plnohodnotná otevřená data. Mohou být
+užitečné jako informační zdroj, ale pro analytickou pipeline jsou hůře automatizovatelné.
+
+V EU se zvlášť zdůrazňují \term{datové sady s vysokou hodnotou}. Patří do oblastí jako geodata,
+pozorování Země a životní prostředí, meteorologie, statistika, společnosti a vlastnictví společností
+a mobilita. Mají být dostupné ve strojově čitelné podobě, přes API a hromadné stažení a s otevřenou
+licencí.
+
+\subsection*{Hodnocení důvěryhodnosti a kvality}
+Před použitím externího zdroje nestačí ověřit, že data jdou stáhnout. Je nutné posoudit, zda zdroj
+odpovídá účelu analýzy.
+
+Otázky k důvěryhodnosti zdroje:
+\begin{itemize}
+  \item kdo je autorem nebo správcem zdroje;
+  \item zda jde o oficiální instituci, odbornou organizaci, univerzitu, komerčního poskytovatele
+  nebo neověřený web;
+  \item zda je uvedena metodika sběru, definice proměnných, časový rozsah a periodicita aktualizace;
+  \item zda zdroj uvádí metadata, dokumentaci, licenci a kontaktní osobu;
+  \item zda lze data ověřit proti jinému zdroji;
+  \item zda nejsou data jednostranná, marketingově upravená nebo vytržená z kontextu.
+\end{itemize}
+
+Otázky k datové kvalitě:
+\begin{itemize}
+  \item \term{úplnost} - nechybí klíčové záznamy, období, regiony nebo proměnné;
+  \item \term{přesnost} - odpovídají hodnoty skutečnosti a metodice měření;
+  \item \term{konzistence} - nejsou v datech rozpory mezi tabulkami, číselníky a jednotkami;
+  \item \term{aktuálnost} - jsou data dostatečně čerstvá pro rozhodnutí;
+  \item \term{validita} - měří proměnná opravdu to, co má měřit;
+  \item \term{unikátnost} - nevznikají duplicity jednotek;
+  \item \term{integrita} - sedí vazby mezi identifikátory, například IČO, kód obce nebo NUTS region.
+\end{itemize}
+
+Častý problém externích dat je rozdílná granularita. Interní data mohou být denní po zákaznících,
+zatímco externí statistika je měsíční po regionech. Analytik pak musí rozhodnout, zda bude data
+agregovat, spojovat přes geografický klíč, interpolovat, nebo je použije jen jako kontext.
+
+\subsection*{Právní a licenční omezení}
+Externí data nejsou automaticky volně použitelná. Vždy je potřeba ověřit:
+\begin{itemize}
+  \item \term{licenci} - zda je dovoleno data kopírovat, upravovat, kombinovat, sdílet a použít
+  komerčně;
+  \item \term{autorská a databázová práva} - zejména u databází, reportů, textů, obrázků a map;
+  \item \term{smluvní podmínky} - API může mít limity, zákaz redistribuce nebo povinnost uvést zdroj;
+  \item \term{ochranu osobních údajů} - pokud data obsahují nebo mohou odhalit fyzickou osobu;
+  \item \term{obchodní tajemství a důvěrnost} - zejména u nakoupených, partnerských nebo neveřejných dat;
+  \item \term{pravidla web scrapingu} - podmínky webu, soubor \texttt{robots.txt}, zákaz obcházení
+  technických ochran a přiměřená zátěž serveru.
+\end{itemize}
+
+U otevřených dat bývá licence nastavena tak, aby umožnila opakované použití. To však neznamená, že
+odpadá odpovědnost za správnou interpretaci. I otevřený dataset může mít omezenou přesnost, neúplná
+metadata nebo metodické změny v čase.
 
 \subsection*{Přístup k externím zdrojům}
 Přístup k externím zdrojům může mít různé podoby:
 \begin{itemize}
-  \item ruční stažení souboru, například CSV, XLSX, JSON nebo XML;
-  \item dotazování přes API;
-  \item přístup do databáze nebo datového katalogu;
-  \item web scraping, pokud je právně a technicky přípustný;
-  \item nákup dat od komerčního poskytovatele;
-  \item využití veřejných dokumentů, výročních zpráv a registrů.
+  \item \term{ruční stažení souboru} - jednoduché pro jednorázovou analýzu, ale špatně reprodukovatelné;
+  \item \term{hromadné stažení} - vhodné pro pravidelné načítání celých datasetů;
+  \item \term{API} - strukturované rozhraní pro automatizovaný přístup, často s autentizací,
+  stránkováním a limity;
+  \item \term{datový katalog} - zdroj metadat, odkazů, licencí a dokumentace;
+  \item \term{přímý databázový přístup} - typický u partnerských nebo placených zdrojů;
+  \item \term{web scraping} - automatizované získávání dat z HTML stránky, pokud neexistuje vhodné
+  API a pokud to dovolují právní, technická a etická omezení;
+  \item \term{nákup dat} - komerční licence k datům, často s lepší dokumentací, podporou a SLA.
 \end{itemize}
 
-Materiály přímo nepopisují competitive intelligence, ale lze ji navázat na práci s externími zdroji. Competitive intelligence je systematické získávání, třídění, analýza a interpretace informací o trhu, konkurenci, zákaznících, dodavatelích, technologiích a regulatorním prostředí. Cílem není jen sběr dat, ale podpora rozhodování. Proto nestačí data stáhnout; je potřeba rozumět jejich původu, kvalitě, omezením a významu pro rozhodnutí.
+Pokud existuje API, je obvykle lepší než scraping. API je stabilnější, má jasnější strukturu, může
+vracet metadata a bývá navrženo pro strojové zpracování. Scraping je křehčí, protože změna HTML
+šablony může rozbít extrakční pravidla.
 
-\todohead
+\subsection*{Napojení externích zdrojů do datové pipeline}
+Externí data je vhodné zapojovat stejně disciplinovaně jako interní zdroje. Typický tok:
+\begin{enumerate}
+  \item výběr zdroje a ověření licence, metodiky a periodicity aktualizace;
+  \item stažení souboru, hromadný export nebo volání API do staging vrstvy;
+  \item validace kvality, schématu, počtu řádků, identifikátorů a časového rozsahu;
+  \item transformace a napojení na interní data;
+  \item využití v reportingu, modelu, dashboardu nebo rozhodovacím procesu.
+\end{enumerate}
+
+Praktické zásady:
 \begin{itemize}
-  \item Doplnit konkrétní veřejné zdroje pro ČR a EU: ČSÚ, Eurostat, data.gov.cz, ARES, obchodní rejstřík a další registry.
-  \item Doplnit proces competitive intelligence: plánování, sběr, vyhodnocení, analýza, distribuce, zpětná vazba.
-  \item Doplnit právní omezení: licence, autorská práva, smluvní podmínky API, ochrana osobních údajů a pravidla web scrapingu.
-  \item Doplnit příklady napojení externích zdrojů do datové pipeline.
+  \item ukládat surovou kopii dat, datum stažení, URL, verzi a licenci;
+  \item oddělit technické načtení od analytické transformace;
+  \item kontrolovat schéma, datové typy, počet řádků, duplicity a rozsah hodnot;
+  \item používat stabilní identifikátory, například IČO, kód obce, NUTS, ISO kód státu nebo časovou
+  dimenzi;
+  \item monitorovat změny API, výpadky, limity dotazů a metodické změny;
+  \item dokumentovat, které externí proměnné byly použity a jak ovlivňují výsledek.
+\end{itemize}
+
+Například při obohacení zákaznických dat lze interní adresu napojit na RÚIAN nebo kód obce, k tomu
+přidat demografii z ČSÚ, regionální ukazatele z Eurostatu a vzdálenost k pobočce z geodat. Výsledek
+může sloužit k segmentaci, predikci poptávky nebo plánování pobočkové sítě.
+
+\subsection*{Competitive intelligence}
+\term{Competitive intelligence} je systematické získávání, třídění, analýza a předávání informací
+o vnějším prostředí organizace. Nejde jen o sledování přímých konkurentů. Patří sem také zákazníci,
+dodavatelé, substituty, technologie, regulace, makroekonomické trendy, nové obchodní modely a změny
+v chování trhu.
+
+Cílem competitive intelligence není vytvořit co největší archiv dokumentů. Cílem je dodat včasnou,
+ověřenou a použitelnou informaci pro rozhodnutí. Typické otázky jsou:
+\begin{itemize}
+  \item vstupuje na trh nový konkurent;
+  \item mění konkurence ceny, produktové balíčky nebo distribuční kanály;
+  \item roste poptávka v určitém segmentu nebo regionu;
+  \item objevuje se technologie, která může změnit náklady nebo kvalitu služby;
+  \item hrozí regulatorní změna, která ovlivní byznys model;
+  \item je konkrétní dodavatel nebo odběratel finančně rizikový.
+\end{itemize}
+
+Competitive intelligence je legální a etická disciplína, pokud pracuje s veřejně dostupnými,
+legálně získanými nebo smluvně dostupnými informacemi. Není to průmyslová špionáž, hacking,
+obcházení přístupových práv ani získávání důvěrných informací pod falešnou identitou.
+
+\subsection*{Proces competitive intelligence}
+Proces lze popsat jako cyklus:
+\begin{enumerate}
+  \item \term{Plánování a zadání} - vyjasnit rozhodnutí, které má být podpořeno. Formulují se
+  \term{KIQ - Key Intelligence Questions}, tedy klíčové zpravodajské otázky.
+  \item \term{Mapování zdrojů} - určit, které veřejné registry, databáze, weby, dokumenty, reporty,
+  rozhovory nebo placené zdroje mohou odpověď poskytnout.
+  \item \term{Sběr dat a informací} - získat data přes API, katalogy, dokumenty, monitoring webu,
+  rešerše nebo legální primární výzkum.
+  \item \term{Vyhodnocení zdrojů} - posoudit důvěryhodnost, aktuálnost, zaujatost, metodiku a právní
+  použitelnost.
+  \item \term{Analýza} - převést data na závěry. Používá se například benchmarking, trendová analýza,
+  SWOT, PESTLE, Porterův model pěti sil, scénáře nebo early warning indikátory.
+  \item \term{Distribuce} - předat závěry ve formě reportu, dashboardu, alertu, briefing note nebo
+  doporučení pro management.
+  \item \term{Zpětná vazba} - ověřit, zda výstup pomohl rozhodnutí, a zpřesnit další sběr.
+\end{enumerate}
+
+Dobrá competitive intelligence odděluje fakta od interpretací. Fakt je například zveřejněná účetní
+závěrka, otevření nové pobočky nebo změna ceníku. Interpretace je závěr, že konkurent posiluje určitý
+segment, má problém s marží nebo se připravuje na expanzi. U interpretace je nutné uvést, o jaké
+důkazy se opírá a jaké existují alternativní výklady.
+
+\subsection*{Příklady analytických úloh}
+\term{Cenový monitoring} sleduje veřejné ceny konkurentů, slevy, dostupnost a produktové balíčky.
+Data mohou pocházet z webů, e-shopů, ceníků nebo API agregátorů. Rizikem je, že veřejná cena nemusí
+odpovídat skutečně realizované ceně po individuálních slevách.
+
+\term{Tržní a regionální analýza} kombinuje interní prodeje s externími daty o populaci, příjmech,
+zaměstnanosti, dopravní dostupnosti a konkurenci v území. Používá se pro volbu lokality, obchodní
+plán nebo rozdělení prodejních cílů.
+
+\term{Riziko obchodního partnera} využívá registry firem, insolvenční rejstřík, účetní závěrky,
+ARES, sankční seznamy, platební historii a mediální monitoring. Výstupem může být skóre rizika,
+varování nebo pravidlo pro schvalování obchodního vztahu.
+
+\term{Technologický scouting} sleduje patenty, vědecké články, startupy, pracovní inzeráty, konference
+a investice konkurentů. Cílem je odhalit technologické trendy dříve, než se projeví ve finančních
+výsledcích.
+
+\subsection*{Rizika a dobré praktiky}
+\begin{itemize}
+  \item \term{Falešná přesnost:} externí dataset může vypadat přesně, ale být založený na odhadech,
+  vzorku nebo změněné metodice.
+  \item \term{Nesoulad definic:} tržba, zákazník, domácnost, firma nebo region mohou být v různých
+  zdrojích definovány odlišně.
+  \item \term{Zpoždění dat:} oficiální statistiky bývají kvalitní, ale často vycházejí se zpožděním.
+  \item \term{Selektivní výběr zdrojů:} výsledek lze zkreslit tím, že analytik vybírá jen zdroje
+  potvrzující předem zvolený závěr.
+  \item \term{Křehká automatizace:} scraping nebo nestabilní API se může bez varování změnit.
+  \item \term{Právní riziko:} licence nebo smluvní podmínky mohou zakazovat redistribuci, automatizované
+  stahování nebo komerční použití.
+  \item \term{Chybné spojování dat:} špatné mapování identifikátorů, firem, adres nebo regionů může
+  vytvořit přesvědčivě vypadající, ale chybný výsledek.
+\end{itemize}
+
+\pozor
+U zkoušky je dobré neplést si externí zdroj s automaticky kvalitním zdrojem. Externí data mohou být
+oficiální, otevřená i strojově čitelná, a přesto nemusí být vhodná pro danou úlohu. V odpovědi je
+vhodné vždy zmínit původ dat, metodiku, licenci, kvalitu, technický přístup a způsob napojení na
+konkrétní rozhodnutí.
+
+\subsection*{Shrnutí ke zkoušce}
+\begin{itemize}
+  \item Externí zdroje doplňují interní data o tržní, regionální, makroekonomický, regulatorní nebo
+  konkurenční kontext.
+  \item Primární zdroj přináší původní data, sekundární zdroj je shrnuje, interpretuje nebo katalogizuje.
+  \item Důležité jsou oficiální statistiky, veřejné registry, národní a evropské datové portály,
+  ČNB ARAD, RÚIAN a registry smluv nebo zakázek.
+  \item Otevřená data mají být strojově čitelná, licenčně použitelná, dokumentovaná a dohledatelná
+  v katalogu.
+  \item Před použitím je nutné posoudit důvěryhodnost, metodiku, aktuálnost, granularitu, kvalitu
+  a právní podmínky zdroje.
+  \item Přístup může probíhat ručním stažením, hromadným exportem, API, databázovým přístupem,
+  scrapingem nebo nákupem dat.
+  \item Competitive intelligence je legální a etická práce s informacemi o vnějším prostředí
+  organizace za účelem lepšího rozhodování.
+  \item Proces competitive intelligence zahrnuje plánování, sběr, vyhodnocení, analýzu, distribuci
+  a zpětnou vazbu.
+  \item Externí data v pipeline vyžadují ukládání metadat, verzování, validace, monitoring a jasné
+  mapování na interní data.
+\end{itemize}
+
+\subsection*{Zdroje}
+\begin{itemize}
+  \item Portál o datech České republiky: \href{https://data.gov.cz/pro-u\%C5\%BEivatele/otev\%C5\%99en\%C3\%A1-data/}{Otevřená data}.
+  \item Český statistický úřad: \href{https://opendata.csu.gov.cz/}{Otevřená data ČSÚ}.
+  \item Eurostat: \href{https://ec.europa.eu/eurostat/web/user-guides/data-browser/api-data-access/api-getting-started/api}{API - Getting started with statistics API}.
+  \item Evropská komise: \href{https://digital-strategy.ec.europa.eu/en/factpages/open-data-and-high-value-datasets-step-step-access-guide}{Open data and high-value datasets}.
+  \item Ministerstvo financí ČR: \href{https://mf.gov.cz/cs/ministerstvo/informacni-systemy/ares}{ARES - Administrativní registr ekonomických subjektů}.
+  \item Ministerstvo spravedlnosti ČR: \href{https://verejnerejstriky.msp.gov.cz/clanky/obecne-informace/verejny-rejstrik-a-sbirka-listin}{Veřejný rejstřík a sbírka listin}.
+  \item Česká národní banka: \href{https://www.cnb.cz/cs/statistika/arad-system-casovych-rad/}{ARAD - systém časových řad}.
+  \item Česká národní banka: \href{https://www.cnb.cz/docs/arad20/dokumentace/arad_rest_api_cs.pdf}{ARAD-REST-API}.
+  \item Intelligence.gov: \href{https://www.intelligence.gov/how-the-ic-works}{How the IC Works}.
+  \item SAGE Encyclopedia of Business Ethics and Society: \href{https://sk.sagepub.com/ency/edvol/embed/sage-encyclopedia-of-business-ethics-and-society-2e/chpt/competitive-intelligence}{Competitive Intelligence}.
 \end{itemize}
 
 \newpage

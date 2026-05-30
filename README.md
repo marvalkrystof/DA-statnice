@@ -8,7 +8,7 @@ Zaškrtnutí znamená, že je téma zpracované do použitelné podoby pro opako
 
 - [x] 1. Transakční data. Zdroje a typy podnikových transakčních dat, úložiště a datové pumpy.
 - [x] 2. Metodika výběrových šetření. Fáze dotazování, sestavení dotazníku, metody vážení.
-- [ ] 3. Externí datové a informační zdroje. Sekundární zdroje dat a informací, role competitive intelligence, přístup k externím zdrojům.
+- [x] 3. Externí datové a informační zdroje. Sekundární zdroje dat a informací, role competitive intelligence, přístup k externím zdrojům.
 - [ ] 4. Etika a regulace při sběru a uchovávání dat.
 - [ ] 5. Databáze. Relační databázové systémy, jazyk SQL, návrh obsahu datové základny.
 - [ ] 6. Metody a nástroje pro vizualizaci dat.
