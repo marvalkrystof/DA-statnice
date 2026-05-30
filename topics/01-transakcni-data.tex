@@ -1,29 +1,45 @@
 \section{Transakční data. Zdroje a typy podnikových transakčních dat, úložiště a datové pumpy}
 
 \subsection*{Transakce a transakční data}
-Transakční data vznikají při běžném provozu organizace jako záznamy o konkrétních událostech. Typicky jde o objednávku, fakturu, platbu, skladový pohyb, výdej materiálu, reklamaci, změnu stavu zakázky, přijetí zaměstnance, kontakt se zákazníkem nebo záznam servisního úkonu. V materiálech se pojem transakce vysvětluje jako změna stavu, která buď proběhne celá, nebo se systém vrátí do původního stavu. V databázovém pojetí je transakce logická posloupnost operací, která se do databáze promítá jako jeden celek.
+Transakční data vznikají při běžném provozu organizace jako záznamy o konkrétních událostech.
+Typicky jde o objednávku, fakturu, platbu, skladový pohyb, výdej materiálu, reklamaci, změnu stavu
+zakázky, přijetí zaměstnance, kontakt se zákazníkem nebo záznam servisního úkonu.
 
-Pro státnicovou odpověď je důležité rozlišit dvě roviny:
+Je důležité rozlišit dvě roviny:
 \begin{itemize}
-  \item \term{byznys transakce} - událost v podniku, která mění stav byznysu, například vystavení faktury nebo objednání zboží;
-  \item \term{databázová transakce} - technický mechanismus, který zajistí bezpečný zápis změn do databáze.
+  \item \term{byznys transakce} - událost v podniku, která mění stav byznysu, například vystavení
+  faktury, objednání zboží nebo přesun položky ve skladu;
+  \item \term{databázová transakce} - technický mechanismus, který zajistí bezpečný zápis změn
+  do databáze.
 \end{itemize}
 
-Transakční data mají zpravidla vysokou granularitu. Jeden řádek bývá jedna událost, jeden doklad, jedna položka objednávky nebo jeden záznam změny. Díky tomu jsou cenným zdrojem pro analytiku, ale samy o sobě nejsou vždy vhodné pro přímé manažerské analýzy. Provozní databáze jsou navrženy hlavně pro rychlé ukládání, změny a mazání záznamů, nikoli pro složité souhrnné dotazy.
+Transakční data mají zpravidla vysokou granularitu. Jeden řádek bývá jedna událost, jeden doklad,
+jedna položka objednávky nebo jeden záznam změny. Díky tomu jsou cenným zdrojem pro analytiku, ale
+sama o sobě nejsou vždy vhodná pro přímé manažerské analýzy. Provozní databáze jsou navrženy hlavně
+pro rychlé ukládání, změny a mazání jednotlivých záznamů, nikoli pro složité souhrnné dotazy nad
+dlouhou historií.
 
 \subsection*{ACID vlastnosti}
 U databázových transakcí je potřeba znát zkratku ACID:
 \begin{itemize}
-  \item \term{Atomicita} - transakce proběhne celá, nebo vůbec. Pokud pátý krok z pěti skončí chybou, nesmí v databázi zůstat jen první čtyři kroky.
-  \item \term{Konzistence} - transakce převádí databázi z jednoho konzistentního stavu do druhého. Musí respektovat integritní omezení, klíče, pravidla a domény.
-  \item \term{Izolovanost} - souběžné transakce si nemají navzájem nekonzistentně zasahovat do mezivýsledků.
+  \item \term{Atomicita} - transakce proběhne celá, nebo vůbec. Pokud pátý krok z pěti skončí
+  chybou, nesmí v databázi zůstat jen první čtyři kroky.
+  \item \term{Konzistence} - transakce převádí databázi z jednoho konzistentního stavu do druhého.
+  Musí respektovat integritní omezení, klíče, pravidla a domény.
+  \item \term{Izolovanost} - souběžné transakce si nemají navzájem nekonzistentně zasahovat do
+  mezivýsledků.
   \item \term{Trvanlivost} - jednou potvrzená transakce zůstane uložena i po pádu systému.
 \end{itemize}
 
-K základním příkazům patří \texttt{BEGIN TRANSACTION}, \texttt{COMMIT} a \texttt{ROLLBACK}. Pro obnovu po havárii se používá logování změn, tedy žurnálový soubor. Při problému lze provést \texttt{UNDO}/\texttt{ROLLBACK} pro odstranění nedokončených změn a \texttt{REDO}/\texttt{ROLLFORWARD} pro opětovné promítnutí dokončených transakcí.
+K základním příkazům patří \texttt{BEGIN TRANSACTION}, \texttt{COMMIT} a \texttt{ROLLBACK}. Pro
+obnovu po havárii se používá logování změn, tedy žurnálový soubor. Při problému lze provést
+\texttt{UNDO}/\texttt{ROLLBACK} pro odstranění nedokončených změn a \texttt{REDO}/\texttt{ROLLFORWARD}
+pro opětovné promítnutí dokončených transakcí.
 
 \subsection*{OLTP jako typické úložiště transakčních dat}
-Transakční data jsou v podniku obvykle uložena v provozních databázích typu OLTP - \textit{On-Line Transaction Processing}. Takové databáze jsou optimalizované na velký počet relativně malých transakcí. Typické požadavky na OLTP jsou:
+Transakční data jsou v podniku obvykle uložena v provozních databázích typu OLTP -
+\textit{On-Line Transaction Processing}. Takové databáze jsou optimalizované na velký počet
+relativně malých transakcí. Typické požadavky na OLTP jsou:
 \begin{itemize}
   \item rychlé vložení, změna a smazání jednotlivých záznamů;
   \item vysoká současnost uživatelů;
@@ -32,51 +48,223 @@ Transakční data jsou v podniku obvykle uložena v provozních databázích typ
   \item podpora provozních procesů v reálném nebo téměř reálném čase.
 \end{itemize}
 
-OLTP se liší od analytického zpracování. V OLTP se řeší například vytvoření objednávky. V analytice se řeší například měsíční obrat podle regionu, segmentu zákazníků a produktové kategorie. Právě proto se data z OLTP často kopírují a transformují do analytických úložišť.
+OLTP se liší od analytického zpracování. V OLTP se řeší například vytvoření objednávky. V analytice
+se řeší například měsíční obrat podle regionu, segmentu zákazníků a produktové kategorie. Právě
+proto se data z OLTP často kopírují, čistí a transformují do analytických úložišť.
 
 \subsection*{Zdroje podnikových transakčních dat}
-Materiály zmiňují zejména podnikové systémy ERP, CRM, SCM a MES. Pro odpověď je dobré je svázat s konkrétním typem dat.
+Zdrojem transakčních dat bývají hlavně interní podnikové systémy, ale stále častěji také webové,
+mobilní, senzorové a externí zdroje.
 
-\term{ERP} je celopodnikový informační systém pokrývající účetnictví, finance, nákup, výrobu, prodej, logistiku, skladové hospodářství, personalistiku a mzdy. Z ERP pocházejí například faktury, účetní doklady, skladové pohyby, nákupní objednávky, výrobní příkazy, dodací listy, mzdy nebo evidence majetku.
+\term{ERP} je celopodnikový informační systém pokrývající účetnictví, finance, nákup, výrobu,
+prodej, logistiku, skladové hospodářství, personalistiku a mzdy. Z ERP pocházejí například faktury,
+účetní doklady, skladové pohyby, nákupní objednávky, výrobní příkazy, dodací listy, mzdy nebo
+evidence majetku.
 
-\term{CRM} spravuje vztahy se zákazníky. Zdrojem transakčních dat jsou kontakty se zákazníky, obchodní příležitosti, marketingové kampaně, servisní požadavky, reklamace, historie komunikace nebo výsledky prodejních aktivit.
+\term{CRM} spravuje vztahy se zákazníky. Zdrojem transakčních dat jsou kontakty se zákazníky,
+obchodní příležitosti, marketingové kampaně, servisní požadavky, reklamace, historie komunikace
+nebo výsledky prodejních aktivit.
 
-\term{SCM} se vztahuje k dodavatelskému řetězci. Vznikají zde data o dodávkách, dostupnosti zásob, dopravě, požadavcích dodavatelů, termínech plnění, stavu zakázek a koordinaci partnerů v řetězci.
+\term{SCM} se vztahuje k dodavatelskému řetězci. Vznikají zde data o dodávkách, dostupnosti zásob,
+dopravě, požadavcích dodavatelů, termínech plnění, stavu zakázek a koordinaci partnerů v řetězci.
 
-\term{MES} se používá ve výrobě. Zachycuje data o výrobních operacích, průběhu výroby, strojích, časech, prostojích, kvalitě a spotřebě materiálu.
+\term{MES} se používá ve výrobě. Zachycuje data o výrobních operacích, průběhu výroby, strojích,
+časech, prostojích, kvalitě a spotřebě materiálu.
 
-Vedle těchto interních systémů se mohou připojit také e-shopy, platební brány, helpdesk, webové a aplikační logy, senzory, pokladní systémy nebo externí zdroje. Důležité je zdůraznit, že datové zdroje bývají heterogenní: mají různé struktury, různé číselníky, různou kvalitu a často vznikaly pro provozní účely, nikoli pro analytiku.
+Vedle těchto systémů se mohou připojit také e-shopy, platební brány, helpdesk, webové a aplikační
+logy, senzory, pokladní systémy nebo externí zdroje. Důležité je zdůraznit, že datové zdroje bývají
+heterogenní: mají různé struktury, různé číselníky, různou kvalitu a často vznikaly pro provozní
+účely, nikoli pro analytiku.
+
+\subsection*{Typy transakčních dat podle oblastí}
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\textwidth}
+                >{\raggedright\arraybackslash}p{0.35\textwidth}
+                >{\raggedright\arraybackslash}p{0.36\textwidth}@{}}
+\hline
+\term{Oblast} & \term{Příklady záznamů} & \term{Typické analytické využití} \\
+\hline
+Účetní a finanční & faktury, platby, pohledávky, závazky, účetní doklady, kurzové rozdíly &
+cash-flow, ziskovost, controlling, odhalování anomálií \\
+Logistická a skladová & příjem a výdej zboží, skladové pohyby, dodací listy, přepravní události &
+optimalizace zásob, vyhodnocení dodavatelů, dostupnost zboží \\
+Výrobní & výrobní příkazy, operace, spotřeba materiálu, kvalita, zmetkovitost, prostoje &
+plánování výroby, OEE, sledování kvality, prediktivní údržba \\
+Obchodní & objednávky, nabídky, ceníky, slevy, položky prodeje, vratky &
+marže, prodejní výkon, segmentace zákazníků, forecasting \\
+Zákaznická a servisní & požadavky, reklamace, tikety, kontakty, historie komunikace &
+retence, spokojenost, SLA, churn analýza \\
+Webová a aplikační & page views, kliky, přihlášení, vyhledávání, konverze, aplikační logy &
+konverzní trychtýř, A/B testy, detekce chyb, produktová analytika \\
+Senzorová a IoT & měření teploty, vibrací, polohy, spotřeby energie, stav zařízení &
+monitoring, alarmy, prediktivní údržba, optimalizace provozu \\
+\hline
+\end{tabular}
+\end{center}
 
 \subsection*{Datové pumpy a přesun do analytických úložišť}
-Materiály popisují datové pumpy jako ETL - \textit{Extraction, Transformation and Loading}. Jejich úkolem je dostat data ze zdrojových systémů do analytického úložiště.
+Datová pumpa je proces, který přesouvá data ze zdrojových systémů do analytického úložiště. Klasický
+přístup je ETL - \textit{Extraction, Transformation and Loading}.
 
 \begin{enumerate}
-  \item \term{Extraction} - výběr a načtení dat ze zdrojových systémů, například z ERP, CRM, SCM nebo externích databází.
-  \item \term{Transformation} - čištění, sjednocení, převod formátů, kontrola číselníků, odstraňování duplicit, doplňování odvozených atributů, převod měn, časových pásem a jednotek.
-  \item \term{Loading} - nahrání připravených dat do datového skladu, datového tržiště, OLAP kostky nebo jiného analytického úložiště.
+  \item \term{Extraction} - výběr a načtení dat ze zdrojových systémů, například z ERP, CRM, SCM,
+  databází, API, souborů nebo logů.
+  \item \term{Transformation} - čištění, sjednocení, převod formátů, kontrola číselníků, odstraňování
+  duplicit, doplňování odvozených atributů, převod měn, časových pásem a jednotek.
+  \item \term{Loading} - nahrání připravených dat do datového skladu, datového tržiště, OLAP kostky
+  nebo jiného analytického úložiště.
 \end{enumerate}
 
-ETL nástroje v materiálech pracují typicky dávkově, tedy v denních, týdenních nebo měsíčních intervalech. Vedle ETL se objevuje také EAI - \textit{Enterprise Application Integration}. Rozdíl je v tom, že ETL slouží hlavně pro dávkové přesuny a transformace dat do analytických struktur, zatímco EAI se zaměřuje na integraci aplikací a výměnu dat nebo funkcí v reálném čase.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\linewidth]{assets/images/etl-data-flow.png}
+  \caption[ETL tok]{Základní ETL tok mezi zdrojovými systémy a cílovými analytickými úložišti.
+  Zdroj obrázku: Bamyers99, Wikimedia Commons, CC0.}
+  \label{fig:etl-data-flow}
+\end{figure}
+
+Datové pumpy mohou běžet dávkově, například jednou za noc, nebo průběžně. U dávkového zpracování
+je typický kompromis: je jednodušší a levnější, ale analytická data nejsou úplně aktuální. U průběžného
+zpracování jsou data aktuálnější, ale roste technická složitost, nároky na monitoring a řešení chyb.
+
+\subsection*{ETL versus ELT}
+Rozdíl mezi ETL a ELT je hlavně v tom, kde probíhá transformace.
+
+\term{ETL} nejdříve data extrahuje, potom transformuje mimo cílový sklad a až poté je nahraje do
+analytického úložiště. Hodí se tam, kde je potřeba data před nahráním silně čistit, filtrovat nebo
+standardizovat, případně kde cílové úložiště nemá být zatěžováno transformační logikou.
+
+\term{ELT} data nejdříve extrahuje, rychle nahraje do cílového úložiště a transformace provádí až tam.
+Tento přístup je častý u moderních cloudových datových skladů a lakehouse platforem, protože mají
+výpočetní výkon přímo v úložišti nebo blízko něj. Výhodou ELT je flexibilita: surová data zůstávají
+k dispozici a různé analytické týmy nad nimi mohou vytvářet vlastní transformační vrstvy.
+
+Zjednodušeně:
+\begin{itemize}
+  \item \term{ETL} - transformace před uložením do cílového analytického úložiště;
+  \item \term{ELT} - nejdříve uložení, transformace až uvnitř cílové platformy;
+  \item \term{moderní pipeline} - často kombinuje dávkové zpracování, streamy, automatizované testy
+  kvality dat, katalog metadat, orchestraci a monitoring.
+\end{itemize}
 
 \subsection*{DSA, ODS, DWH, datové tržiště a OLAP}
-Při zpracování transakčních dat pro analytiku se v materiálech objevuje několik úložišť:
+Při zpracování transakčních dat pro analytiku se používá několik typů úložišť.
 
-\term{DSA - Data Staging Area} je dočasné úložiště extrahovaných dat. Data zde často ještě nejsou vyčištěná ani konsolidovaná. Slouží k tomu, aby se zdrojové systémy nemusely opakovaně zatěžovat a aby bylo možné data předzpracovat.
+\term{DSA - Data Staging Area} je dočasné úložiště extrahovaných dat. Data zde často ještě nejsou
+vyčištěná ani konsolidovaná. Slouží k tomu, aby se zdrojové systémy nemusely opakovaně zatěžovat
+a aby bylo možné data předzpracovat.
 
-\term{ODS - Operational Data Store} je operativní úložiště aktuálních, konsolidovaných a konzistentních dat. Oproti DSA už může obsahovat sjednocená data a někdy i agregace, ale typicky neobsahuje dlouhou historii jako datový sklad.
+\term{ODS - Operational Data Store} je operativní úložiště aktuálních, konsolidovaných a konzistentních
+dat. Oproti DSA už může obsahovat sjednocená data a někdy i agregace, ale typicky neobsahuje tak
+dlouhou historii jako datový sklad.
 
-\term{DWH - datový sklad} je integrovaný, subjektově orientovaný, stálý a časově rozlišený souhrn dat pro podporu managementu. Integrovanost znamená, že data nejsou jen za jedno oddělení. Subjektová orientace znamená členění podle předmětů zájmu, například zákazník, produkt nebo zakázka, ne podle aplikace, kde data vznikla. Stálost znamená, že data se ve skladu běžně nemění jako v OLTP. Časové rozlišení znamená, že data nesou historii.
+\term{DWH - datový sklad} je integrovaný, subjektově orientovaný, stálý a časově rozlišený souhrn dat
+pro podporu managementu. Integrovanost znamená, že data nejsou jen za jedno oddělení. Subjektová
+orientace znamená členění podle předmětů zájmu, například zákazník, produkt nebo zakázka, ne podle
+aplikace, kde data vznikla. Stálost znamená, že data se ve skladu běžně nemění jako v OLTP. Časové
+rozlišení znamená, že data nesou historii.
 
-\term{Datové tržiště} je menší, problémově nebo uživatelsky orientovaný sklad pro omezenou skupinu uživatelů nebo konkrétní oblast, například finance, prodej nebo marketing.
+\term{Datové tržiště} je menší, problémově nebo uživatelsky orientovaný sklad pro omezenou skupinu
+uživatelů nebo konkrétní oblast, například finance, prodej nebo marketing.
 
-\term{OLAP} představuje analytické zpracování nad multidimenzionálními daty. Data jsou organizována do kostek, kde lze sledovat ukazatele podle dimenzí, jako je čas, region, produkt, zákazník nebo organizační jednotka.
+\term{OLAP} představuje analytické zpracování nad multidimenzionálními daty. Data jsou organizována
+do kostek, kde lze sledovat ukazatele podle dimenzí, jako je čas, region, produkt, zákazník nebo
+organizační jednotka.
 
-\todohead
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.88\linewidth]{assets/images/data-warehouse-data-marts.png}
+  \caption[Datový sklad a datová tržiště]{Příklad toku dat z provozních systémů přes integrační
+  vrstvu do datového skladu a datových tržišť. Zdroj obrázku: MarsJson, Wikimedia Commons,
+  CC BY-SA 4.0.}
+  \label{fig:data-warehouse-data-marts}
+\end{figure}
+
+\subsection*{CDC, streamové zpracování a fronty zpráv}
+\term{CDC - Change Data Capture} je způsob zachytávání změn ve zdrojových systémech. Cílem není
+pokaždé kopírovat celou tabulku, ale přenášet jen vložené, změněné nebo smazané záznamy. CDC se
+hodí například pro průběžné napojení ERP databáze na datový sklad nebo pro replikaci provozních dat
+do analytické platformy.
+
+Základní varianty CDC:
 \begin{itemize}
-  \item Konkrétněji doplnit typy transakčních dat podle oblastí: účetní, logistická, výrobní, obchodní, zákaznická, webová a senzorová.
-  \item Doplnit rozdíl ETL versus ELT a moderní datové pipeline.
-  \item Doplnit CDC - Change Data Capture, streamové zpracování a fronty zpráv.
-  \item Doplnit konkrétní příklady nástrojů pro datové pumpy a integraci.
+  \item \term{log-based CDC} - čte transakční log databáze; bývá efektivní a málo zatěžuje zdroj;
+  \item \term{trigger-based CDC} - změny zapisují databázové triggery do pomocných tabulek;
+  \item \term{timestamp/polling} - pipeline periodicky vybírá záznamy změněné od posledního běhu;
+  \item \term{snapshot diff} - porovnává dva snímky dat a hledá rozdíly.
+\end{itemize}
+
+\term{Streamové zpracování} pracuje s událostmi průběžně, ne až po uzavření dávky. Událostí může být
+nová objednávka, platba, klik na webu, změna stavu stroje nebo senzorové měření. Stream je vhodný
+tam, kde má hodnota informace krátkou životnost: detekce podvodu, monitoring výroby, doporučování,
+personalizace nebo online alerty.
+
+\term{Fronty zpráv} a \term{event streaming platformy} oddělují producenty dat od konzumentů. Zdrojový
+systém publikuje zprávy a analytické nebo integrační aplikace je čtou vlastním tempem. Tím se snižuje
+těsné propojení systémů a zvyšuje odolnost vůči dočasným výpadkům.
+
+Typické příklady technologií:
+\begin{itemize}
+  \item \term{Apache Kafka} a \term{Kafka Connect} pro event streaming a konektory ke zdrojům;
+  \item \term{RabbitMQ} pro zprávy a fronty mezi aplikacemi;
+  \item \term{AWS Kinesis}, \term{Google Pub/Sub}, \term{Azure Event Hubs} pro cloudové streamy;
+  \item \term{Debezium} pro log-based CDC nad databázemi;
+  \item \term{Spark Structured Streaming}, \term{Apache Flink} pro zpracování proudů dat.
+\end{itemize}
+
+\subsection*{Příklady nástrojů pro datové pumpy a integraci}
+Nástroje se liší podle toho, jestli řeší připojení ke zdrojům, transformace, orchestraci, streamy
+nebo kvalitu dat.
+
+\begin{itemize}
+  \item \term{Databázové a integrační nástroje:} SQL Server Integration Services, Oracle Data Integrator,
+  Informatica, Talend, Pentaho Data Integration.
+  \item \term{Cloudové a SaaS konektory:} Fivetran, Airbyte, Stitch.
+  \item \term{Transformační vrstva:} SQL transformace, dbt, Spark, Databricks.
+  \item \term{Orchestrace pipeline:} Apache Airflow, Prefect, Dagster, cloudové workflow služby.
+  \item \term{Streamy a zprávy:} Kafka, RabbitMQ, Kinesis, Pub/Sub, Event Hubs.
+  \item \term{Kvalita a správa dat:} Great Expectations, datové katalogy, lineage nástroje,
+  monitoring běhů a alerting.
+\end{itemize}
+
+V praxi se často nekupuje jeden izolovaný nástroj, ale skládá se celá pipeline: konektor načte data,
+orchestrátor řídí pořadí úloh, transformační vrstva vytváří analytické modely, testy kontrolují kvalitu
+a monitoring hlídá, zda pipeline doběhla včas a bez chyby.
+
+\subsection*{Rizika a dobré praktiky}
+U transakčních dat je potřeba řešit nejen přesun dat, ale také jejich význam a spolehlivost.
+
+\begin{itemize}
+  \item \term{Konzistence číselníků:} stejný zákazník, produkt nebo pobočka mohou mít v různých
+  systémech odlišné identifikátory.
+  \item \term{Historie změn:} analytika často potřebuje vědět, jaká hodnota platila v daném čase,
+  nejen aktuální stav.
+  \item \term{Idempotence:} opakovaný běh pipeline nemá vytvořit duplicity ani změnit správný výsledek.
+  \item \term{Auditovatelnost:} musí být dohledatelné, odkud data přišla, kdy byla načtena a jak byla
+  transformována.
+  \item \term{Bezpečnost:} transakční data často obsahují osobní údaje, finanční informace nebo obchodní
+  tajemství.
+  \item \term{Zpoždění:} je nutné rozlišit, zda stačí denní dávka, nebo je potřeba near-real-time zpracování.
+\end{itemize}
+
+\subsection*{Shrnutí ke zkoušce}
+\begin{itemize}
+  \item Transakční data zachycují konkrétní provozní události ve vysoké granularitě.
+  \item OLTP systémy jsou optimalizované na rychlý a konzistentní zápis jednotlivých transakcí.
+  \item Analytika obvykle vyžaduje kopii dat v DSA, ODS, DWH, datovém tržišti nebo OLAP vrstvě.
+  \item ETL transformuje data před nahráním, ELT je nejdříve nahraje a transformuje až v cílové platformě.
+  \item CDC přenáší jen změny, ne celé tabulky, a je důležité pro aktuální analytiku.
+  \item Streamy a fronty zpráv umožňují průběžné zpracování událostí a volnější propojení systémů.
+  \item U datových pump je nutné hlídat kvalitu, auditovatelnost, idempotenci, bezpečnost a monitoring.
+\end{itemize}
+
+\subsection*{Zdroje obrázků}
+\begin{itemize}
+  \item Bamyers99: \textit{Extract, Transform, Load Data Flow Diagram}, Wikimedia Commons, CC0,
+  \href{https://commons.wikimedia.org/wiki/File:Extract,_Transform,_Load_Data_Flow_Diagram.svg}{soubor na Wikimedia Commons}.
+  \item MarsJson: \textit{Data Warehouse \& Data-Marts overview}, Wikimedia Commons, CC BY-SA 4.0,
+  \href{https://commons.wikimedia.org/wiki/File:Data_Warehouse_%26_Data-Marts_overview.svg}{soubor na Wikimedia Commons}.
 \end{itemize}
 
 \newpage
