@@ -6,8 +6,8 @@ Workspace slouží pro tvorbu přípravy ke státnicím z bakalářského studia
 
 Zaškrtnutí znamená, že je téma zpracované do použitelné podoby pro opakování.
 
-- [ ] 1. Transakční data. Zdroje a typy podnikových transakčních dat, úložiště a datové pumpy.
-- [ ] 2. Metodika výběrových šetření. Fáze dotazování, sestavení dotazníku, metody vážení.
+- [x] 1. Transakční data. Zdroje a typy podnikových transakčních dat, úložiště a datové pumpy.
+- [x] 2. Metodika výběrových šetření. Fáze dotazování, sestavení dotazníku, metody vážení.
 - [ ] 3. Externí datové a informační zdroje. Sekundární zdroje dat a informací, role competitive intelligence, přístup k externím zdrojům.
 - [ ] 4. Etika a regulace při sběru a uchovávání dat.
 - [ ] 5. Databáze. Relační databázové systémy, jazyk SQL, návrh obsahu datové základny.
@@ -29,10 +29,41 @@ Zaškrtnutí znamená, že je téma zpracované do použitelné podoby pro opako
 - [ ] 21. Řízení datového projektu. Životní cyklus, metodiky a standardy, organizace projektu a nástroje pro podporu řízení.
 - [ ] 22. Optimalizační modely pro podporu ekonomického rozhodování. Příklady typických úloh LP a MILP, heuristické optimalizační algoritmy.
 
-## Prerekvizity
+## Co je potřeba ke kompilaci
+
+Projekt se kompiluje přes XeLaTeX. Pro běžné použití stačí:
 
 - `make`
-- TeX distribuce s `xelatex` a `latexmk`, například TeX Live
+- `latexmk`
+- `xelatex`
+- TeX balíčky používané v `preamble.tex`, hlavně `fontspec`, `polyglossia`,
+  `microtype`, `enumitem`, `titlesec`, `tocloft`, `fancyhdr`, `hyperref`,
+  `graphicx` a `amsmath`
+- fonty TeX Gyre, konkrétně `TeX Gyre Pagella` a `TeX Gyre Heros`
+
+Na Linuxu s Debian/Ubuntu balíčky lze prostředí připravit například takto:
+
+```sh
+sudo apt update
+sudo apt install make latexmk texlive-xetex texlive-latex-extra texlive-lang-czechslovak texlive-fonts-recommended fonts-texgyre
+```
+
+Na macOS je nejjednodušší nainstalovat MacTeX. Pokud používáš Homebrew:
+
+```sh
+brew install --cask mactex
+```
+
+Na Windows použij TeX Live nebo MiKTeX a ujisti se, že jsou příkazy `latexmk`
+a `xelatex` dostupné v `PATH`.
+
+Instalaci lze rychle ověřit:
+
+```sh
+make --version
+latexmk -v
+xelatex --version
+```
 
 ## Struktura dokumentu
 
@@ -40,23 +71,46 @@ Hlavní vstupní soubor je `main.tex`. Globální nastavení, balíčky a makra 
 v `preamble.tex`. Jednotlivé státnicové otázky jsou uložené samostatně v adresáři
 `topics/` a do hlavního dokumentu se skládají přes `\input`.
 
-## Kompilace
+## Kompilace a spuštění projektu
 
-Výchozí dokument je `main.tex`:
+Výchozí dokument je `main.tex`. Z kořenové složky projektu spusť:
 
 ```sh
 make
 ```
 
-PDF vznikne jako `build/priprava.pdf`. Jiný vstupní soubor lze zkompilovat
-takto:
+Výsledné PDF vznikne v:
+
+```sh
+build/priprava.pdf
+```
+
+Pokud chceš zkompilovat jiný vstupní soubor, použij:
 
 ```sh
 make TEX=soubor.tex
 ```
 
-Pomocné soubory smažeš přes:
+Název výsledného souboru lze změnit přes `JOBNAME`:
+
+```sh
+make JOBNAME=statnice
+```
+
+PDF pak vznikne jako `build/statnice.pdf`.
+
+Pomocné soubory smažeš příkazem:
 
 ```sh
 make clean
 ```
+
+Pokud na systému není dostupný `make`, lze spustit stejnou kompilaci přímo:
+
+```sh
+mkdir -p build
+latexmk -xelatex -jobname=priprava -interaction=nonstopmode -halt-on-error -outdir=build main.tex
+```
+
+Po úspěšné kompilaci stačí otevřít soubor `build/priprava.pdf` v libovolném
+PDF prohlížeči.
