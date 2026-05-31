@@ -1,39 +1,1074 @@
 \section{Big data. Charakteristika velkých dat, metody a nástroje pro jejich zpracování}
 
-\subsection*{Charakteristika velkých dat}
-Dodaný materiál téma big data pokrývá nepřímo přes datové zdroje, transakční databáze, NoSQL, BI, data mining a kvalitu dat. Z těchto částí lze postavit základní odpověď: big data jsou data, jejichž objem, rychlost vzniku, různorodost nebo složitost překračují možnosti běžného zpracování v tradičních relačních databázích.
+\subsection*{Základní vymezení}
 
-Velká data se obvykle popisují pomocí vlastností:
+Big data jsou data, jejichž objem, rychlost vzniku, různorodost nebo složitost překračují možnosti
+běžného zpracování na jednom stroji nebo v klasické relační databázi. Nejde jen o \uv{hodně dat}.
+Podstatné je, že pro jejich uložení, přenos, zpracování a správu je potřeba škálovat výpočet,
+úložiště nebo organizaci datového toku.
+
+Typický rozdíl proti tradiční analytické databázi:
+\[
+\begin{aligned}
+\text{klasická analytika}
+&:
+\text{databáze}
+\rightarrow
+\text{SQL}
+\rightarrow
+\text{report},\\
+\text{big data}
+&:
+\text{zdroje}
+\rightarrow
+\text{storage}
+\rightarrow
+\text{processing}\\
+&
+\rightarrow
+\text{serving}.
+\end{aligned}
+\]
+
+Big data se objevují například u:
 \begin{itemize}
-  \item \term{Volume} - velký objem dat;
-  \item \term{Velocity} - vysoká rychlost vzniku, přenosu nebo požadované reakce;
-  \item \term{Variety} - různorodost datových typů, například tabulky, JSON, logy, texty, obrázky nebo streamy;
-  \item \term{Veracity} - nejistota, kvalita a důvěryhodnost dat;
-  \item \term{Value} - schopnost získat z dat použitelnou hodnotu pro rozhodování.
+    \item webových a aplikačních logů,
+    \item clickstream dat,
+    \item senzorů a IoT,
+    \item transakčních systémů ve velkém měřítku,
+    \item sociálních sítí,
+    \item streamů událostí,
+    \item textů, obrázků, audia a videa,
+    \item vědeckých měření,
+    \item doporučovacích systémů a personalizace.
 \end{itemize}
 
-\subsection*{Vztah k dodaným materiálům}
-Materiály rozlišují interní a externí datové zdroje, strukturovaná, semistrukturovaná a nestrukturovaná data. To je pro big data důležité: velká data typicky nevznikají jen v jedné relační tabulce, ale kombinují transakce, logy, texty, JSON/XML dokumenty, webová data a případně senzorová data.
+\subsection*{Charakteristiky velkých dat: 5V}
 
-\subsection*{NoSQL a specializované databáze}
-V materiálech se objevují NoSQL databáze a specializované databáze. NoSQL databáze často nepoužívají klasické tabulkové struktury, normalizaci a SQL v tradičním smyslu. Místo toho mohou ukládat dokumenty, klíč-hodnota páry, grafy nebo jiné specializované struktury. Výhodou bývá flexibilnější schéma a škálovatelnost, nevýhodou slabší návaznost na relační model a často jiný způsob zajištění konzistence.
+Velká data se často popisují pomocí vlastností označovaných jako 5V.
 
 \begin{itemize}
-  \item dokumentové databáze - ukládají komplexní dokumenty, často JSON/BSON;
-  \item key-value databáze - rychlé ukládání hodnot podle klíče, často pro cache;
-  \item grafové databáze - pracují s uzly a hranami, hodí se pro vztahy a sítě;
-  \item specializované databáze - řeší konkrétní typ dat nebo přístupu.
+    \item \term{Volume} -- velký objem dat. Data mohou mít terabajty, petabajty nebo více a nevejdou se
+    prakticky na jeden server.
+    \item \term{Velocity} -- rychlost vzniku, přenosu a požadované reakce. Některé úlohy jsou dávkové,
+    jiné musí reagovat v sekundách nebo milisekundách.
+    \item \term{Variety} -- různorodost formátů: tabulky, JSON, XML, logy, texty, obrázky, grafy,
+    časové řady nebo binární soubory.
+    \item \term{Veracity} -- nejistota, kvalita, šum, duplicity, chybějící hodnoty a nejednotná
+    interpretace dat.
+    \item \term{Value} -- schopnost převést data na použitelnou hodnotu, například lepší rozhodování,
+    predikci, detekci anomálií nebo automatizaci.
 \end{itemize}
 
-\subsection*{Big data v analytice}
-Big data se v datové analytice využívají pro reporting ve velkém měřítku, strojové učení, doporučovací systémy, detekci anomálií, personalizaci, monitoring provozu a analýzu textu nebo webových dat. Základní problém je převést velký a různorodý datový zdroj na použitelnou datovou sadu se známou kvalitou, významem proměnných a reprodukovatelným zpracováním.
+\paragraph{Důležitá poznámka.}
+Vysoký objem sám o sobě nestačí. Pokud velká datová sada nepřináší hodnotu nebo ji neumíme spolehlivě
+zpracovat, jde spíše o náklad než o analytické aktivum.
 
-\todohead
+\subsection*{Proč se používá distribuované zpracování}
+
+U velkých dat narážíme na omezení jednoho stroje:
 \begin{itemize}
-  \item Doplnit Hadoop, HDFS, MapReduce, Spark a distribuované výpočty.
-  \item Doplnit data lake, lakehouse a cloudová datová úložiště.
-  \item Doplnit streamingové zpracování: Kafka, Spark Streaming, Flink.
-  \item Doplnit CAP teorém, eventual consistency a rozdíl oproti ACID.
+    \item nedostatek diskové kapacity,
+    \item nedostatek operační paměti,
+    \item příliš dlouhý výpočet,
+    \item pomalý síťový přenos,
+    \item riziko výpadku jednoho uzlu,
+    \item obtížná správa různých datových formátů.
+\end{itemize}
+
+Základní řešení je rozdělit data i výpočet na menší části:
+\[
+\text{data}
+\rightarrow
+\text{partitions / blocks}
+\rightarrow
+\text{parallel tasks}
+\rightarrow
+\text{combined result}.
+\]
+
+Distribuovaný systém má několik typických mechanismů:
+\begin{itemize}
+    \item \term{partitioning} -- rozdělení dat na části podle klíče, času nebo velikosti souboru;
+    \item \term{replication} -- uložení více kopií pro odolnost proti výpadkům;
+    \item \term{data locality} -- výpočet se snaží běžet blízko uložených dat;
+    \item \term{fault tolerance} -- systém umí znovu spustit neúspěšnou část výpočtu;
+    \item \term{horizontal scaling} -- přidáváme další uzly místo zvětšování jednoho stroje.
+\end{itemize}
+
+\subsection*{Základní architektura big data řešení}
+
+Obecný datový tok:
+\[
+\begin{aligned}
+\text{zdroje dat}
+&\rightarrow
+\text{ingestion}
+\rightarrow
+\text{storage}\\
+&\rightarrow
+\text{processing}
+\rightarrow
+\text{serving}
+\rightarrow
+\text{spotřeba dat}.
+\end{aligned}
+\]
+
+\begin{itemize}
+    \item \term{Zdroje dat} -- databáze, API, soubory, logy, senzory, události, web nebo externí datové
+    zdroje.
+    \item \term{Ingestion} -- nahrání nebo proudové přijímání dat, například přes ETL nástroje,
+    konektory, Kafka nebo dávkové importy.
+    \item \term{Storage} -- HDFS, objektové úložiště, data lake, NoSQL databáze nebo cloudový sklad.
+    \item \term{Processing} -- dávkové výpočty, stream processing, SQL transformace, strojové učení
+    nebo grafové výpočty.
+    \item \term{Serving} -- vrstva, ze které čtou analytici, aplikace, BI nástroje nebo modely.
+    \item \term{Spotřeba dat} -- dashboardy, reporty, alerting, API, ML modely a rozhodovací systémy.
+\end{itemize}
+
+V praxi je stejně důležitá i průřezová vrstva:
+\begin{itemize}
+    \item orchestrace,
+    \item monitoring,
+    \item metadata a katalog,
+    \item řízení kvality,
+    \item bezpečnost,
+    \item lineage,
+    \item správa nákladů.
+\end{itemize}
+
+\subsection*{Batch, streaming a interaktivní zpracování}
+
+\subsubsection*{Dávkové zpracování}
+
+Batch processing zpracovává data po dávkách. Typicky se spouští pravidelně:
+\[
+\text{každou hodinu},\quad
+\text{každou noc},\quad
+\text{po uzavření období}.
+\]
+
+Hodí se pro:
+\begin{itemize}
+    \item výpočet denních agregací,
+    \item historické přepočty,
+    \item trénování modelů,
+    \item reporting,
+    \item transformace velkých souborů.
+\end{itemize}
+
+Výhody:
+\begin{itemize}
+    \item jednoduchá reprodukovatelnost,
+    \item efektivní zpracování velkého objemu,
+    \item vhodné pro historická data.
+\end{itemize}
+
+Nevýhody:
+\begin{itemize}
+    \item vyšší latence,
+    \item výsledek nemusí odrážet nejnovější události.
+\end{itemize}
+
+\subsubsection*{Stream processing}
+
+Stream processing zpracovává data průběžně jako tok událostí:
+\[
+e_1,e_2,\ldots,e_t,\ldots
+\]
+
+Hodí se pro:
+\begin{itemize}
+    \item detekci podvodů v reálném čase,
+    \item monitoring aplikací,
+    \item zpracování senzorů,
+    \item doporučení během návštěvy webu,
+    \item alerting,
+    \item aktualizaci online agregací.
+\end{itemize}
+
+U streamingu jsou důležité pojmy:
+\begin{itemize}
+    \item \term{event time} -- čas, kdy událost skutečně vznikla;
+    \item \term{processing time} -- čas, kdy ji zpracoval systém;
+    \item \term{window} -- časové okno pro agregaci;
+    \item \term{watermark} -- odhad, jak dlouho čekat na opožděné události;
+    \item \term{state} -- stav uložený mezi událostmi;
+    \item \term{checkpoint} -- uložený bod obnovy po chybě.
+\end{itemize}
+
+\subsubsection*{Interaktivní analytika}
+
+Interaktivní analytika znamená, že uživatel nebo aplikace klade dotazy nad velkými daty s relativně
+nízkou latencí. Typicky jde o:
+\begin{itemize}
+    \item SQL dotazy nad datovým jezerem,
+    \item BI dashboardy,
+    \item ad hoc analýzu,
+    \item datovou exploraci,
+    \item OLAP nad agregovanými daty.
+\end{itemize}
+
+Používají se například Spark SQL, Trino, Presto, Hive, BigQuery, Snowflake, Databricks SQL nebo cloudové
+datové sklady.
+
+\subsection*{Hadoop ekosystém}
+
+Hadoop je historicky významná platforma pro distribuované uložení a dávkové zpracování velkých dat.
+Její základ tvoří:
+\begin{itemize}
+    \item \term{HDFS} -- distribuovaný souborový systém;
+    \item \term{YARN} -- správa výpočetních zdrojů v clusteru;
+    \item \term{MapReduce} -- programovací model a výpočetní framework pro dávkové úlohy.
+\end{itemize}
+
+Hadoop byl důležitý hlavně proto, že umožnil zpracovávat velké datové soubory na clusteru běžných serverů
+a přesunul analytiku od vertikálního škálování k horizontálnímu škálování.
+
+\subsection*{HDFS}
+
+HDFS, Hadoop Distributed File System, je distribuovaný souborový systém navržený pro velké soubory,
+vysokou propustnost a odolnost proti výpadkům.
+
+Základní části:
+\begin{itemize}
+    \item \term{NameNode} -- spravuje metadata souborového systému, například adresáře, názvy souborů
+    a mapování bloků na uzly;
+    \item \term{DataNode} -- ukládá skutečné datové bloky;
+    \item \term{block} -- soubor je rozdělen na bloky;
+    \item \term{replication factor} -- bloky jsou uloženy ve více kopiích.
+\end{itemize}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.80\linewidth]{assets/images/big-data/hdfs-architecture.png}
+  \caption[Architektura HDFS]{Zjednodušená architektura HDFS. Popis obrázku: NameNode spravuje metadata
+  a mapování bloků, zatímco DataNode servery ukládají datové bloky; klient komunikuje s NameNode kvůli
+  metadatům a čte nebo zapisuje bloky přímo u DataNode uzlů. Zdroj obrázku: Clém IAGL,
+  \href{https://commons.wikimedia.org/wiki/File:HDFS.png}{Wikimedia Commons}, licence CC BY-SA 3.0.}
+  \label{fig:q19-hdfs}
+\end{figure}
+
+Vlastnosti HDFS:
+\begin{itemize}
+    \item optimalizace na sekvenční čtení velkých souborů,
+    \item vysoká propustnost místo nízké latence,
+    \item automatická replikace bloků,
+    \item detekce výpadků přes heartbeat,
+    \item obnova ztracených replik,
+    \item vhodnost pro dávkové výpočty.
+\end{itemize}
+
+Nevýhody:
+\begin{itemize}
+    \item slabší vhodnost pro mnoho malých souborů,
+    \item není ideální pro interaktivní transakční práci,
+    \item historicky centrální role NameNode,
+    \item horší komfort než moderní cloudová objektová úložiště.
+\end{itemize}
+
+\subsection*{MapReduce}
+
+MapReduce je programovací model pro paralelní dávkové zpracování. Vychází z rozdělení práce na dvě hlavní
+fáze:
+\[
+map \rightarrow shuffle/sort \rightarrow reduce.
+\]
+
+Obecné schéma:
+\[
+\begin{aligned}
+(k_1,v_1)
+&\xrightarrow{map}
+(k_2,v_2),\\
+(k_2,\{v_2\})
+&\xrightarrow{reduce}
+(k_3,v_3).
+\end{aligned}
+\]
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.92\linewidth]{assets/images/big-data/mapreduce-flow.png}
+  \caption[Tok MapReduce úlohy]{Tok výpočtu v MapReduce. Popis obrázku: vstupní data se rozdělí mezi map
+  úlohy, jejich mezivýstupy se seřadí a přes shuffle rozdělí podle klíčů mezi reduce úlohy, které vytvoří
+  výsledné výstupy. Zdroj obrázku: Clém IAGL,
+  \href{https://commons.wikimedia.org/wiki/File:Mapreduce.png}{Wikimedia Commons}, licence CC BY-SA 3.0.}
+  \label{fig:q19-mapreduce}
+\end{figure}
+
+\paragraph{Příklad: word count.}
+Chceme spočítat výskyty slov v kolekci dokumentů.
+
+Fáze map:
+\[
+\text{slovo}
+\rightarrow
+(\text{slovo},1).
+\]
+
+Fáze reduce:
+\[
+(\text{slovo},[1,1,\ldots,1])
+\rightarrow
+(\text{slovo},n).
+\]
+
+Výhody MapReduce:
+\begin{itemize}
+    \item jednoduchý model pro velké dávkové úlohy,
+    \item paralelizace nad bloky dat,
+    \item odolnost proti výpadkům úloh,
+    \item dobré využití data locality,
+    \item vhodné pro jednorázové průchody velkými soubory.
+\end{itemize}
+
+Nevýhody MapReduce:
+\begin{itemize}
+    \item vysoká latence,
+    \item mezivýstupy se často zapisují na disk,
+    \item nepohodlné pro iterativní algoritmy,
+    \item složitější programování než SQL nebo DataFrame API,
+    \item dnes bývá v mnoha úlohách nahrazen Sparku a podobnými enginy.
+\end{itemize}
+
+\subsection*{Apache Spark}
+
+Apache Spark je distribuovaný výpočetní engine pro dávkové i některé streamové úlohy. Oproti klasickému
+MapReduce je často rychlejší a pohodlnější, protože umí držet mezivýsledky v paměti a poskytuje vyšší API:
+\begin{itemize}
+    \item RDD,
+    \item DataFrame,
+    \item Dataset,
+    \item Spark SQL,
+    \item Structured Streaming,
+    \item MLlib,
+    \item GraphX.
+\end{itemize}
+
+Spark aplikace typicky obsahuje:
+\begin{itemize}
+    \item \term{driver} -- hlavní program, který vytváří plán výpočtu;
+    \item \term{cluster manager} -- například Standalone, YARN nebo Kubernetes;
+    \item \term{executors} -- procesy na pracovních uzlech, které spouštějí tasky;
+    \item \term{tasks} -- jednotky práce nad partitions.
+\end{itemize}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.82\linewidth]{assets/images/big-data/spark-architecture.jpg}
+  \caption[Architektura Spark aplikace]{Základní architektura Spark aplikace. Popis obrázku: driver program
+  komunikuje s cluster managerem, získává executory na worker uzlech a posílá jim tasky; executory provádějí
+  výpočet a mohou držet data v paměti nebo na disku. Zdroj obrázku: lparant,
+  \href{https://commons.wikimedia.org/wiki/File:Spark\_Architecture.jpg}{Wikimedia Commons}, licence
+  CC BY-SA 4.0.}
+  \label{fig:q19-spark}
+\end{figure}
+
+\subsubsection*{RDD, DataFrame a lazy evaluation}
+
+\term{RDD} je nízkoúrovňová distribuovaná kolekce prvků. Je odolná proti výpadkům díky informaci o tom,
+jak byla vytvořena, tedy díky lineage.
+
+\term{DataFrame} je tabulková abstrakce se schématem. Umožňuje optimalizovat dotazy podobně jako databázový
+engine:
+\[
+\text{DataFrame}
+\approx
+\text{distributed table}.
+\]
+
+Spark používá lazy evaluation:
+\begin{itemize}
+    \item transformace pouze vytvářejí plán,
+    \item akce plán spustí,
+    \item optimalizátor může upravit pořadí kroků,
+    \item výpočet se rozdělí na stage a tasky.
+\end{itemize}
+
+\subsubsection*{Kdy je Spark vhodný}
+
+Spark je vhodný pro:
+\begin{itemize}
+    \item ETL nad velkými soubory,
+    \item SQL analytiku nad datovým jezerem,
+    \item iterativní algoritmy,
+    \item feature engineering,
+    \item trénování modelů nad velkými daty,
+    \item kombinaci dávkových a streamových pipeline.
+\end{itemize}
+
+Pozor na:
+\begin{itemize}
+    \item datový skew,
+    \item příliš mnoho malých souborů,
+    \item nevhodný počet partitions,
+    \item neefektivní joiny,
+    \item shuffle přes síť,
+    \item paměťové limity executorů.
+\end{itemize}
+
+\subsection*{Streamovací architektura: Kafka, Spark Streaming a Flink}
+
+\subsubsection*{Apache Kafka}
+
+Apache Kafka je distribuovaná platforma pro event streaming. Ukládá proudy událostí do topiců, které jsou
+rozdělené na partitions.
+
+Základní pojmy:
+\begin{itemize}
+    \item \term{producer} -- zapisuje události;
+    \item \term{consumer} -- čte události;
+    \item \term{broker} -- server v Kafka clusteru;
+    \item \term{topic} -- log událostí určité kategorie;
+    \item \term{partition} -- část topicu, základ paralelismu;
+    \item \term{offset} -- pozice čtenáře v partition;
+    \item \term{consumer group} -- skupina consumerů, která sdílí práci.
+\end{itemize}
+
+Kafka je důležitá jako vstupní a integrační vrstva:
+\[
+\begin{aligned}
+\text{aplikace / senzory / databáze}
+&\rightarrow
+\text{Kafka topics}\\
+&\rightarrow
+\text{stream processing / storage / services}.
+\end{aligned}
+\]
+
+Objednání zpráv je garantováno uvnitř jedné partition, ne globálně přes všechny partitions. To je
+praktický kompromis mezi pořadím a paralelismem.
+
+\subsubsection*{Spark Structured Streaming}
+
+Spark Structured Streaming používá podobnou práci s DataFrame API jako dávkový Spark, ale vstup chápe jako
+průběžně rostoucí tabulku. Hodí se tehdy, když tým už používá Spark a chce sjednotit batch a streaming.
+
+Typické použití:
+\begin{itemize}
+    \item čtení z Kafka topiců,
+    \item agregace v časových oknech,
+    \item zápis do data lake,
+    \item průběžné obohacování událostí,
+    \item výpočet metrik.
+\end{itemize}
+
+\subsubsection*{Apache Flink}
+
+Apache Flink je engine pro stavové výpočty nad neomezenými i omezenými streamy. Je silný hlavně v úlohách,
+kde záleží na event time, stavu, nízké latenci a přesném zacházení s opožděnými událostmi.
+
+Flink se používá například pro:
+\begin{itemize}
+    \item real-time detekci anomálií,
+    \item kontinuální agregace,
+    \item komplexní event processing,
+    \item stavové streamovací aplikace,
+    \item near real-time ETL.
+\end{itemize}
+
+\subsection*{Data lake a lakehouse}
+
+\term{Data lake} je úložiště, které umožňuje ukládat velké množství surových i zpracovaných dat v různých
+formátech. Často je postavené nad HDFS nebo cloudovým objektovým úložištěm:
+\[
+S3,\quad ADLS,\quad GCS,\quad HDFS.
+\]
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\linewidth]{assets/images/big-data/data-lake.png}
+  \caption[Princip data lake]{Zjednodušené schéma datového jezera. Popis obrázku: data z různých zdrojů
+  se ukládají do centrálního datového jezera, odkud mohou být dále používána pro analytiku, reporting,
+  strojové učení nebo aplikace. Zdroj obrázku: Nekouš,
+  \href{https://commons.wikimedia.org/wiki/File:Datalake.png}{Wikimedia Commons}, licence CC0 1.0.}
+  \label{fig:q19-data-lake}
+\end{figure}
+
+Výhody data lake:
+\begin{itemize}
+    \item levné ukládání velkého objemu,
+    \item flexibilita formátů,
+    \item možnost ukládat raw data,
+    \item vhodné pro datovou vědu a ML,
+    \item oddělení výpočetní vrstvy od úložiště.
+\end{itemize}
+
+Rizika:
+\begin{itemize}
+    \item bez katalogu a governance vzniká data swamp,
+    \item nekontrolovaná schémata ztěžují použití,
+    \item mnoho malých souborů zhoršuje výkon,
+    \item nejasná vlastnická odpovědnost snižuje důvěru v data.
+\end{itemize}
+
+\term{Lakehouse} kombinuje flexibilitu data lake s vlastnostmi datového skladu. Přidává nad soubory
+transakční vrstvu, metadata, schémata, verzování a lepší podporu SQL analytiky. Typické technologie:
+\begin{itemize}
+    \item Delta Lake,
+    \item Apache Iceberg,
+    \item Apache Hudi.
+\end{itemize}
+
+Lakehouse řeší zejména:
+\begin{itemize}
+    \item ACID transakce nad souborovým úložištěm,
+    \item schema enforcement,
+    \item time travel,
+    \item upserts a deletes,
+    \item sjednocení dávkového a streamového zpracování,
+    \item čitelnost stejných dat více enginy.
+\end{itemize}
+
+\subsection*{Souborové formáty a fyzická organizace dat}
+
+U big data nestačí řešit jen nástroj. Výkon často závisí na fyzickém uložení.
+
+\subsubsection*{Řádkové a sloupcové formáty}
+
+Řádkový formát ukládá všechny hodnoty jednoho záznamu vedle sebe. Hodí se pro zápis celých záznamů.
+
+Sloupcový formát ukládá hodnoty stejného sloupce pohromadě. Hodí se pro analytiku:
+\begin{itemize}
+    \item čteme jen potřebné sloupce,
+    \item komprese je účinnější,
+    \item agregace jsou rychlejší,
+    \item funguje predicate pushdown.
+\end{itemize}
+
+Typické formáty:
+\begin{itemize}
+    \item \term{CSV} -- jednoduchý, ale bez schématu a neefektivní pro velká data;
+    \item \term{JSON} -- flexibilní, vhodný pro semistrukturovaná data, ale objemný;
+    \item \term{Avro} -- řádkový binární formát se schématem, často pro streaming;
+    \item \term{Parquet} -- sloupcový formát vhodný pro analytiku;
+    \item \term{ORC} -- sloupcový formát často spojený s Hive ekosystémem.
+\end{itemize}
+
+\subsubsection*{Partitioning}
+
+Partitioning rozděluje data podle hodnoty sloupce, často podle času:
+\[
+\text{year}=2026,\quad
+\text{month}=05,\quad
+\text{day}=31.
+\]
+
+Výhoda:
+\begin{itemize}
+    \item dotaz nemusí číst celou tabulku,
+    \item jednodušší mazání starých dat,
+    \item lepší paralelizace.
+\end{itemize}
+
+Nevýhoda:
+\begin{itemize}
+    \item příliš jemné partitioning vytváří mnoho malých souborů,
+    \item špatný partition key může způsobit nerovnoměrné rozložení dat.
+\end{itemize}
+
+\subsubsection*{Small files problem}
+
+Velké datové enginy typicky pracují efektivněji s menším počtem větších souborů než s miliony drobných
+souborů. Mnoho malých souborů zvyšuje náklady na metadata, plánování tasků a otevírání souborů.
+
+Řešení:
+\begin{itemize}
+    \item compaction,
+    \item vhodné nastavení velikosti výstupních souborů,
+    \item dávkové slučování streamovaných výstupů,
+    \item formáty jako Parquet s rozumnou velikostí row groups.
+\end{itemize}
+
+\subsection*{NoSQL databáze}
+
+NoSQL databáze se používají tam, kde relační model není nejvhodnější pro požadovaný objem, latenci,
+schéma nebo způsob dotazování. Neznamená to, že SQL je špatně; znamená to, že systém volí jiný datový model
+a jiné kompromisy.
+
+Základní typy:
+\begin{itemize}
+    \item \term{key-value databáze} -- rychlý přístup podle klíče, například cache nebo session store;
+    \item \term{dokumentové databáze} -- ukládají JSON/BSON dokumenty s flexibilním schématem;
+    \item \term{wide-column databáze} -- ukládají data po sloupcových rodinách, vhodné pro velký zápis;
+    \item \term{grafové databáze} -- pracují s uzly a hranami;
+    \item \term{search enginy} -- indexace a vyhledávání textu, logů a dokumentů.
+\end{itemize}
+
+Příklady:
+\begin{itemize}
+    \item Redis -- key-value,
+    \item MongoDB -- dokumentová databáze,
+    \item Cassandra -- wide-column databáze,
+    \item Neo4j -- grafová databáze,
+    \item Elasticsearch nebo OpenSearch -- vyhledávací index.
+\end{itemize}
+
+\subsection*{ACID, BASE a eventual consistency}
+
+Relační databáze tradičně zdůrazňují ACID:
+\begin{itemize}
+    \item \term{Atomicity} -- transakce proběhne celá, nebo vůbec;
+    \item \term{Consistency} -- transakce zachovává integritní pravidla;
+    \item \term{Isolation} -- souběžné transakce se vzájemně nekazí;
+    \item \term{Durability} -- potvrzená data přežijí výpadek.
+\end{itemize}
+
+Některé distribuované NoSQL systémy volí slabší konzistenci kvůli dostupnosti a škálování. Často se mluví
+o BASE:
+\begin{itemize}
+    \item \term{Basically Available} -- systém se snaží odpovídat i při částečných výpadcích;
+    \item \term{Soft state} -- stav se může dočasně měnit i bez nové uživatelské transakce;
+    \item \term{Eventual consistency} -- pokud nepřicházejí další změny, repliky se časem sjednotí.
+\end{itemize}
+
+\paragraph{Příklad eventual consistency.}
+Uživatel změní profilovou fotku. Jeden server ji už vidí, jiný ještě krátce ukazuje starou verzi. Po
+replikaci se všechny kopie sjednotí. Pro profilovou fotku to může být přijatelné; pro bankovní převod
+by to přijatelné nebylo.
+
+\subsection*{CAP teorém}
+
+CAP teorém popisuje kompromis v distribuovaných systémech. Při síťovém rozdělení není možné současně plně
+garantovat silnou konzistenci a dostupnost.
+
+Tři vlastnosti:
+\begin{itemize}
+    \item \term{Consistency} -- všichni klienti vidí stejný aktuální stav;
+    \item \term{Availability} -- každý požadavek dostane odpověď;
+    \item \term{Partition tolerance} -- systém funguje navzdory výpadku komunikace mezi částmi clusteru.
+\end{itemize}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.52\linewidth]{assets/images/big-data/cap-theorem.png}
+  \caption[CAP teorém]{Eulerův diagram CAP teorému. Popis obrázku: v distribuovaném systému se při síťové
+  partition rozhoduje mezi konzistencí a dostupností; diagram znázorňuje dvojice CA, CP a AP, ale plné C,
+  A a P nelze při partition garantovat současně. Zdroj obrázku: JamieMcCarthy,
+  \href{https://commons.wikimedia.org/wiki/File:CAP\_Theorem\_Euler\_Diagram.png}{Wikimedia Commons},
+  licence CC BY-SA 4.0.}
+  \label{fig:q19-cap}
+\end{figure}
+
+Praktický výklad:
+\begin{itemize}
+    \item \term{CP systém} raději odmítne nebo pozdrží některé požadavky, aby nevrátil nekonzistentní data;
+    \item \term{AP systém} raději odpoví i za cenu dočasné nekonzistence;
+    \item \term{CA bez partition} je realistické jen pokud síťové rozdělení nebereme jako problém.
+\end{itemize}
+
+\paragraph{Pozor u zkoušky.}
+CAP není obecné pravidlo \uv{vyber přesně dvě vlastnosti vždy a všude}. Důležitý je kontext síťové partition.
+V reálných systémech se často volí jemnější kompromisy podle typu operace, datové domény a požadavků na
+latenci.
+
+\subsection*{Lambda, kappa a moderní datové architektury}
+
+\subsubsection*{Lambda architektura}
+
+Lambda architektura kombinuje dávkovou a rychlou vrstvu:
+\[
+\begin{aligned}
+\text{raw data}
+&\rightarrow
+\text{batch layer}
+\rightarrow
+\text{batch views},\\
+\text{events}
+&\rightarrow
+\text{speed layer}
+\rightarrow
+\text{real-time views}.
+\end{aligned}
+\]
+
+Výhoda:
+\begin{itemize}
+    \item spolehlivý historický přepočet,
+    \item nízká latence pro nové události.
+\end{itemize}
+
+Nevýhoda:
+\begin{itemize}
+    \item dvě implementace stejné logiky,
+    \item složitější provoz,
+    \item riziko rozdílných výsledků mezi vrstvami.
+\end{itemize}
+
+\subsubsection*{Kappa architektura}
+
+Kappa architektura se snaží zpracovávat vše jako stream. Historický přepočet se dělá opětovným přehráním
+událostí z logu.
+
+Výhoda:
+\begin{itemize}
+    \item jedna výpočetní logika,
+    \item jednodušší architektura.
+\end{itemize}
+
+Nevýhoda:
+\begin{itemize}
+    \item vyžaduje dlouhodobě uložený event log,
+    \item přehrání historie může být náročné,
+    \item ne každá úloha je přirozeně streamová.
+\end{itemize}
+
+\subsubsection*{Medallion architektura}
+
+V lakehouse prostředí se často používá rozdělení na vrstvy:
+\begin{itemize}
+    \item \term{bronze} -- surová data po ingestu;
+    \item \term{silver} -- vyčištěná, validovaná a sjednocená data;
+    \item \term{gold} -- business agregace, datové produkty a reportingové tabulky.
+\end{itemize}
+
+Toto členění pomáhá oddělit původní data od analyticky připravených dat a usnadňuje kontrolu kvality.
+
+\subsection*{Cloudové big data služby}
+
+Moderní big data platformy jsou často cloudové. Základní idea je oddělit úložiště od výpočtu:
+\[
+\text{object storage}
+\quad + \quad
+\text{elastic compute}
+\quad + \quad
+\text{managed metadata}.
+\]
+
+Příklady:
+\begin{itemize}
+    \item AWS S3, Azure Data Lake Storage, Google Cloud Storage -- objektová úložiště;
+    \item Amazon EMR, Dataproc, HDInsight -- spravované Hadoop/Spark clustery;
+    \item Databricks -- Spark a lakehouse platforma;
+    \item BigQuery, Snowflake, Redshift, Synapse -- cloudové analytické databáze;
+    \item Glue, Data Factory, Cloud Composer -- integrace a orchestrace;
+    \item Kinesis, Pub/Sub, Event Hubs -- cloudové streamovací služby.
+\end{itemize}
+
+Výhody cloudu:
+\begin{itemize}
+    \item elastické škálování,
+    \item placení podle využití,
+    \item spravovaná infrastruktura,
+    \item snadná integrace s dalšími službami,
+    \item rychlejší experimentování.
+\end{itemize}
+
+Rizika:
+\begin{itemize}
+    \item nekontrolované náklady,
+    \item vendor lock-in,
+    \item síťové poplatky,
+    \item bezpečnostní konfigurace,
+    \item závislost na správě identit a práv.
+\end{itemize}
+
+\subsection*{Orchestrace, workflow a datové pipeline}
+
+Big data pipeline není jen jeden výpočet. Je to řízený proces:
+\[
+\text{extract/load}
+\rightarrow
+\text{validate}
+\rightarrow
+\text{transform}
+\rightarrow
+\text{publish}
+\rightarrow
+\text{monitor}.
+\]
+
+Orchestrace řeší:
+\begin{itemize}
+    \item pořadí úloh,
+    \item závislosti,
+    \item plánování,
+    \item opakování po chybě,
+    \item parametry,
+    \item alerting,
+    \item logy běhů.
+\end{itemize}
+
+Nástroje:
+\begin{itemize}
+    \item Apache Airflow,
+    \item Dagster,
+    \item Prefect,
+    \item Luigi,
+    \item cloudové orchestrátory,
+    \item dbt pro SQL transformace a testy.
+\end{itemize}
+
+\subsection*{Kvalita dat a governance}
+
+U big data je kvalita dat kritická, protože chyba se může rychle rozšířit do mnoha reportů, modelů a
+aplikací.
+
+Sledují se hlavně:
+\begin{itemize}
+    \item úplnost,
+    \item validita,
+    \item konzistence,
+    \item unikátnost,
+    \item aktuálnost,
+    \item přesnost,
+    \item stabilita schématu.
+\end{itemize}
+
+Governance zahrnuje:
+\begin{itemize}
+    \item datový katalog,
+    \item metadata,
+    \item data lineage,
+    \item vlastnictví dat,
+    \item přístupová práva,
+    \item klasifikaci citlivých údajů,
+    \item retenci,
+    \item audit.
+\end{itemize}
+
+\paragraph{Příklad pravidla kvality.}
+Tabulka objednávek může mít testy:
+\begin{itemize}
+    \item \texttt{order\_id} nesmí být prázdné,
+    \item \texttt{order\_id} musí být unikátní,
+    \item \texttt{created\_at} nesmí být v budoucnosti,
+    \item \texttt{amount} musí být nezáporná,
+    \item \texttt{customer\_id} musí existovat v dimenzi zákazníků.
+\end{itemize}
+
+\subsection*{Bezpečnost a ochrana dat}
+
+Big data platformy často pracují s citlivými údaji. Řeší se:
+\begin{itemize}
+    \item autentizace,
+    \item autorizace,
+    \item šifrování při přenosu,
+    \item šifrování v úložišti,
+    \item maskování a tokenizace,
+    \item audit přístupů,
+    \item oddělení prostředí,
+    \item správa tajemství,
+    \item pravidla retence a mazání.
+\end{itemize}
+
+Typický problém je, že data lake snadno centralizuje velké množství údajů. Bez správného řízení přístupů
+může mít jeden chybný grant mnohem větší dopad než v menší izolované databázi.
+
+\subsection*{Optimalizace výkonu}
+
+Výkon big data úloh se často ladí na úrovni dat i výpočtu.
+
+\subsubsection*{Optimalizace dat}
+
+\begin{itemize}
+    \item používat sloupcové formáty pro analytiku,
+    \item komprimovat data,
+    \item partitionovat podle často filtrovaných sloupců,
+    \item omezovat počet malých souborů,
+    \item ukládat statistiky,
+    \item udržovat schéma,
+    \item odstraňovat duplicity.
+\end{itemize}
+
+\subsubsection*{Optimalizace výpočtu}
+
+\begin{itemize}
+    \item filtrovat co nejdříve,
+    \item vybírat jen potřebné sloupce,
+    \item hlídat shuffle,
+    \item řešit datový skew,
+    \item volit správný počet partitions,
+    \item cachovat jen opakovaně používaná data,
+    \item používat broadcast join pro malé dimenze,
+    \item sledovat plán dotazu a metriky běhu.
+\end{itemize}
+
+\subsection*{Typické analytické úlohy nad big data}
+
+\begin{itemize}
+    \item \term{Log analytics} -- analýza provozu aplikací, chyb a výkonu.
+    \item \term{Clickstream analytics} -- chování uživatelů na webu nebo v aplikaci.
+    \item \term{Fraud detection} -- detekce podezřelých transakcí.
+    \item \term{Recommender systems} -- doporučování produktů, filmů nebo obsahu.
+    \item \term{Predictive maintenance} -- predikce poruch ze senzorů.
+    \item \term{Customer 360} -- spojení zákaznických dat z mnoha systémů.
+    \item \term{Text analytics} -- klasifikace dokumentů, sentiment a vyhledávání.
+    \item \term{Real-time monitoring} -- metriky a alerty v reálném čase.
+\end{itemize}
+
+\subsection*{Nástroje pro zpracování velkých dat}
+
+\subsubsection*{Úložiště}
+
+\begin{itemize}
+    \item HDFS,
+    \item Amazon S3,
+    \item Azure Data Lake Storage,
+    \item Google Cloud Storage,
+    \item MinIO,
+    \item Delta Lake,
+    \item Apache Iceberg,
+    \item Apache Hudi.
+\end{itemize}
+
+\subsubsection*{Výpočetní enginy}
+
+\begin{itemize}
+    \item Hadoop MapReduce,
+    \item Apache Spark,
+    \item Apache Flink,
+    \item Apache Beam,
+    \item Trino,
+    \item Presto,
+    \item Hive,
+    \item Dask,
+    \item Ray.
+\end{itemize}
+
+\subsubsection*{Streaming a ingestion}
+
+\begin{itemize}
+    \item Apache Kafka,
+    \item Kafka Connect,
+    \item Apache Pulsar,
+    \item Amazon Kinesis,
+    \item Google Pub/Sub,
+    \item Azure Event Hubs,
+    \item Debezium,
+    \item NiFi.
+\end{itemize}
+
+\subsubsection*{NoSQL a vyhledávání}
+
+\begin{itemize}
+    \item Cassandra,
+    \item HBase,
+    \item MongoDB,
+    \item Redis,
+    \item DynamoDB,
+    \item Bigtable,
+    \item Elasticsearch,
+    \item OpenSearch,
+    \item Neo4j.
+\end{itemize}
+
+\subsubsection*{Orchestrace, transformace a governance}
+
+\begin{itemize}
+    \item Airflow,
+    \item Dagster,
+    \item Prefect,
+    \item dbt,
+    \item Great Expectations,
+    \item OpenLineage,
+    \item DataHub,
+    \item Amundsen,
+    \item Apache Atlas.
+\end{itemize}
+
+\subsection*{Praktický postup návrhu big data řešení}
+
+\begin{enumerate}
+    \item Vymezit business problém a požadovanou latenci.
+    \item Popsat zdroje dat, formáty, objemy a frekvenci změn.
+    \item Rozhodnout, zda jde o batch, streaming nebo kombinaci.
+    \item Zvolit úložiště: data warehouse, data lake, lakehouse, NoSQL nebo kombinaci.
+    \item Zvolit výpočetní engine podle typu úlohy.
+    \item Navrhnout schéma, partitioning, formáty a retenci.
+    \item Přidat validace kvality a monitoring pipeline.
+    \item Vyřešit bezpečnost, přístupy a citlivá data.
+    \item Otestovat škálování, chybové stavy a náklady.
+    \item Dokumentovat datové produkty a odpovědnosti.
+\end{enumerate}
+
+\subsection*{Typické chyby}
+
+\begin{itemize}
+    \item sbírat data bez jasného účelu,
+    \item řešit jen technologii a ne kvalitu dat,
+    \item používat Hadoop/Spark i na malé úlohy, kde stačí databáze,
+    \item ukládat vše jako CSV bez schématu,
+    \item ignorovat malé soubory,
+    \item podcenit datový skew,
+    \item nemít katalog a vlastníky dat,
+    \item neměřit náklady na cloudové výpočty,
+    \item zaměňovat data lake za datový sklad,
+    \item slibovat real-time výstupy bez jasné potřeby.
+\end{itemize}
+
+\subsection*{Pozor u zkoušky}
+
+\begin{itemize}
+    \item Big data nejsou jen \uv{velká tabulka}; jde o kombinaci objemu, rychlosti, různorodosti,
+    kvality a hodnoty.
+    \item Distribuované zpracování řeší škálování, ale přidává složitost: selhání uzlů, síť, partitioning,
+    konzistenci a monitoring.
+    \item Hadoop se skládá hlavně z HDFS, YARN a MapReduce; Spark je modernější výpočetní engine, který
+    se často používá nad HDFS nebo objektovým úložištěm.
+    \item MapReduce je dobré umět vysvětlit přes map, shuffle/sort a reduce.
+    \item Kafka není databáze pro libovolné dotazování, ale distribuovaný log událostí.
+    \item Data lake bez governance se snadno změní v nepřehledné úložiště.
+    \item CAP se týká kompromisu při síťové partition; v praxi nejde o jednoduché heslo \uv{vyber dvě}.
+\end{itemize}
+
+\subsection*{Shrnutí ke zkoušce}
+
+Big data jsou data, která vyžadují škálovatelné uložení, zpracování a správu. Charakterizují se pomocí
+5V: volume, velocity, variety, veracity a value. Základní princip spočívá v rozdělení dat do partitions,
+paralelním výpočtu a odolnosti proti výpadkům.
+
+Hadoop přinesl distribuované uložení přes HDFS a dávkové výpočty přes MapReduce. HDFS dělí soubory na
+bloky, ukládá je na DataNode uzly a metadata spravuje přes NameNode. MapReduce zpracovává data přes fáze
+map, shuffle/sort a reduce. Apache Spark poskytuje pohodlnější a často rychlejší zpracování přes RDD,
+DataFrame, Spark SQL, MLlib a Structured Streaming; aplikace běží přes driver, cluster manager a executory.
+
+Pro streamová data se používá Kafka, Spark Structured Streaming nebo Flink. Důležité jsou event time,
+windowing, stav, checkpointy a offsety. Pro uložení se používají data lake a lakehouse architektury,
+sloupcové formáty jako Parquet, partitioning a katalog metadat. NoSQL databáze volí jiné datové modely
+a jiné kompromisy než relační databáze. CAP teorém připomíná, že při síťové partition se distribuovaný
+systém musí rozhodovat mezi silnou konzistencí a dostupností.
+
+Prakticky je nutné řešit nejen výpočetní engine, ale také kvalitu dat, governance, bezpečnost, monitoring,
+orchestraci, náklady a fyzickou organizaci dat.
+
+\subsection*{Zdroje}
+
+\begin{itemize}
+    \item NIST:
+    \href{https://www.nist.gov/publications/nist-big-data-interoperability-framework-volume-1-big-data-definitions-version-2}{Big
+    Data Interoperability Framework: Volume 1, Big Data Definitions}.
+    \item Apache Hadoop dokumentace:
+    \href{https://hadoop.apache.org/docs/r3.3.6/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html}{HDFS
+    Architecture}.
+    \item Apache Hadoop dokumentace:
+    \href{https://hadoop.apache.org/docs/r3.3.6/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html}{MapReduce
+    Tutorial}.
+    \item Apache Spark dokumentace:
+    \href{https://spark.apache.org/docs/latest/cluster-overview.html}{Cluster Mode Overview}.
+    \item Apache Spark dokumentace:
+    \href{https://spark.apache.org/docs/latest/sql-programming-guide.html}{Spark SQL, DataFrames and Datasets}.
+    \item Confluent dokumentace k Apache Kafka:
+    \href{https://docs.confluent.io/kafka/introduction.html}{Introduction to Apache Kafka}.
+    \item Apache Flink dokumentace:
+    \href{https://nightlies.apache.org/flink/flink-docs-stable/docs/concepts/overview/}{Overview}.
+    \item Delta Lake dokumentace:
+    \href{https://docs.delta.io/}{Delta Lake documentation}.
+    \item Gilbert, Lynch:
+    \href{https://groups.csail.mit.edu/tds/papers/Gilbert/Brewer2.pdf}{Brewer's Conjecture and the Feasibility
+    of Consistent, Available, Partition-Tolerant Web Services}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:HDFS.png}{HDFS.png}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Mapreduce.png}{Mapreduce.png}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Spark\_Architecture.jpg}{Spark Architecture}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Datalake.png}{Datalake.png}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:CAP\_Theorem\_Euler\_Diagram.png}{CAP Theorem Euler Diagram}.
 \end{itemize}
 
 \newpage

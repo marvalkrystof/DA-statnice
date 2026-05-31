@@ -129,6 +129,25 @@ OLS hledá regresní přímku, rovinu nebo obecně hyperrovinu tak, aby byly odc
 modelu co nejmenší. Čtverce se používají proto, aby se kladné a záporné odchylky nerušily a aby větší chyby
 dostaly větší váhu.
 
+\paragraph{Alternativy k OLS.}
+\term{LAD} neboli metoda nejmenších absolutních odchylek minimalizuje součet absolutních reziduí
+\(\sum_i |y_i-\hat y_i|\). Je robustnější vůči odlehlým hodnotám, protože extrémní chyby netrestá
+kvadraticky. \term{MLE} neboli metoda maximální věrohodnosti volí parametry tak, aby byla pozorovaná
+data při zvoleném pravděpodobnostním modelu co nejpravděpodobnější. U klasické lineární regrese s
+normálními chybami vede MLE pro sklonové koeficienty ke stejným odhadům jako OLS.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\linewidth]{assets/images/linearni-regrese/linear-regression-residuals.png}
+  \caption[Regresní přímka a rezidua]{Regresní přímka a reziduální graf. Popis obrázku: horní panel
+  ukazuje body a odhadnutou lineární regresi, dolní panel zobrazuje rezidua vůči vysvětlující proměnné.
+  Pokud jsou rezidua náhodně rozptýlená kolem nuly bez systematického vzoru, je lineární specifikace
+  věcně přijatelnější. Zdroj obrázku: Justinkunimune,
+  \href{https://commons.wikimedia.org/wiki/File:Linear\_regression\_residuals.svg}{Wikimedia Commons},
+  licence CC0 1.0.}
+  \label{fig:linear-regression-residuals}
+\end{figure}
+
 \subsection*{Normální rovnice a vlastnosti reziduí}
 
 Z podmínek prvního řádu dostaneme:
@@ -343,6 +362,18 @@ R^2=1-\frac{SSR}{SST}.
 
 $R^2$ říká, jakou část variability $y$ model vysvětluje.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.82\linewidth]{assets/images/linearni-regrese/linear-regression-sums-of-squares.png}
+  \caption[Rozklad variability v regresi]{Rozklad variability závisle proměnné v lineární regresi.
+  Popis obrázku: tečkované úsečky ukazují rozdíl mezi skutečnými hodnotami, průměrem a regresní
+  přímkou; nevysvětlená část vstupuje do reziduálního součtu čtverců a vysvětlená část do výpočtu
+  koeficientu determinace. Zdroj obrázku: QuantuMechaniX8,
+  \href{https://commons.wikimedia.org/wiki/File:Linear\_Regression\_Plot.png}{Wikimedia Commons},
+  licence CC0 1.0.}
+  \label{fig:linear-regression-sums-of-squares}
+\end{figure}
+
 \paragraph{Pozor.}
 Vyšší $R^2$ neznamená automaticky lepší model pro kauzální interpretaci. Model může mít vysoké $R^2$,
 ale být špatně specifikovaný nebo trpět endogenitou.
@@ -387,6 +418,22 @@ x_0^\top \widehat{\mathrm{Var}}(\hat\beta)x_0
 }.
 \]
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.82\linewidth]{assets/images/linearni-regrese/regression-confidence-band.png}
+  \caption[Regresní nejistota]{Odhadnutá regresní funkce a pásy nejistoty. Popis obrázku: zelená
+  křivka je odhad, modré a červené pásy ukazují různé typy konfidenčních pásem kolem regresní funkce.
+  Pásy se typicky rozšiřují dál od středu dat, kde je odhad méně opřený o pozorování. Zdroj obrázku:
+  Skbkekas, \href{https://commons.wikimedia.org/wiki/File:Regression\_confidence\_band.svg}{Wikimedia Commons},
+  licence CC BY 3.0.}
+  \label{fig:regression-confidence-band}
+\end{figure}
+
+\paragraph{Extrapolace.}
+Regrese predikuje nejspolehlivěji v oblasti hodnot, které jsou podobné trénovacím datům. Predikce mimo
+pozorovaný rozsah $x$ je extrapolace a může být zavádějící i tehdy, když má model v trénovacích datech
+vysoké $R^2$.
+
 \subsection*{Volba modelu}
 
 Při volbě modelu řešíme:
@@ -397,6 +444,35 @@ Při volbě modelu řešíme:
     \item zda vztah není nelineární,
     \item zda model slouží k popisu, predikci nebo kauzalitě.
 \end{itemize}
+
+\subsubsection*{Volba podle účelu}
+
+\begin{itemize}
+    \item \textbf{Deskriptivní model} má přehledně popsat vztahy v datech. Důležitá je srozumitelná
+    interpretace koeficientů a transparentní specifikace.
+    \item \textbf{Prediktivní model} vybíráme podle chyby na validačních nebo testovacích datech.
+    Může obsahovat proměnné, které zlepšují predikci, i když nemají čistou kauzální interpretaci.
+    \item \textbf{Kauzální model} stavíme kolem identifikační otázky. Klíčové je zahrnout relevantní
+    confoundery, vyhnout se špatným kontrolním proměnným a obhájit exogenitu.
+\end{itemize}
+
+Proto neexistuje jeden univerzálně \uv{nejlepší} regresní model. Model s nejvyšším $R^2$ nemusí být
+nejlepší pro predikci mimo trénovací data a už vůbec nemusí identifikovat kauzální efekt.
+
+\subsubsection*{Křížová validace, informační kritéria a regularizace}
+U prediktivních úloh se model volí podle výkonu mimo trénovací data. \term{Holdout} rozdělí data na
+trénovací, validační a testovací část. \term{k-fold cross-validation} rozdělí data na \(k\) částí,
+model vždy trénuje na \(k-1\) částech a testuje na zbývající části; výsledná chyba je průměr přes
+všechny foldy. Testovací množina se používá až na konečné nezávislé vyhodnocení.
+
+\term{AIC} a \term{BIC} porovnávají modely pomocí věrohodnosti penalizované za počet parametrů.
+Nižší hodnota znamená lepší kompromis mezi shodou s daty a složitostí. AIC obvykle penalizuje
+složitost mírněji, BIC přísněji, protože penalizace roste s velikostí vzorku. U lineární regrese se
+často sleduje také adjustované \(R^2\), které na rozdíl od běžného \(R^2\) trestá zbytečné proměnné.
+
+\term{Ridge} regrese používá \(L_2\) penalizaci a stabilizuje odhady při multikolinearitě. \term{LASSO}
+používá \(L_1\) penalizaci a může některé koeficienty nastavit přesně na nulu, takže funguje i jako
+výběr proměnných. \term{Elastic net} obě penalizace kombinuje.
 
 \subsubsection*{Dummy proměnné}
 
@@ -519,6 +595,13 @@ Bias vzniká, pokud platí obě podmínky:
 \paragraph{Intuice.}
 Pokud vynechaná proměnná souvisí s vysvětlující proměnnou, model její efekt mylně přičte proměnné $x$.
 
+Možné reakce závisí na povaze problému. \term{Proxy proměnná} je pozorovatelná náhrada nepozorovaného
+faktoru, například testové skóre jako přibližná kontrola schopností v regresi mzdy na vzdělání.
+Proxy se vkládá přímo do rovnice a pomáhá snížit vychýlení, pokud dobře zachycuje vynechaný faktor.
+\term{Instrumentální proměnná} se používá, když je vysvětlující proměnná endogenní. Dobrý instrument
+musí být relevantní pro endogenní proměnnou a zároveň exogenní vůči chybě v hlavní rovnici. Častým
+odhadem je dvoustupňová metoda nejmenších čtverců, zkráceně 2SLS.
+
 \subsection*{Multikolinearita}
 
 Multikolinearita znamená, že vysvětlující proměnné jsou mezi sebou silně korelované.
@@ -571,7 +654,45 @@ mohou být špatně odhadnuté.
     \item vhodná transformace proměnných.
 \end{itemize}
 
-\subsection*{Shrnutí otázky 9}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\linewidth]{assets/images/linearni-regrese/heteroscedastic-residuals.png}
+  \caption[Heteroskedasticita v reziduích]{Reziduální graf s heteroskedasticitou. Popis obrázku:
+  horní panel ukazuje lineární regresi, dolní panel ukazuje, že rozptyl reziduí není konstantní, ale
+  roste s hodnotou vysvětlující proměnné. V takové situaci je potřeba řešit zejména správné
+  standardní chyby a inferenci. Zdroj obrázku: Justinkunimune,
+  \href{https://commons.wikimedia.org/wiki/File:Linear\_regression\_residuals\_heteroscedastic.svg}{Wikimedia Commons},
+  licence CC0 1.0.}
+  \label{fig:heteroscedastic-residuals}
+\end{figure}
+
+\subsection*{Diagnostika regresního modelu}
+
+Po odhadu nestačí opsat tabulku koeficientů. Je potřeba ověřit, zda model odpovídá účelu analýzy.
+
+Typicky kontrolujeme:
+\begin{itemize}
+    \item \textbf{rezidua vs. fitted values} -- vzor v reziduích může znamenat nelinearitu,
+    heteroskedasticitu nebo chybějící proměnné;
+    \item \textbf{odlehlá a vlivná pozorování} -- extrémy mohou výrazně změnit koeficienty;
+    \item \textbf{multikolinearitu} -- vysoké VIF a široké intervaly spolehlivosti u klíčových
+    proměnných;
+    \item \textbf{normalitu reziduí} -- hlavně pro malovýběrovou inferenci;
+    \item \textbf{predikční výkon} -- u prediktivních úloh validační/testovací chyba, například RMSE
+    nebo MAE;
+    \item \textbf{věcnou plausibilitu} -- znaménka, velikosti efektů a jednotky musejí dávat ekonomický
+    smysl.
+\end{itemize}
+
+\subsection*{Pozor u zkoušky}
+
+Nejčastější chyba je zaměnit statistickou významnost za věcnou nebo kauzální významnost. Malé
+$p$-value říká, že odhad je vzhledem ke standardní chybě vzdálený od nulové hypotézy, ne že efekt je
+velký, důležitý nebo kauzální. Druhá častá chyba je tvrdit, že vysoké $R^2$ znamená správný model.
+Pro kauzalitu je důležitá exogenita a argument o tom, proč v chybě nezůstává confounder. Pro predikci je
+důležitá chyba na nových datech, ne jen fit v trénovacím souboru.
+
+\subsection*{Shrnutí ke zkoušce}
 
 Lineární regrese modeluje podmíněnou střední hodnotu $y$ pomocí lineární kombinace vysvětlujících
 proměnných. OLS minimalizuje součet čtverců reziduí:
@@ -587,5 +708,24 @@ Při splnění základních předpokladů je OLS nestranný a konzistentní; př
 Při praktickém použití je nutné řešit volbu modelu, vynechané proměnné, multikolinearitu,
 heteroskedasticitu a správnou interpretaci koeficientů.
 
+\subsection*{Zdroje}
+\begin{itemize}
+    \item statsmodels User Guide:
+    \href{https://www.statsmodels.org/stable/regression.html}{Linear Regression}.
+    \item scikit-learn User Guide:
+    \href{https://scikit-learn.org/stable/modules/linear\_model.html}{Linear Models}.
+    \item PennState Eberly College of Science:
+    \href{https://online.stat.psu.edu/stat501/}{STAT 501 -- Regression Methods}.
+    \item Zeileis:
+    \href{https://cran.r-project.org/web/packages/sandwich/vignettes/sandwich.pdf}{Econometric Computing with HC and HAC Covariance Matrix Estimators}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Linear\_regression\_residuals.svg}{File:Linear\_regression\_residuals.svg}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Linear\_Regression\_Plot.png}{File:Linear\_Regression\_Plot.png}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Regression\_confidence\_band.svg}{File:Regression\_confidence\_band.svg}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Linear\_regression\_residuals\_heteroscedastic.svg}{heteroskedastic residual plot}.
+\end{itemize}
 
 \newpage

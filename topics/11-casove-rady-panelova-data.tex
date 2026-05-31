@@ -66,6 +66,18 @@ V jednodušší podobě:
     y_t = Tr_t + u_t.
 \]
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.76\linewidth]{assets/images/casove-rady-panelova-data/time-series-decomposition.png}
+  \caption[Rozklad časové řady]{Aditivní rozklad časové řady na pozorovanou řadu, trend, sezónní složku
+  a rezidua. Popis obrázku: horní panel ukazuje původní řadu, další panely oddělují hladký trend,
+  opakující se sezónní vzorec a zbytkovou náhodnou složku. Takový rozklad pomáhá rozhodnout, zda má
+  smysl modelovat trend, sezónnost nebo autokorelaci. Zdroj obrázku: Junkie.dolphin,
+  \href{https://commons.wikimedia.org/wiki/File:Group.size.1\_decompose.png}{Wikimedia Commons},
+  licence CC BY-SA 3.0.}
+  \label{fig:time-series-decomposition}
+\end{figure}
+
 \paragraph{Trend}
 
 Trend znamená dlouhodobý růst nebo pokles časové řady. Může být deterministický nebo stochastický.
@@ -219,6 +231,18 @@ ACF klesá velmi pomalu & podezření na nestacionaritu nebo jednotkový kořen 
 
 V praxi se ACF/PACF používají společně s informačními kritérii, jako jsou AIC a BIC, a s kontrolou reziduí.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.86\linewidth]{assets/images/casove-rady-panelova-data/acf-pacf.png}
+  \caption[ACF a PACF]{Srovnání ACF a PACF pro autoregresní proces. Popis obrázku: vlevo ACF postupně
+  doznívá, zatímco vpravo PACF ukazuje několik výrazných zpoždění a další hodnoty už leží v pásmu šumu.
+  Takové chování pomáhá při orientační volbě řádu AR složky, ale v praxi se musí doplnit diagnostikou
+  reziduí a informačními kritérii. Zdroj obrázku: Moon motif,
+  \href{https://commons.wikimedia.org/wiki/File:Autocorrelation\_Function\_vs.\_Partial\_Autocorrelation\_Function.png}{Wikimedia Commons},
+  licence CC BY-SA 4.0.}
+  \label{fig:acf-pacf}
+\end{figure}
+
 \subsubsection*{1.5 Základní lineární modely časových řad}
 
 \paragraph{MA(q) model}
@@ -302,6 +326,18 @@ Speciální případ:
     y_t=y_{t-1}+e_t
 \]
 je random walk, tedy ARIMA$(0,1,0)$.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.82\linewidth]{assets/images/casove-rady-panelova-data/random-walk.png}
+  \caption[Random walk]{Osm simulovaných náhodných procházek. Popis obrázku: každá trajektorie začíná
+  blízko stejné hodnoty, ale šoky se kumulují, takže řady se mohou dlouhodobě vzdalovat bez návratu ke
+  stabilní střední hodnotě. To vystihuje intuici jednotkového kořene a proč je u takových řad často nutné
+  diferencování. Zdroj obrázku: Morn,
+  \href{https://commons.wikimedia.org/wiki/File:Random\_Walk\_example.svg}{Wikimedia Commons},
+  licence GFDL 1.2 nebo novější.}
+  \label{fig:random-walk}
+\end{figure}
 
 \paragraph{SARIMA}
 
@@ -1181,6 +1217,18 @@ Praktická intuice:
     \item RE je efektivnější, ale stojí na silnějším předpokladu.
 \end{itemize}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.76\linewidth]{assets/images/casove-rady-panelova-data/fe-re.png}
+  \caption[FE a RE při korelované heterogenitě]{Simulační srovnání fixed effects a random effects
+  odhadu v situaci, kdy je vhodný FE přístup. Popis obrázku: hustota FE odhadů je centrovaná blízko
+  skutečné hodnoty parametru, zatímco RE odhady jsou posunuté; obrázek ilustruje, proč je předpoklad
+  nekorelovanosti $c_i$ s regresory pro RE klíčový. Zdroj obrázku: SEM,
+  \href{https://commons.wikimedia.org/wiki/File:FE-RE.png}{Wikimedia Commons},
+  licence CC BY 3.0.}
+  \label{fig:fe-re}
+\end{figure}
+
 \subsubsection*{3.11 Correlated Random Effects}
 
 CRE, tedy correlated random effects nebo Mundlakův přístup, dovoluje, aby nepozorovaná heterogenita
@@ -1531,5 +1579,54 @@ Dynamický panel se zpožděným $y$ & Arellano--Bond / GMM \\
     u_{it}.
 \]
 
+\subsection*{6. Pozor u zkoušky}
+
+U časových řad je první otázka vždy stacionarita. Pokud jsou dvě řady trendové nebo $I(1)$, obyčejná
+regrese v úrovních může být zdánlivá. Nejdřív je potřeba řešit trend, jednotkový kořen a případně
+kointegraci. Diferencování ale není automaticky nejlepší řešení: pokud jsou řady kointegrované, samotné
+diference zahodí dlouhodobý vztah a vhodnější je ECM nebo VECM.
+
+Grangerova kauzalita není kauzalita v silném ekonomickém smyslu. Znamená, že minulost jedné proměnné
+zlepšuje predikci druhé proměnné po kontrole její vlastní minulosti. Pro kauzální interpretaci je pořád
+potřeba věcný identifikační argument.
+
+U panelových dat je klíčový předpoklad o nepozorované heterogenitě $c_i$. FE dovoluje korelaci mezi
+$c_i$ a regresory, ale neumí odhadnout efekty časově neměnných proměnných. RE je efektivnější a umí
+časově neměnné proměnné, ale jen pokud $c_i$ není korelované s regresory. Hausmanův test je pomůcka,
+ne náhrada věcného úsudku.
+
+V panelech se standardní chyby často musí clusterovat, typicky podle jednotek. U dynamických panelů je
+navíc potřeba myslet na Nickell bias a kontrolovat Arellano--Bond diagnostiky, hlavně absenci AR(2) v
+diferencovaných reziduích a přiměřenost instrumentů.
+
+\subsection*{7. Shrnutí ke zkoušce}
+
+Časové řady řeší závislost pozorování v čase. Základní postup je řadu vykreslit, zkontrolovat trend,
+sezónnost, stacionaritu a autokorelaci, potom volit mezi AR, MA, ARMA, ARIMA, SARIMA, ADL/ARDL,
+VAR nebo VECM podle povahy dat a cíle analýzy. Pro predikci nestačí dobrý fit v trénovacích datech;
+důležitá je out-of-sample chyba a kontrola reziduí.
+
+Panelová data kombinují časovou a průřezovou dimenzi. Jejich hlavní výhoda je kontrola časově neměnné
+nepozorované heterogenity. Pooled OLS je jednoduchý, ale často riskuje omitted variable bias. FD a FE
+odstraňují $c_i$, RE stojí na silnějším předpokladu nekorelovanosti $c_i$ s regresory, CRE/Mundlak
+pomáhá tento předpoklad uvolnit a two-way FE přidává společné časové šoky.
+
+\subsection*{Zdroje}
+\begin{itemize}
+    \item statsmodels User Guide:
+    \href{https://www.statsmodels.org/stable/tsa.html}{Time Series analysis}.
+    \item statsmodels User Guide:
+    \href{https://www.statsmodels.org/stable/vector\_ar.html}{Vector Autoregressions}.
+    \item linearmodels Documentation:
+    \href{https://bashtage.github.io/linearmodels/panel/examples/examples.html}{Panel Data Model Estimation}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Group.size.1\_decompose.png}{File:Group.size.1\_decompose.png}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Autocorrelation\_Function\_vs.\_Partial\_Autocorrelation\_Function.png}{ACF/PACF plot}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Random\_Walk\_example.svg}{File:Random\_Walk\_example.svg}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:FE-RE.png}{File:FE-RE.png}.
+\end{itemize}
 
 \newpage

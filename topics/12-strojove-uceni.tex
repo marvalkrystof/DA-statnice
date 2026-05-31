@@ -29,8 +29,8 @@ e-mailů a učí se, jaké vlastnosti se spamem souvisí.
 
 \subsection*{Pattern recognition a data mining}
 
-V materiálech se objevuje pojem \term{pattern recognition}, tedy rozpoznávání vzorů. Na vstupu jsou surová
-data a na výstupu je akce, klasifikace nebo doporučení podle nalezených vzorů.
+\term{Pattern recognition}, tedy rozpoznávání vzorů, je hledání pravidelností ve vstupních datech.
+Na vstupu jsou surová data a na výstupu je akce, klasifikace nebo doporučení podle nalezených vzorů.
 
 Příklady:
 \begin{itemize}
@@ -107,9 +107,36 @@ Typické úlohy:
 U zákazníků neznáme předem segmenty. Shlukovací algoritmus se pokusí najít skupiny zákazníků podle podobného
 chování, nákupů nebo demografie.
 
+\subsubsection*{Semi-supervised learning}
+
+Semi-supervised learning kombinuje malé množství označených dat s velkým množstvím neoznačených dat.
+Používá se tehdy, když je značení drahé, ale neoznačená data jsou dostupná.
+
+Příklady:
+\begin{itemize}
+    \item klasifikace dokumentů, kde ruční anotace stojí čas,
+    \item rozpoznávání obrazů s malou anotovanou trénovací množinou,
+    \item detekce závad, kde je málo potvrzených případů.
+\end{itemize}
+
+\subsubsection*{Reinforcement learning}
+
+Reinforcement learning, tedy zpětnovazební učení, řeší rozhodování v prostředí. Agent volí akce, dostává
+odměny nebo penalizace a učí se politiku, která dlouhodobě maximalizuje očekávanou odměnu.
+
+Příklady:
+\begin{itemize}
+    \item řízení robotů,
+    \item hraní her,
+    \item optimalizace doporučování nebo dynamického oceňování.
+\end{itemize}
+
+Na rozdíl od učení s učitelem nemáme u každého pozorování správnou odpověď. Model se učí z následků
+svých akcí.
+
 \subsubsection*{Doporučování}
 
-Doporučovací systémy predikují, jaké položky by uživatele mohly zajímat. V materiálech se objevuje
+Doporučovací systémy predikují, jaké položky by uživatele mohly zajímat. Typickým přístupem je
 \term{collaborative filtering}, například doporučování filmů podle matice uživatel--položka.
 
 Typická vstupní matice:
@@ -181,6 +208,23 @@ ale často vyžaduje dodatečné vysvětlovací metody, například LIME, SHAP n
 \paragraph{No-Free-Lunch princip.}
 Neexistuje jeden algoritmus, který by byl nejlepší pro všechny problémy. Algoritmus se vybírá podle cíle,
 povahy dat, velikosti datasetu, požadavků na interpretaci, nákladů chyb a výpočetních omezení.
+
+\subsubsection*{Další hlediska klasifikace algoritmů}
+
+Algoritmy lze třídit i podle toho, jak reprezentují naučenou znalost:
+\begin{itemize}
+    \item \textbf{parametrické modely} mají pevný počet parametrů, například lineární nebo logistická
+    regrese;
+    \item \textbf{neparametrické modely} se pružněji přizpůsobují datům, například k-NN nebo rozhodovací
+    stromy;
+    \item \textbf{instance-based modely} ukládají příklady a rozhodují podle podobnosti, typicky k-NN;
+    \item \textbf{model-based přístupy} z dat vytvoří explicitní model, například strom nebo regresní
+    rovnici;
+    \item \textbf{batch learning} trénuje na celé dávce dat, zatímco \textbf{online learning} postupně
+    aktualizuje model s přicházejícími daty;
+    \item \textbf{generativní modely} modelují rozdělení dat, například Naive Bayes; \textbf{diskriminační
+    modely} se soustředí přímo na rozhodovací hranici nebo podmíněnou pravděpodobnost třídy.
+\end{itemize}
 
 \subsection*{Vybrané algoritmy}
 
@@ -351,6 +395,18 @@ CRISP-DM je standardní metodika pro data mining projekty. Má šest fází:
     nasazení modelu, reporting, API, automatizace, monitoring a údržba.
 \end{enumerate}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\linewidth]{assets/images/strojove-uceni/crisp-dm-process.png}
+  \caption[CRISP-DM proces]{Fáze metodiky CRISP-DM. Popis obrázku: diagram ukazuje iterativní tok mezi
+  porozuměním businessu, porozuměním datům, přípravou dat, modelováním, evaluací a nasazením. Šipky
+  zdůrazňují, že analytický projekt se často vrací k předchozím krokům, například po zjištění problémů
+  s daty nebo po neuspokojivé evaluaci modelu. Zdroj obrázku: Kenneth Jensen,
+  \href{https://commons.wikimedia.org/wiki/File:CRISP-DM\_Process\_Diagram.png}{Wikimedia Commons},
+  licence CC BY-SA 3.0.}
+  \label{fig:crisp-dm-process}
+\end{figure}
+
 V praxi bývá nejvíce práce v komunikaci s vlastníkem dat, čištění, přípravě dat, interpretaci a zajištění
 důvěry ve výsledky, ne v samotném spuštění algoritmu.
 
@@ -418,6 +474,18 @@ CV_K
 \sum_{k=1}^K Err_k.
 \]
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.86\linewidth]{assets/images/strojove-uceni/k-fold-cross-validation.png}
+  \caption[K-fold cross-validation]{Schéma k-fold cross-validation. Popis obrázku: data se rozdělí na
+  několik foldů; v každé iteraci se jedna část použije jako validační/testovací fold a zbytek jako
+  trénovací data. Výsledná chyba se průměruje přes iterace, takže odhad výkonu méně závisí na jednom
+  náhodném rozdělení dat. Zdroj obrázku: Gufosowa,
+  \href{https://commons.wikimedia.org/wiki/File:K-fold\_cross\_validation\_EN.svg}{Wikimedia Commons},
+  licence CC BY-SA 4.0.}
+  \label{fig:k-fold-cross-validation}
+\end{figure}
+
 \paragraph{Stratifikace.}
 U nevyvážených tříd je vhodné zachovat podíly tříd v každém foldu.
 
@@ -437,6 +505,17 @@ Pro binární klasifikaci:
 \text{Predikováno negativní} & FN & TN
 \end{array}
 \]
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\linewidth]{assets/images/strojove-uceni/confusion-matrix.png}
+  \caption[Confusion matrix]{Confusion matrix pro binární klasifikaci. Popis obrázku: matice porovnává
+  skutečné a predikované třídy a rozlišuje true positives, false positives, false negatives a true
+  negatives. Z těchto čtyř hodnot se počítá accuracy, precision, recall, specificity i F1 score. Zdroj
+  obrázku: Jackverr, \href{https://commons.wikimedia.org/wiki/File:ConfusionMatrix.png}{Wikimedia Commons},
+  licence CC BY-SA 3.0 nebo GFDL 1.2.}
+  \label{fig:confusion-matrix}
+\end{figure}
 
 \subsubsection*{Accuracy}
 
@@ -541,6 +620,17 @@ Err_{\text{train}} \ll Err_{\text{test}}
 \text{podezření na overfitting}.
 \]
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.68\linewidth]{assets/images/strojove-uceni/overfitting.png}
+  \caption[Overfitting]{Příklad přeučení klasifikátoru. Popis obrázku: jednoduchá hranice by lépe
+  vystihla obecný vztah mezi třídami, zatímco příliš složitá hranice se přizpůsobuje šumu v trénovacích
+  datech a hůře generalizuje na nové případy. Zdroj obrázku: Chabacano,
+  \href{https://commons.wikimedia.org/wiki/File:Overfitting.svg}{Wikimedia Commons},
+  licence CC BY-SA 4.0 nebo GFDL 1.2.}
+  \label{fig:overfitting}
+\end{figure}
+
 Řešení:
 \begin{itemize}
     \item jednodušší model,
@@ -592,17 +682,64 @@ Metody ladění:
     BigML, cloudové ML služby, kontejnery, API, CI/CD, monitoring modelů.
 \end{itemize}
 
-Materiály zmiňují práci v Pythonu a scikit-learn, cloudové nástroje, BigML pro stromy a LISp-Miner jako
-systém navazující na GUHA.
+V praktických kurzech a projektech se často pracuje s Pythonem a knihovnami jako scikit-learn, s GUI
+nástroji typu BigML nebo Weka a s nástroji navazujícími na GUHA/LISp-Miner pro pravidlové dobývání
+znalostí.
 
-\subsection*{Shrnutí otázky}
+\subsection*{Nasazení, monitoring a rizika modelu}
+
+Model není hotový okamžikem, kdy má dobrou validační metriku. V produkci je potřeba řešit:
+\begin{itemize}
+    \item reprodukovatelnost trénování a verzování dat, kódu i modelu;
+    \item monitoring vstupních dat, predikcí a reálného výkonu;
+    \item \term{data drift} -- změna rozdělení vstupů;
+    \item \term{concept drift} -- změna vztahu mezi vstupy a cílem;
+    \item vysvětlitelnost rozhodnutí, auditovatelnost a etické dopady;
+    \item bezpečné zacházení s osobními a citlivými daty.
+\end{itemize}
+
+\subsection*{Pozor u zkoušky}
+
+Nejčastější chyba je hodnotit model podle trénovací chyby. Důležité je, jak model funguje na nových
+datech. Proto se používá validační/testovací množina, cross-validation a kontrola overfittingu.
+
+Druhá častá chyba je zaměnit typ úlohy a metriku. Accuracy může být zavádějící u nevyvážených tříd; u
+detekce podvodů nebo nemocí často záleží víc na recallu, precision nebo přímo na nákladech chyb. U
+časových dat se nesmí náhodně míchat budoucnost do tréninku.
+
+Třetí častá chyba je vyjmenovat algoritmy bez vazby na data a business cíl. Správná odpověď má říct, proč
+volíme konkrétní model, jak připravíme data, jak ověříme výkon a jak poznáme, že model po nasazení
+nezestárl.
+
+\subsection*{Shrnutí ke zkoušce}
 
 Strojové učení je přístup, kdy se model učí ze vzorových dat. Základní dělení je učení s učitelem,
-učení bez učitele, doporučování a detekce anomálií. Učení s učitelem zahrnuje klasifikaci a regresi,
-učení bez učitele shlukování, asociační pravidla a redukci dimenze.
+učení bez učitele, semi-supervised learning, reinforcement learning, doporučování a detekce anomálií.
+Učení s učitelem zahrnuje klasifikaci a regresi, učení bez učitele shlukování, asociační pravidla a
+redukci dimenze.
 
 Typický ML projekt se řídí logikou CRISP-DM: pochopení businessu, pochopení dat, příprava dat, modelování,
 vyhodnocení a nasazení. Kvalita modelu se nehodnotí na trénovacích datech, ale na validačních/testovacích
 datech pomocí vhodných metrik. Je nutné hlídat overfitting, data leakage, nevyvážené třídy a náklady chyb.
+
+\subsection*{Zdroje}
+\begin{itemize}
+    \item scikit-learn User Guide:
+    \href{https://scikit-learn.org/stable/supervised\_learning.html}{Supervised learning}.
+    \item scikit-learn User Guide:
+    \href{https://scikit-learn.org/stable/unsupervised\_learning.html}{Unsupervised learning}.
+    \item scikit-learn User Guide:
+    \href{https://scikit-learn.org/stable/model\_selection.html}{Model selection and evaluation}.
+    \item scikit-learn User Guide:
+    \href{https://scikit-learn.org/stable/modules/model\_evaluation.html}{Metrics and scoring}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:CRISP-DM\_Process\_Diagram.png}{CRISP-DM process diagram}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:K-fold\_cross\_validation\_EN.svg}{K-fold cross-validation}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:ConfusionMatrix.png}{Confusion matrix}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Overfitting.svg}{Overfitting}.
+\end{itemize}
 
 \newpage

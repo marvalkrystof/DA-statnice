@@ -63,6 +63,17 @@ kde $g$ závisí na úloze:
     \item vícetřídní klasifikace: softmax.
 \end{itemize}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\linewidth]{assets/images/hluboke-uceni/multilayer-neural-network.png}
+  \caption[Vícevrstvá neuronová síť]{Vícevrstvá dopředná neuronová síť. Popis obrázku: vstupní hodnoty
+  postupně procházejí přes více skrytých vrstev do výstupní vrstvy. Každá vrstva vytváří novou reprezentaci
+  dat a skládáním těchto reprezentací vzniká schopnost modelovat složité nelineární vztahy. Zdroj obrázku:
+  Offnfopt, \href{https://commons.wikimedia.org/wiki/File:Multi-Layer\_Neural\_Network-Vector.svg}{Wikimedia
+  Commons}, licence CC0 1.0 / public domain.}
+  \label{fig:multilayer-neural-network}
+\end{figure}
+
 \subsection*{Proč hluboké učení funguje}
 
 Hluboké sítě jsou úspěšné hlavně díky kombinaci několika faktorů:
@@ -80,6 +91,12 @@ Hluboké sítě jsou úspěšné hlavně díky kombinaci několika faktorů:
 Hluboké učení není vhodné vždy. U malých tabulkových datasetů mohou být lepší jednodušší modely, například
 logistická regrese, rozhodovací strom, random forest nebo gradient boosting. Hluboké sítě se vyplatí hlavně
 tam, kde je hodně dat a složitá struktura vstupu.
+
+\paragraph{Induktivní předpoklady architektur.}
+Různé architektury nejsou zaměnitelné. MLP předpokládá obecný vektor příznaků, CNN využívá lokální
+prostorovou strukturu a sdílení filtrů, RNN/LSTM pracují se sekvenčním pořadím a transformer se učí vztahy
+mezi prvky sekvence pomocí attention. Správná architektura tedy vnáší do modelu předpoklad, který odpovídá
+typu dat.
 
 \subsection*{Vícevrstvý perceptron}
 
@@ -549,6 +566,17 @@ CNN používají:
     \item hierarchickou extrakci příznaků.
 \end{itemize}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.92\linewidth]{assets/images/hluboke-uceni/cnn-convolutional-layers.png}
+  \caption[Konvoluční vrstvy v CNN]{Konvoluční vrstvy v CNN. Popis obrázku: malý filtr se aplikuje lokálně
+  na vstupní mapu a vytváří feature mapu. Stejné váhy filtru se sdílejí napříč pozicemi, takže počet parametrů
+  neroste s každým pixelem samostatně a síť využívá prostorovou strukturu obrazu. Zdroj obrázku: Renanar2,
+  \href{https://commons.wikimedia.org/wiki/File:CNN\_Convolutional\_Layers.svg}{Wikimedia Commons}, licence
+  CC BY-SA 4.0.}
+  \label{fig:cnn-convolutional-layers}
+\end{figure}
+
 \subsection*{Konvoluce}
 
 Konvoluce aplikuje filtr, také kernel, na vstupní obrázek a vytváří feature mapu:
@@ -652,46 +680,46 @@ Pooling:
 \subsection*{Typická CNN architektura}
 
 Základní konvoluční síť:
-\[
+\begin{align*}
 \text{Input}
-\rightarrow
+&\rightarrow
 \text{Convolution}
 \rightarrow
 \text{ReLU}
 \rightarrow
-\text{Pooling}
-\rightarrow
+\text{Pooling}\\
+&\rightarrow
 \text{Convolution}
 \rightarrow
 \text{ReLU}
 \rightarrow
-\text{Pooling}
-\rightarrow
+\text{Pooling}\\
+&\rightarrow
 \text{Flatten}
 \rightarrow
 \text{Dense}
 \rightarrow
 \text{Softmax}.
-\]
+\end{align*}
 
 \paragraph{Příklad MNIST CNN.}
-\[
+\begin{align*}
 (28,28,1)
-\rightarrow
+&\rightarrow
 (26,26,32)
 \rightarrow
-(13,13,32)
-\rightarrow
+(13,13,32)\\
+&\rightarrow
 (11,11,64)
 \rightarrow
-(5,5,64)
-\rightarrow
+(5,5,64)\\
+&\rightarrow
 (3,3,128)
 \rightarrow
 (1152,)
 \rightarrow
 (10,).
-\]
+\end{align*}
 
 Počet parametrů:
 \[
@@ -729,6 +757,9 @@ Existují dva přístupy:
     \item \textbf{offline augmentation} -- nové obrázky se předem uloží na disk,
     \item \textbf{on-the-fly augmentation} -- transformace se generují během trénování.
 \end{itemize}
+
+Augmentace se typicky aplikuje jen na trénovací data. Validační a testovací množina mají zůstat stabilní,
+aby měřily výkon modelu na realistických, nikoli náhodně změněných datech.
 
 \subsection*{Moderní CNN architektury}
 
@@ -880,6 +911,16 @@ h_t = o_t\odot \tanh(c_t).
 \paragraph{Intuice.}
 LSTM se učí, co zapomenout, co přidat do paměti a co poslat dál jako výstup. Díky tomu lépe zachycuje
 dlouhodobé závislosti než jednoduchá RNN.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.86\linewidth]{assets/images/hluboke-uceni/lstm-cell.png}
+  \caption[LSTM buňka]{Vnitřní struktura LSTM buňky. Popis obrázku: brány řízené sigmoidou rozhodují, kolik
+  informace se zapomene, kolik se přidá do paměťového stavu a jaká část paměti se použije pro nový skrytý
+  stav. Právě paměťový stav pomáhá zachytit delší závislosti v sekvenci. Zdroj obrázku: Guillaume Chevalier,
+  \href{https://commons.wikimedia.org/wiki/File:The\_LSTM\_cell.png}{Wikimedia Commons}, licence CC BY 4.0.}
+  \label{fig:lstm-cell}
+\end{figure}
 
 \subsection*{GRU}
 
@@ -1080,6 +1121,18 @@ V encoderu se používá self-attention nad vstupem. V decoderu se používá:
     \item feed-forward vrstvy.
 \end{itemize}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.64\linewidth]{assets/images/hluboke-uceni/transformer-architecture.png}
+  \caption[Architektura transformeru]{Původní encoder-decoder transformer. Popis obrázku: encoder převádí
+  vstupní sekvenci na kontextové reprezentace, decoder generuje výstup autoregresivně. Obě části používají
+  attention, reziduální spojení, normalizaci a feed-forward vrstvy; decoder navíc používá maskování budoucích
+  pozic. Zdroj obrázku: Yuening Jia,
+  \href{https://commons.wikimedia.org/wiki/File:The-Transformer-model-architecture.png}{Wikimedia Commons},
+  licence CC BY-SA 3.0.}
+  \label{fig:transformer-architecture}
+\end{figure}
+
 \subsection*{Typy transformerových modelů}
 
 \begin{itemize}
@@ -1127,6 +1180,10 @@ Možnosti:
     \item fine-tunovat celý model s malým learning rate.
 \end{itemize}
 
+Prakticky se často postupuje ve dvou krocích: nejprve se zmrazí předtrénovaný backbone a naučí se nová
+klasifikační hlava, potom se případně odemrazí část vyšších vrstev a celý model se krátce doladí s menším
+learning rate. Tím se sníží riziko, že se užitečné předtrénované reprezentace rychle zničí.
+
 \subsubsection*{Self-supervised learning}
 
 U velkých jazykových modelů se často využívá self-supervised učení. Model si vytváří cílovou proměnnou z
@@ -1164,6 +1221,17 @@ L(x,\hat x)=\|x-\hat x\|^2.
 \paragraph{Bottleneck.}
 Nejužší skrytá vrstva se nazývá code nebo bottleneck. Pokud má malou dimenzi, autoencoder se musí naučit
 kompaktní reprezentaci dat.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.74\linewidth]{assets/images/hluboke-uceni/autoencoder-structure.png}
+  \caption[Autoencoder]{Schéma autoencoderu. Popis obrázku: encoder převádí vstup do kompaktního latentního
+  kódu a decoder z něj rekonstruuje původní vstup. Pokud je bottleneck dost úzký nebo je model regularizovaný,
+  síť se musí naučit užitečnou reprezentaci dat. Zdroj obrázku: Chervinskii,
+  \href{https://commons.wikimedia.org/wiki/File:Autoencoder\_structure.png}{Wikimedia Commons}, licence
+  CC BY-SA 4.0.}
+  \label{fig:autoencoder-structure}
+\end{figure}
 
 Použití:
 \begin{itemize}
@@ -1507,5 +1575,35 @@ business procesů. Prakticky je důležité nejen trénování, ale také příp
 monitoring, škálování, bezpečnost a interpretovatelnost. Největší slabiny hlubokého učení jsou náročnost na
 data a výpočetní výkon, riziko přeučení, black-box povaha a potřeba kontroly biasu, driftu a právních/etických
 dopadů.
+
+\subsection*{Zdroje}
+
+\begin{itemize}
+    \item Goodfellow, Bengio, Courville:
+    \href{https://www.deeplearningbook.org/}{Deep Learning}.
+    \item PyTorch Tutorials:
+    \href{https://docs.pytorch.org/tutorials/recipes/recipes/defining\_a\_neural\_network.html}{Defining a
+    Neural Network}.
+    \item TensorFlow / Keras Guide:
+    \href{https://www.tensorflow.org/guide/keras/transfer\_learning}{Transfer learning and fine-tuning}.
+    \item TensorFlow Tutorials:
+    \href{https://www.tensorflow.org/tutorials/images/data\_augmentation}{Data augmentation}.
+    \item Vaswani et al.:
+    \href{https://arxiv.org/abs/1706.03762}{Attention Is All You Need}.
+    \item Hugging Face Transformers:
+    \href{https://huggingface.co/docs/transformers/v4.16.2/en/model\_summary}{Summary of the models}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Multi-Layer\_Neural\_Network-Vector.svg}{Multi-Layer Neural
+    Network-Vector}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:CNN\_Convolutional\_Layers.svg}{CNN Convolutional Layers}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:The\_LSTM\_cell.png}{The LSTM cell}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:The-Transformer-model-architecture.png}{The Transformer model
+    architecture}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Autoencoder\_structure.png}{Autoencoder structure}.
+\end{itemize}
 
 \newpage

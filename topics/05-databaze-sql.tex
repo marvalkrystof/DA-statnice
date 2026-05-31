@@ -51,6 +51,11 @@ kandidátní klíč, který nebyl zvolen jako primární.
 \term{Cizí klíč} je atribut nebo skupina atributů, která odkazuje na primární nebo kandidátní klíč
 jiné tabulky. Cizí klíč zajišťuje, že se v tabulce neobjeví odkaz na neexistující záznam.
 
+Primární klíč může být \term{přirozený}, pokud vychází z business reality, například IČO firmy, nebo
+\term{umělý} neboli surrogate key, pokud ho generuje databáze či aplikace. Umělý klíč nemá vlastní
+věcný význam, ale bývá stabilnější, kratší a lépe použitelný ve vazbách. Přirozený klíč se často
+ponechává jako unikátní omezení, aby databáze dál hlídala business jednoznačnost.
+
 Základní typy integrity:
 \begin{itemize}
   \item \term{entitní integrita} - každý řádek má být jednoznačně identifikovatelný; primární klíč

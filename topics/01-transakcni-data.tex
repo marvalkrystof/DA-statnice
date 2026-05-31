@@ -118,7 +118,7 @@ přístup je ETL - \textit{Extraction, Transformation and Loading}.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.78\linewidth]{assets/images/etl-data-flow.png}
+  \includegraphics[width=0.78\linewidth]{assets/images/transakcni-data/etl-data-flow.png}
   \caption[ETL tok]{Základní ETL tok mezi zdrojovými systémy a cílovými analytickými úložišti.
   Zdroj obrázku: Bamyers99, Wikimedia Commons, CC0.}
   \label{fig:etl-data-flow}
@@ -172,9 +172,17 @@ uživatelů nebo konkrétní oblast, například finance, prodej nebo marketing.
 do kostek, kde lze sledovat ukazatele podle dimenzí, jako je čas, region, produkt, zákazník nebo
 organizační jednotka.
 
+Vedle relačních databází se v integrační vrstvě často objevují i jednodušší nebo distribuovaná
+úložiště. \term{Ploché soubory} ve formátech CSV, JSON, XML nebo XLSX jsou praktické pro exporty,
+jednorázové předávky a menší datové sady, ale hůře vynucují integritu, typy a audit změn.
+\term{Data lake} ukládá data v surovější podobě a spoléhá na pozdější transformace, typicky v režimu
+ELT. U velkých objemů dat se může použít distribuované souborové úložiště, například HDFS nebo cloudové
+objektové úložiště. Pro zkoušku je důležité rozlišit, zda úložiště slouží k rychlým transakcím,
+technické přípravě dat, historické analytice nebo flexibilnímu ukládání surových dat.
+
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.88\linewidth]{assets/images/data-warehouse-data-marts.png}
+  \includegraphics[width=0.88\linewidth]{assets/images/transakcni-data/data-warehouse-data-marts.png}
   \caption[Datový sklad a datová tržiště]{Příklad toku dat z provozních systémů přes integrační
   vrstvu do datového skladu a datových tržišť. Zdroj obrázku: MarsJson, Wikimedia Commons,
   CC BY-SA 4.0.}

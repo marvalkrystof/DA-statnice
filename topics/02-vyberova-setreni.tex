@@ -64,6 +64,11 @@ přímého kontaktu, nemožnost okamžitě vysvětlit nejasnou otázku a riziko 
 \term{Anketa} je méně reprezentativní forma zjišťování názorů. Výsledky ankety nelze automaticky
 zobecnit na populaci, protože výběr respondentů nebývá náhodný a často závisí na dobrovolné účasti.
 
+Do širší rodiny technik sběru patří také \term{focus group}, tedy moderovaná diskuse malé skupiny
+respondentů, a \term{mystery shopping}, kdy vyškolený pozorovatel vystupuje jako běžný zákazník a
+hodnotí reálný průběh služby. Nejsou to typické nástroje pro reprezentativní odhad podílů v populaci,
+ale pomáhají pochopit motivace, jazyk respondentů a konkrétní slabá místa procesu.
+
 \subsection*{Režimy dotazování}
 Dotazování může probíhat různými kanály:
 \begin{itemize}
@@ -77,6 +82,15 @@ Dotazování může probíhat různými kanály:
   ale zvyšuje náklady na přepis a kontrolu dat;
   \item \term{smíšený režim} - kombinuje více kanálů, například online dotazník s telefonickou
   urgencí neodpovídajících.
+\end{itemize}
+
+V praxi se často používají zkratky podle použité technologie:
+\begin{itemize}
+  \item \term{PAPI} - papírový dotazník vyplňovaný tazatelem nebo respondentem;
+  \item \term{CAPI} - osobní dotazování s počítačem nebo tabletem vedené tazatelem;
+  \item \term{CASI} - elektronický dotazník, který respondent vyplňuje sám;
+  \item \term{CATI} - telefonické dotazování podporované dotazovacím softwarem;
+  \item \term{CAWI} - webový dotazník vyplňovaný přes internet.
 \end{itemize}
 
 \subsection*{Fáze dotazování}
@@ -161,6 +175,11 @@ Tři základní přístupy k uspořádání:
 Pro dotazník je praktické sdružovat otázky tematicky, dávat klíčové otázky spíše dříve a volit
 přehledný design formuláře. U online dotazníku je nutné otestovat větvení, povinné položky,
 zobrazení na mobilu a export dat.
+
+\term{Vignety} jsou krátké popisy situací, ke kterým respondent vyjadřuje postoj nebo hodnocení.
+Pomáhají ukotvit škálu do konkrétního kontextu, například když se lidé liší v tom, co považují za
+\uv{vysokou spokojenost} nebo \uv{přiměřené riziko}. Hodí se zejména pro postoje, citlivé otázky a
+porovnávání subjektivních odpovědí mezi skupinami.
 
 \subsection*{Škálování odpovědí}
 Škálování znamená přiřazení hodnot nebo symbolů vlastnostem, které chceme měřit. Rozlišují se čtyři
@@ -275,6 +294,9 @@ Základní typy vah:
   populačním součtům najednou, například věku, pohlaví, regionu a vzdělání.
   \item \term{Raking} - iterativní kalibrace podle okrajových rozdělení. Používá se, když známe
   zvlášť rozdělení podle více proměnných, ale ne jejich úplnou křížovou tabulku.
+  \item \term{Vážení inverzní pravděpodobností odpovědi} - jednotky, které odpověděly ve skupinách
+  s nízkou mírou odpovědi, dostanou vyšší váhu. Používá se jako korekce non-response biasu, pokud
+  lze pravděpodobnost odpovědi rozumně modelovat nebo odhadnout ze známých znaků.
   \item \term{Trimming vah} - omezení extrémně velkých vah. Snižuje rozptyl odhadů, ale může zavést
   malé zkreslení.
   \item \term{Normalizace vah} - převod vah tak, aby jejich součet odpovídal velikosti vzorku nebo

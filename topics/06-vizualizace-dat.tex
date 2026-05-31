@@ -1,33 +1,357 @@
 \section{Metody a nástroje pro vizualizaci dat}
 
-\subsection*{Smysl prezentace a vizualizace informací}
-Dodaný materiál k vizualizaci dat není systematický, ale obsahuje části o prezentaci informací, tabulkách, grafech, obrázcích, Paretově grafu a histogramu. Pro přípravu lze využít základní myšlenku: vizualizace slouží k tomu, aby data byla čitelná, srozumitelná a využitelná pro rozhodování.
+\subsection*{Smysl vizualizace dat}
+\term{Vizualizace dat} převádí data do vizuální podoby tak, aby bylo možné rychleji porozumět
+struktuře, vztahům, trendům, rozdílům a odchylkám. Nejde jen o estetickou úpravu tabulky. Dobrá
+vizualizace je analytický i komunikační nástroj: pomáhá hledat vzory v datech, ověřovat hypotézy,
+vysvětlit závěr a podpořit rozhodnutí.
 
-Materiály zdůrazňují vztah obsahu a formy. U prezentace informací nestačí mít správná data; je nutné je podat tak, aby publikum pochopilo hlavní sdělení. Úspěšná prezentace vyžaduje znát publikum, vyjadřovat se stručně, držet se tématu a věřit tomu, co říkám. U datové vizualizace to znamená přizpůsobit graf cílové skupině: jinak bude vypadat manažerský dashboard, jinak analytický graf pro datového specialistu a jinak graf v závěrečné práci.
+V datové analytice se rozlišují dva základní účely:
+\begin{itemize}
+  \item \term{explorační vizualizace} - slouží analytikovi při hledání vzorů, chyb, odlehlých hodnot,
+  segmentů nebo vztahů; může být pracovní, méně formální a iterativní;
+  \item \term{explanatorní vizualizace} - slouží publiku, které má pochopit hlavní sdělení; musí mít
+  jasný kontext, popisky, jednotky, zdroj a vizuální hierarchii.
+\end{itemize}
+
+U prezentace informací nestačí mít správná data. Je nutné zvolit formu, kterou cílová skupina dokáže
+rychle a správně přečíst. Jinak bude vypadat manažerský dashboard, jinak analytický graf v notebooku
+a jinak graf v odborné zprávě. Před tvorbou grafu je dobré umět jednou větou říct, jakou otázku graf
+zodpovídá: například \uv{kde rostou tržby nejrychleji}, \uv{který kanál má nejvyšší chybovost} nebo
+\uv{zda spolu souvisí cena a poptávka}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\linewidth]{assets/images/vizualizace-dat/anscombe-quartet.png}
+  \caption[Anscombeho kvarteto]{Anscombeho kvarteto ukazuje, že podobné souhrnné statistiky mohou
+  skrývat velmi odlišnou strukturu dat. Popis obrázku: čtyři bodové grafy mají přibližně stejnou
+  regresní přímku, ale jiné rozložení bodů. Zdroj obrázku: vlastní zpracování podle datového příkladu
+  F. J. Anscombeho, viz zdroje.}
+  \label{fig:anscombe-quartet}
+\end{figure}
 
 \subsection*{Tabulky, grafy a obrázky}
-Materiály popisují \term{tabulky} jako vhodné pro shrnutí číselných dat nebo přehled různých charakteristik. Každá tabulka má mít číslo, název a zdroj. V datové analytice je tabulka vhodná pro přesné hodnoty, porovnání kategorií a kontrolu detailů. Není ale vždy nejlepší pro rychlé odhalení trendu nebo extrému.
+\term{Tabulka} je vhodná, pokud uživatel potřebuje přesné hodnoty, detailní kontrolu, výčet kategorií
+nebo kombinaci více ukazatelů. Dobrá tabulka má název, jednotky, zarovnání podle typu hodnot, čitelné
+zaokrouhlení a zdroj. Číselné hodnoty se obvykle zarovnávají podle desetinné čárky nebo doprava,
+textové hodnoty doleva.
 
-\term{Grafy} slouží jako ilustrace a vysvětlení v textu. Graf má mít popsané osy, legendu, název a zdroj. Graf by měl odpovídat typu dat a otázce, kterou řešíme. U časového vývoje dává smysl liniový graf, u kategorií sloupcový graf, u rozdělení histogram, u vztahu dvou metrických proměnných bodový graf.
+\term{Graf} je vhodný, pokud je důležitý tvar, trend, porovnání, rozdělení, vztah nebo odchylka. Graf
+má mít jasný název, popsané osy, jednotky, legendu jen tam, kde je nutná, a zdroj dat. Má odpovídat
+typu proměnných a otázce. Pokud graf potřebuje dlouhé vysvětlení, často není dobře navržený.
 
-\term{Obrázky a náčrty} mají být jednoduché a srozumitelné. Do textu se mají vkládat jen tehdy, pokud podporují výklad. Stejná zásada platí pro dashboardy: vizuální prvek má sloužit sdělení, ne být dekorací.
+\term{Obrázek, schéma nebo náčrt} se používá tam, kde pomáhá pochopit proces, architekturu, tok dat,
+mapu, dashboard nebo vizuální princip. Do analytického textu nepatří dekorativní obrázky bez vztahu
+k argumentu.
+
+Základní pravidlo: \term{tabulka} přesně ukazuje hodnoty, \term{graf} ukazuje vzor a \term{schéma}
+ukazuje strukturu nebo proces.
+
+\subsection*{Vizuální vnímání a kódování}
+Graf převádí proměnné na vizuální vlastnosti. Mezi nejčastější \term{vizuální kanály} patří poloha,
+délka, úhel, plocha, barva, tvar, velikost, směr a textura. Ne všechny kanály jsou stejně přesné.
+Nejpřesnější bývá poloha na společné ose a délka. Hůře se porovnávají plochy, úhly a objemy.
+Proto je pro srovnání kategorií obvykle lepší sloupcový graf než koláčový graf a pro časový vývoj
+liniový graf než série koláčů.
+
+\term{Preatentivní vlastnosti} jsou vizuální znaky, které člověk zachytí velmi rychle, například
+barva, výrazná velikost, orientace, poloha nebo izolovaný bod. Hodí se pro zvýraznění výjimky nebo
+hlavního sdělení. Neměly by se ale používat chaoticky: pokud je zvýrazněno všechno, není zvýrazněno
+nic.
+
+\term{Kognitivní zátěž} vyjadřuje, kolik úsilí musí čtenář věnovat pochopení grafu. Snižuje se
+odstraněním balastu, jasnými popisky, konzistentními barvami a tím, že graf odpovídá jedné hlavní
+otázce. \term{Vizuální hierarchie} vede pozornost od nejdůležitější informace k detailu. U
+interaktivních vizualizací pomáhá také \term{affordance}, tedy vizuální vodítko, že prvek lze kliknout,
+filtrovat, rozbalit nebo použít pro drill-down.
+
+\subsection*{Volba grafu podle analytické otázky}
+Volba grafu má vycházet z otázky, typu dat a úrovně detailu. Není správné vybírat graf podle toho,
+co vypadá zajímavě.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\linewidth]{assets/images/vizualizace-dat/chart-choice-overview.png}
+  \caption[Volba grafu podle otázky]{Základní volba grafu podle analytického účelu: trend, porovnání,
+  rozdělení a vztah proměnných. Popis obrázku: čtyři panely ukazují liniový graf, sloupcový graf,
+  histogram a bodový graf. Zdroj obrázku: vlastní schéma.}
+  \label{fig:chart-choice-overview}
+\end{figure}
+
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth}
+                >{\raggedright\arraybackslash}p{0.30\textwidth}
+                >{\raggedright\arraybackslash}p{0.36\textwidth}@{}}
+\hline
+\term{Účel} & \term{Vhodné grafy} & \term{Poznámka} \\
+\hline
+Porovnání kategorií & sloupcový graf, pruhový graf, dot plot & osa má být čitelná; u sloupců obvykle
+začínat na nule \\
+Trend v čase & liniový graf, plošný graf, indexovaný vývoj & důležité je měřítko času a sezonnost \\
+Rozdělení hodnot & histogram, boxplot, violin plot, hustota & ukazuje šikmost, variabilitu a odlehlé
+hodnoty \\
+Vztah dvou proměnných & bodový graf, bublinový graf, hexbin & pozor na korelaci bez kauzality \\
+Kompozice celku & stacked bar, 100\% stacked bar, plošný graf & koláčový graf jen pro málo kategorií \\
+Hierarchie & treemap, sunburst, dendrogram & vhodné pro stromovou strukturu, ne pro přesné porovnání \\
+Geografie & choropleth mapa, bodová mapa, kartogram & nutné hlídat velikost oblastí a normalizaci
+ukazatele \\
+Toky a procesy & Sankey diagram, flowchart, síťový graf & vhodné pro přesuny, vazby a závislosti \\
+Nejistota & interval spolehlivosti, error bars, fan chart & samotný průměr často nestačí \\
+\hline
+\end{tabular}
+\end{center}
 
 \subsection*{Paretův graf a histogram}
-Materiály uvádějí dva konkrétní typy grafů.
+\term{Paretův graf} kombinuje sloupcový a čárový graf. Sloupce ukazují četnosti kategorií seřazené
+od největší po nejmenší a čára ukazuje kumulativní podíl. Hodí se pro hledání hlavních příčin problému:
+například které typy reklamací tvoří většinu nákladů nebo které chyby způsobují nejvíce výpadků.
 
-\term{Paretův graf} kombinuje sloupcový a čárový graf. Sloupce ukazují četnosti kategorií seřazené od největší po nejmenší a čára zobrazuje kumulativní četnost v procentech. Hodí se pro hledání hlavních příčin problému nebo pro pravidlo 80/20: malý počet kategorií často vysvětluje velkou část jevu.
+\term{Histogram} zobrazuje rozdělení metrické proměnné pomocí intervalů. Umožňuje vidět tvar rozdělení,
+šikmost, koncentraci hodnot, více vrcholů a odlehlé oblasti. Výsledek závisí na volbě šířky intervalů:
+příliš málo intervalů může zakrýt strukturu, příliš mnoho intervalů zvýrazní náhodný šum.
 
-\term{Histogram} slouží k zobrazení rozdělení hodnot, typicky rozdělením číselné proměnné do intervalů. Umožňuje vidět tvar rozdělení, šikmost, koncentraci hodnot a odlehlé oblasti.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\linewidth]{assets/images/vizualizace-dat/pareto-histogram.png}
+  \caption[Paretův graf a histogram]{Paretův graf a histogram řeší odlišné otázky. Popis obrázku:
+  vlevo jsou kategorie seřazené podle četnosti a kumulativní křivka, vpravo histogram s vyznačenou
+  hranicí. Zdroj obrázku: vlastní schéma.}
+  \label{fig:pareto-histogram}
+\end{figure}
+
+\subsection*{Zásady dobré vizualizace}
+Dobrá vizualizace je pravdivá, čitelná, přiměřená publiku a zaměřená na sdělení. Nejde o to použít
+co nejvíce efektů, ale co nejlépe převést datovou otázku do vizuální odpovědi.
+
+Základní zásady:
+\begin{itemize}
+  \item začít otázkou a hlavním sdělením, ne typem grafu;
+  \item volit graf podle typu proměnných a úlohy;
+  \item uvádět název, popisky os, jednotky, období a zdroj dat;
+  \item používat konzistentní měřítko a nezkreslovat osy;
+  \item u sloupcových grafů zpravidla začínat osu na nule, protože čtenář porovnává délku sloupců;
+  \item omezit zbytečný vizuální šum: 3D efekty, stíny, přehnané mřížky, dekorace a nadbytečné legendy;
+  \item zvýraznit hlavní sdělení barvou, anotací nebo pořadím prvků;
+  \item neschovávat nejistotu, výběrovou chybu ani definici ukazatele;
+  \item ověřit, že graf funguje i při tisku, projekci, menší obrazovce a pro uživatele s poruchou
+  barvocitu.
+\end{itemize}
+
+\subsection*{Práce s barvou}
+Barva má v grafu několik rolí: odlišuje kategorie, vyjadřuje pořadí, zdůrazňuje hodnotu, kóduje odchylku
+od středu nebo upozorňuje na problém. Její použití musí odpovídat významu dat.
+
+Typy barevných škál:
+\begin{itemize}
+  \item \term{sekvenční škála} - pro seřazené hodnoty od nízké po vysokou, například intenzita prodeje;
+  \item \term{divergentní škála} - pro odchylku kolem významného středu, například růst a pokles proti
+  nule nebo rozdíl proti plánu;
+  \item \term{kvalitativní paleta} - pro nesetříděné kategorie, například regiony nebo segmenty;
+  \item \term{cyklická škála} - pro hodnoty, které se periodicky vracejí, například směr větru nebo
+  hodina dne.
+\end{itemize}
+
+U kvantitativních škál je vhodné používat přibližně percepčně rovnoměrné palety, kde podobný rozdíl
+v datech odpovídá podobně vnímanému rozdílu v barvě. Pro běžné reporty je bezpečné nespoléhat pouze
+na barvu: důležitou informaci lze doplnit popiskem, tvarem, přímou anotací nebo pořadím.
+
+\subsection*{Měřítko, osy a zkreslení}
+Nejčastější chyby vznikají nevhodným měřítkem. Zkrácená osa může dramatizovat malý rozdíl. Dvojitá
+osa může naznačit vztah, který je výsledkem ruční volby měřítka. Logaritmická osa je užitečná pro
+velké rozsahy nebo růstové procesy, ale musí být jasně označená.
+
+Typické zdroje zkreslení:
+\begin{itemize}
+  \item useknutá osa u sloupcového grafu;
+  \item neporovnatelné jednotky nebo různě dlouhá období;
+  \item kumulativní hodnoty prezentované jako běžný trend;
+  \item absolutní počty na mapě místo hodnot přepočtených na obyvatele nebo relevantní základnu;
+  \item koláčový graf s mnoha podobně velkými výsečemi;
+  \item 3D grafy, kde perspektiva mění vnímanou velikost;
+  \item chybějící informace o výběru, definici ukazatele nebo velikosti vzorku.
+\end{itemize}
+
+\subsection*{Dashboardy a interaktivní vizualizace}
+\term{Dashboard} je uspořádaná sada vizualizací, ukazatelů a ovládacích prvků pro sledování určité
+oblasti. V BI představuje výstupní vrstvu nad datovým skladem, datovým tržištěm nebo analytickým
+modelem. Dobrý dashboard není náhodná sbírka grafů; má jasný účel, cílovou roli a rozhodovací kontext.
+
+Typy dashboardů:
+\begin{itemize}
+  \item \term{strategický dashboard} - sleduje dlouhodobé KPI, cíle a vývoj pro vedení;
+  \item \term{taktický dashboard} - podporuje řízení týmů, kampaní, produktů nebo regionů;
+  \item \term{operativní dashboard} - sleduje aktuální provoz, incidenty, fronty nebo SLA;
+  \item \term{analytický dashboard} - umožňuje segmentaci, drill-down a hledání příčin.
+\end{itemize}
+
+Zásady dashboardu:
+\begin{itemize}
+  \item nejdůležitější informace umístit nahoru a doleva;
+  \item omezit počet pohledů, aby se neztratilo hlavní sdělení;
+  \item používat filtry, zvýraznění a drill-down tam, kde pomáhají odpovědět na otázku;
+  \item zachovat konzistentní definice metrik napříč stránkami;
+  \item ukazovat stav proti cíli, trend a případně rozpad podle dimenzí;
+  \item myslet na obnovu dat, oprávnění, rychlost načítání a správu verzí.
+\end{itemize}
+
+\term{Interaktivita} umožňuje filtrovat, řadit, vybírat segmenty, zobrazovat detail přes tooltip,
+přecházet z agregace na detail nebo křížově zvýrazňovat související hodnoty. Interaktivita ale nesmí
+nahrazovat jasnou strukturu. Pokud uživatel musí složitě klikat, aby pochopil základní informaci,
+dashboard neplní svůj účel.
+
+\subsection*{Storytelling s daty}
+\term{Datový storytelling} propojuje data, vizualizaci a výklad. Vysvětlující graf by měl mít pointu:
+co se stalo, proč je to důležité, jak silný je efekt a jaké rozhodnutí z toho plyne.
+
+Praktická struktura prezentace:
+\begin{enumerate}
+  \item kontext: jaký problém řešíme a pro koho;
+  \item metrika: jak je ukazatel definován a z jakých dat pochází;
+  \item zjištění: trend, rozdíl, vztah nebo odchylka;
+  \item interpretace: možné příčiny a omezení;
+  \item doporučení: další krok, rozhodnutí nebo otázka k ověření.
+\end{enumerate}
+
+Pro publikum je často lepší jeden dobře anotovaný graf než deset obecných grafů bez závěru.
+
+\subsection*{Proces tvorby vizualizace}
+Tvorba vizualizace je iterativní proces:
+\begin{enumerate}
+  \item vymezit otázku, publikum a rozhodnutí, které má vizualizace podpořit;
+  \item porozumět datům, definicím metrik, jednotkám, kvalitě a omezením;
+  \item připravit data: agregace, filtrování, čištění, změna granularity, výpočet ukazatelů;
+  \item zvolit typ grafu a vizuální kódování;
+  \item vytvořit pracovní verzi a zkontrolovat, zda graf odpovídá datům;
+  \item doplnit název, popisky, jednotky, zdroj, anotace a případně nejistotu;
+  \item otestovat graf s cílovým uživatelem nebo alespoň s někým mimo analýzu;
+  \item publikovat, dokumentovat definice a u dashboardů nastavit obnovu a oprávnění.
+\end{enumerate}
+
+\subsection*{Nástroje pro vizualizaci dat}
+Nástroj se volí podle účelu, opakovatelnosti, míry interaktivity, datového objemu, publika a způsobu
+publikace.
+
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.22\textwidth}
+                >{\raggedright\arraybackslash}p{0.31\textwidth}
+                >{\raggedright\arraybackslash}p{0.36\textwidth}@{}}
+\hline
+\term{Skupina nástrojů} & \term{Příklady} & \term{Typické použití} \\
+\hline
+Tabulkové procesory & Excel, Google Sheets, LibreOffice Calc & rychlé grafy, kontingenční tabulky,
+malé reporty, ad hoc analýza \\
+BI nástroje & Power BI, Tableau, Qlik, Looker Studio & dashboardy, sdílení v organizaci, napojení
+na datové modely a řízení oprávnění \\
+Python & matplotlib, seaborn, plotly, Bokeh, Altair & opakovatelná analýza, notebooky, statistické
+grafy, interaktivní webové výstupy \\
+R & ggplot2, Shiny, plotly pro R & statistická grafika, publikovatelné grafy, datové aplikace \\
+Webové knihovny & D3.js, Vega, Vega-Lite, ECharts & vlastní interaktivní vizualizace a webové
+aplikace \\
+GIS nástroje & QGIS, ArcGIS, PostGIS, kepler.gl & mapy, prostorová analýza, geokódování a vrstvy \\
+Prezentační nástroje & PowerPoint, Keynote, Canva & ruční anotace a komunikace závěrů; nevhodné
+jako primární analytické prostředí \\
+\hline
+\end{tabular}
+\end{center}
+
+\term{Matplotlib} je nízkoúrovňová a velmi flexibilní knihovna pro grafiku v Pythonu. Hodí se pro
+publikovatelné grafy a přesnou kontrolu nad podobou. \term{Seaborn} staví na matplotlibu a poskytuje
+vyšší úroveň pro statistické grafy. \term{Plotly} se hodí pro interaktivní grafy a webové výstupy.
+\term{ggplot2} v R používá princip gramatiky grafiky: graf se skládá z dat, mapování proměnných na
+estetické vlastnosti, geometrických vrstev, škál a souřadnic.
 
 \subsection*{Vizualizace v BI}
-V části o BI materiály vysvětlují, že data mají být manažerům reprezentována v čitelné podobě a že BI poskytuje multidimenzionální pohled na data. Vizualizace je tedy výstupní vrstva BI: reporty, dashboardy, OLAP analýzy a ad hoc přehledy. Důležité je napojení na dimenze a metriky. Například tržby lze zobrazit podle času, regionu, produktu nebo zákaznického segmentu.
+Business intelligence používá vizualizaci jako prezentační a rozhodovací vrstvu nad daty. Data jsou
+typicky připravena v datovém skladu, datovém tržišti, OLAP modelu nebo sémantické vrstvě. Uživatel
+pak pracuje s dimenzemi a metrikami: například tržby podle času, regionu, zákaznického segmentu,
+produktu nebo obchodníka.
 
-\todohead
+Důležité prvky BI vizualizace:
 \begin{itemize}
-  \item Doplnit typy grafů podle účelu: porovnání, trend, rozdělení, vztah, kompozice, mapa, hierarchie.
-  \item Doplnit zásady dobré vizualizace: volba měřítka, práce s barvou, čitelnost, odstranění zbytečného šumu, správné osy.
-  \item Doplnit nástroje: Excel, Power BI, Tableau, Qlik, Python matplotlib, seaborn a plotly, R ggplot2.
-  \item Doplnit dashboardy, interaktivitu, drill-down a storytelling s daty.
+  \item \term{KPI} - hlavní ukazatel se stavem vůči cíli nebo minulému období;
+  \item \term{dimenze} - osa členění, například čas, region, produkt nebo zákazník;
+  \item \term{metrika} - měřená hodnota, například tržby, marže, počet objednávek nebo konverze;
+  \item \term{drill-down} - přechod z agregace na podrobnější úroveň;
+  \item \term{drill-up} - návrat z detailní úrovně na vyšší agregaci;
+  \item \term{drill-through} - přechod na detailní stránku nebo související report;
+  \item \term{slice and dice} - ořez a přeskupování pohledu podle dimenzí, například rok, region
+  nebo produktová kategorie;
+  \item \term{filtr a slicer} - výběr podmnožiny dat;
+  \item \term{tooltip} - detail při najetí na prvek;
+  \item \term{refresh} - obnova dat podle definovaného plánu nebo události.
+\end{itemize}
+
+V BI je zásadní governance: stejné KPI musí mít stejnou definici v celé organizaci. Jinak vzniká
+situace, kdy různé dashboardy ukazují různá čísla pro stejný pojem.
+
+\subsection*{Přístupnost a etika vizualizace}
+Vizualizace může pomoci porozumění, ale může také manipulovat. Etická vizualizace nezkresluje měřítko,
+nevybírá účelově jen podporující data, neskrývá nejistotu a jasně uvádí definice ukazatelů. U citlivých
+témat je potřeba dávat pozor na agregaci, anonymizaci a mapy s malými počty osob.
+
+Přístupnost znamená, že graf má být použitelný i pro lidi s různými zrakovými omezeními nebo v různých
+technických podmínkách. Prakticky:
+\begin{itemize}
+  \item nepoužívat pouze červenou a zelenou jako jediný nosič významu;
+  \item zajistit dostatečný kontrast textu, čar a důležitých prvků;
+  \item doplnit přímé popisky nebo anotace tam, kde legenda nestačí;
+  \item zachovat čitelnost při zmenšení, tisku a projekci;
+  \item u digitálních výstupů doplnit alternativní text nebo textové shrnutí.
+\end{itemize}
+
+\subsection*{Typické chyby}
+\begin{itemize}
+  \item graf neodpovídá otázce, kterou má řešit;
+  \item chybí jednotky, období, zdroj nebo definice metriky;
+  \item je použit 3D efekt, který zkresluje velikost;
+  \item barvy jsou použity náhodně a nemají jasný význam;
+  \item graf má příliš mnoho kategorií, řad nebo legend;
+  \item osa je useknutá bez upozornění;
+  \item v mapě jsou použity absolutní hodnoty místo přepočtu na relevantní základnu;
+  \item dashboard obsahuje příliš mnoho pohledů a uživatel neví, co je hlavní;
+  \item interaktivní filtr mění interpretaci, ale není zřejmé, co je vybráno;
+  \item graf zaměňuje korelaci za kauzální vysvětlení.
+\end{itemize}
+
+\pozor
+Nejčastější chyba u zkoušky je vyjmenovat nástroje a zapomenout na principy. Správná odpověď má
+spojit účel grafu, typ dat, zásady čitelnosti, dashboardy, nástroje a rizika zkreslení. Druhá častá
+chyba je tvrdit, že vizualizace jen \uv{zkrášluje} výsledky. Ve skutečnosti je součástí analýzy:
+pomáhá odhalit vzory, chyby a odlehlé hodnoty, které souhrnné statistiky nemusí ukázat.
+
+\subsection*{Shrnutí ke zkoušce}
+\begin{itemize}
+  \item Vizualizace převádí data do vizuální podoby pro analýzu, komunikaci a rozhodování.
+  \item Explorační vizualizace pomáhá hledat vzory; explanatorní vizualizace vysvětluje závěr publiku.
+  \item Tabulka je vhodná pro přesné hodnoty, graf pro vzory a schéma pro strukturu nebo proces.
+  \item Graf se volí podle otázky: trend, porovnání, rozdělení, vztah, kompozice, mapa, hierarchie,
+  tok nebo nejistota.
+  \item Paretův graf řadí kategorie podle četnosti a přidává kumulativní podíl; histogram ukazuje
+  rozdělení metrické proměnné.
+  \item Dobrá vizualizace má jasný název, popsané osy, jednotky, zdroj, správné měřítko a minimum
+  zbytečného šumu.
+  \item Barva má mít význam: sekvenční, divergentní, kvalitativní nebo cyklický.
+  \item Dashboard je účelově sestavená sada ukazatelů a grafů; má podporovat rozhodování, ne jen
+  zobrazovat mnoho grafů najednou.
+  \item Mezi nástroje patří Excel, Power BI, Tableau, Qlik, Python knihovny, R/ggplot2, webové
+  knihovny a GIS nástroje.
+  \item Etická vizualizace nezkresluje měřítko, neskrývá nejistotu a bere v úvahu přístupnost.
+\end{itemize}
+
+\subsection*{Zdroje}
+\begin{itemize}
+  \item Matplotlib Documentation: \href{https://matplotlib.org/stable/plot_types/index.html}{Plot types};
+  \href{https://matplotlib.org/stable/users/explain/colors/colormaps.html}{Choosing Colormaps in Matplotlib}.
+  \item Seaborn Documentation: \href{https://seaborn.pydata.org/tutorial/function_overview.html}{Overview of seaborn plotting functions}.
+  \item ggplot2 Documentation: \href{https://ggplot2.tidyverse.org/articles/ggplot2.html}{Introduction to ggplot2}.
+  \item Plotly Documentation: \href{https://plotly.com/python/}{Plotly Python Graphing Library}.
+  \item Microsoft Learn: \href{https://learn.microsoft.com/en-ie/power-bi/create-reports/service-dashboard-tiles}{Introduction to Dashboard Tiles for Power BI Designers}.
+  \item Tableau Help: \href{https://help.tableau.com/current/pro/desktop/en-us/visual_best_practices.htm}{Visual Best Practices};
+  \href{https://help.tableau.com/current/pro/desktop/en-us/dashboards_best_practices.htm}{Best Practices for Effective Dashboards}.
+  \item W3C: \href{https://www.w3.org/TR/WCAG22/}{Web Content Accessibility Guidelines 2.2}.
+  \item Wikimedia Commons: \href{https://commons.wikimedia.org/wiki/Category:Anscombe's_quartet}{Anscombe's quartet}.
 \end{itemize}
 
 \newpage

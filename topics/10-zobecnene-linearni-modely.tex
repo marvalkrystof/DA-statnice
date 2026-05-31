@@ -147,6 +147,17 @@ P(y_i=1|x_i)
 \frac{1}{1+e^{-x_i^\top\beta}}.
 \]
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\linewidth]{assets/images/zobecnene-linearni-modely/logistic-curve.png}
+  \caption[Logistická funkce]{Logistická funkce používaná v logitu. Popis obrázku: S-křivka převádí
+  lineární index $x_i^\top\beta$ na hodnotu mezi 0 a 1, tedy na predikovanou pravděpodobnost úspěchu.
+  Největší změna pravděpodobnosti nastává kolem středu křivky, kde je $p$ blízko 0.5. Zdroj obrázku:
+  Qef, \href{https://commons.wikimedia.org/wiki/File:Logistic-curve.svg}{Wikimedia Commons},
+  licence public domain.}
+  \label{fig:logistic-curve}
+\end{figure}
+
 \subsubsection*{Probit}
 
 U probitu:
@@ -317,6 +328,22 @@ Pro klasifikaci často používáme pravidlo:
 \paragraph{Pozor.}
 Hranice 0.5 nemusí být vždy vhodná. Pokud jsou náklady na falešně pozitivní a falešně negativní chybu
 odlišné, volíme jiný práh.
+
+ROC křivka ukazuje, jak se mění citlivost a falešně pozitivní míra při různých klasifikačních prazích.
+AUC shrnuje schopnost modelu odlišit jedničky od nul do jednoho čísla. Neříká ale, zda jsou predikované
+pravděpodobnosti dobře kalibrované.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.76\linewidth]{assets/images/zobecnene-linearni-modely/roc-curve.png}
+  \caption[ROC křivka]{ROC křivka pro binární klasifikaci. Popis obrázku: osa $y$ zobrazuje citlivost
+  neboli true positive rate, osa $x$ falešně pozitivní míru neboli $1-\text{specificity}$. Body na křivce
+  odpovídají různým rozhodovacím prahům; křivka blíže levému hornímu rohu znamená lepší diskriminaci.
+  Zdroj obrázku: Masato8686819,
+  \href{https://commons.wikimedia.org/wiki/File:ROC\_curve.svg}{Wikimedia Commons},
+  licence CC BY-SA 3.0.}
+  \label{fig:roc-curve}
+\end{figure}
 
 \subsection*{Ordinální závisle proměnná}
 
@@ -519,6 +546,17 @@ Tedy:
 \paragraph{Proč log link?}
 Exponenciální funkce je vždy kladná, takže model nikdy nepredikuje záporný očekávaný počet.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.76\linewidth]{assets/images/zobecnene-linearni-modely/poisson-pmf.png}
+  \caption[Poissonovo rozdělení]{Pravděpodobnostní funkce Poissonova rozdělení pro různé hodnoty
+  parametru $\lambda$. Popis obrázku: rozdělení je diskrétní, nabývá nezáporných celých hodnot a s rostoucí
+  střední hodnotou se posouvá doprava. Právě proto se hodí pro modelování počtů událostí. Zdroj obrázku:
+  Skbkekas, \href{https://commons.wikimedia.org/wiki/File:Poisson\_pmf.svg}{Wikimedia Commons},
+  licence CC BY 3.0.}
+  \label{fig:poisson-pmf}
+\end{figure}
+
 \subsection*{Interpretace Poissonova modelu}
 
 Protože:
@@ -718,6 +756,28 @@ Poisson je pro počty. Tobit je pro spojité hodnoty omezené zdola nebo shora.
 U cenzorovaných dat skutečnou hodnotu neznáme přesně, protože je oříznutá. U corner solution je nula skutečná
 hodnota, která má ekonomický význam.
 
+\subsection*{Diagnostika a praktické použití}
+
+U nelineárních modelů nestačí sledovat jen znaménka a $p$-hodnoty koeficientů. Důležité je ověřit, zda
+zvolený typ modelu odpovídá povaze závislé proměnné a účelu analýzy.
+
+Typické kontroly:
+\begin{itemize}
+    \item \textbf{binární modely} -- klasifikační tabulka, ROC/AUC, citlivost, specificita, kalibrace
+    pravděpodobností a vhodnost rozhodovacího prahu;
+    \item \textbf{logit/probit} -- reportovat marginální efekty nebo predikované pravděpodobnosti, ne jen
+    samotné koeficienty;
+    \item \textbf{multinomický logit} -- promyslet, zda je realistický předpoklad IIA; při blízkých
+    substitutech zvážit jiné modely nebo jiné členění kategorií;
+    \item \textbf{Poissonův model} -- kontrolovat overdispersion, přebytek nul a správné použití
+    expozice/offsetu;
+    \item \textbf{inference} -- podle dat používat robustní nebo klastrované standardní chyby, zejména
+    při heterogenitě jednotek nebo opakovaných pozorováních.
+\end{itemize}
+
+U logitu může nastat také perfektní nebo téměř perfektní separace: kombinace vysvětlujících proměnných
+dokonale oddělí nuly a jedničky. V takové situaci maximum likelihood nemusí dát stabilní konečný odhad.
+
 \subsection*{Srovnání modelů podle typu závislé proměnné}
 
 \begin{itemize}
@@ -752,7 +812,23 @@ hodnota, která má ekonomický význam.
     \]
 \end{itemize}
 
-\subsection*{Shrnutí otázky 10}
+\subsection*{Pozor u zkoušky}
+
+Koeficient v logitu není změna pravděpodobnosti. Je to změna log-odds; pro pravděpodobnost je potřeba
+uvést marginální efekt nebo konkrétní predikované pravděpodobnosti. Odds ratio také není totéž co změna
+pravděpodobnosti o procentní body.
+
+LPM není \uv{zakázaný} model, ale má omezení: může predikovat mimo interval $[0,1]$ a má
+heteroskedasticitu. Pokud se použije, je potřeba aspoň robustní inference a opatrná interpretace.
+
+U Poissonova modelu se koeficienty interpretují multiplikativně přes $e^{\beta_j}$ a modelují očekávaný
+počet nebo míru. Offset není běžná vysvětlující proměnná s odhadovaným koeficientem, ale známá expozice,
+která vstupuje s koeficientem 1.
+
+Multinomický logit je citlivý na předpoklad IIA. Tobit je model pro spojitou omezenou proměnnou, ne pro
+čítací data; Poisson je naopak pro nezáporné celé počty.
+
+\subsection*{Shrnutí ke zkoušce}
 
 Zobecněné lineární modely a modely s omezenou závisle proměnnou používáme tehdy, když klasická lineární
 regrese není vhodná kvůli povaze $y$.
@@ -787,6 +863,22 @@ e^{\beta_j},
 tedy jako násobení očekávaného počtu. Pokud je v datech overdispersion, používá se negativně binomický
 model nebo robustní standardní chyby. Pokud je příliš mnoho nul, používají se zero-inflated nebo hurdle
 modely.
+
+\subsection*{Zdroje}
+\begin{itemize}
+    \item statsmodels User Guide:
+    \href{https://www.statsmodels.org/stable/glm.html}{Generalized Linear Models}.
+    \item statsmodels User Guide:
+    \href{https://www.statsmodels.org/stable/discretemod.html}{Regression with Discrete Dependent Variable}.
+    \item scikit-learn User Guide:
+    \href{https://scikit-learn.org/stable/modules/model\_evaluation.html\#roc-metrics}{Receiver operating characteristic}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Logistic-curve.svg}{File:Logistic-curve.svg}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:ROC\_curve.svg}{File:ROC\_curve.svg}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Poisson\_pmf.svg}{File:Poisson\_pmf.svg}.
+\end{itemize}
 
 
 

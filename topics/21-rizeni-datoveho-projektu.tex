@@ -1,68 +1,520 @@
 \section{Řízení datového projektu. Životní cyklus, metodiky a standardy, organizace projektu a nástroje pro podporu řízení}
 
-\subsection*{Datový projekt jako projekt dobývání znalostí}
-Dodaný materiál nemá samostatnou kapitolu „řízení datového projektu“, ale obsahuje CRISP-DM, metodiky budování IS, životní cyklus aplikace, agilní metodiky, Scrum a části o organizaci analytické práce. Pro datovou analytiku je nejlépe použitelný CRISP-DM.
+\subsection*{Datový projekt jako řízená změna}
+Datový projekt je projekt, jehož cílem je získat hodnotu z dat. Výstupem může být analýza, dashboard, datový sklad, datová pipeline, prediktivní model, doporučovací systém, segmentace zákazníků, automatizované rozhodovací pravidlo nebo nový datový produkt. Společným znakem je, že projekt propojuje business problém, data, analytické metody, technologii a změnu práce uživatelů.
 
-Datový projekt typicky nezačíná modelem, ale problémem zadavatele. Cílem je převést business otázku na analytickou úlohu, získat a připravit data, vytvořit výstup nebo model, vyhodnotit ho a zajistit využití v praxi.
+Datový projekt obvykle nezačíná algoritmem, ale otázkou zadavatele. Typické zadání zní například:
+\begin{itemize}
+  \item proč klesá retence zákazníků;
+  \item jak predikovat poptávku na další měsíc;
+  \item které transakce vypadají podezřele;
+  \item jak sjednotit reporting mezi odděleními;
+  \item jak zkrátit dobu zpracování objednávek;
+  \item jak automatizovat ruční kontrolu dokumentů.
+\end{itemize}
 
-\subsection*{Životní cyklus podle CRISP-DM}
-CRISP-DM lze použít jako hlavní kostru řízení datového projektu:
+Úkolem řízení datového projektu je převést takovou otázku na proveditelný postup: vyjasnit cíl, zajistit data, naplánovat práci, rozdělit role, řídit rizika, kontrolovat kvalitu, komunikovat se stakeholdery a zavést výsledek do praxe. Pokud projekt skončí pouze notebookem nebo prezentací, kterou nikdo nepoužívá, nejde o úspěšně dokončený datový projekt.
 
+\subsection*{Specifika datových projektů}
+Datové projekty se liší od běžných softwarových nebo procesních projektů hlavně nejistotou. Na začátku často není jasné, zda potřebná data existují, zda jsou kvalitní, zda v nich je užitečný signál a zda výsledek půjde nasadit do rozhodování.
+
+Typická specifika:
+\begin{itemize}
+  \item \term{nejistá proveditelnost} -- až průzkum dat ukáže, zda lze otázku rozumně zodpovědět;
+  \item \term{závislost na kvalitě dat} -- technicky dobrý model nemůže opravit špatné, neúplné nebo nejednoznačné vstupy;
+  \item \term{iterativnost} -- po zjištění problémů v datech se projekt vrací k zadání, zdrojům nebo definici metrik;
+  \item \term{kombinace rolí} -- je nutná spolupráce businessu, analytiků, datových inženýrů, IT, bezpečnosti a uživatelů;
+  \item \term{provozní odpovědnost} -- model nebo pipeline po nasazení stárne, může selhat a musí se monitorovat;
+  \item \term{právní a etická omezení} -- projekt může pracovat s osobními údaji, citlivými atributy nebo automatizovaným rozhodováním;
+  \item \term{nutnost adopce} -- výsledek musí zapadnout do procesu, jinak ho uživatelé obejdou.
+\end{itemize}
+
+Datový projekt proto nelze řídit pouze jako posloupnost technických úkolů. Je potřeba řídit i očekávání, interpretaci výsledků, důvěru uživatelů a návaznost na rozhodování.
+
+\subsection*{Cíle, rozsah a trojimperativ}
+Každý projekt má omezení v rozsahu, čase, nákladech a kvalitě. V řízení projektů se často používá \term{projektový trojimperativ}: čas, náklady a rozsah spolu souvisejí a změna jednoho parametru ovlivňuje ostatní. Kvalita bývá chápána jako výsledek vyvážení těchto omezení.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.54\linewidth]{assets/images/rizeni-datoveho-projektu/project-triangle.png}
+  \caption[Projektový trojimperativ]{Projektový trojimperativ. Popis obrázku: projekt je omezen časem, náklady a rozsahem; kvalita výsledku závisí na jejich vyvážení. U datového projektu se do tohoto vztahu přidává i nejistota ohledně dat a analytické proveditelnosti. Zdroj: \href{https://commons.wikimedia.org/wiki/File:Project-triangle-en.svg}{Wikimedia Commons}, autor Mapto, public domain.}
+\end{figure}
+
+U datových projektů je vhodné formulovat rozsah pomocí rozhodovací hodnoty, ne pouze pomocí seznamu grafů nebo modelů. Špatné zadání zní \uv{udělejte predikční model}. Lepší zadání říká:
+\begin{itemize}
+  \item kdo bude výsledek používat;
+  \item jaké rozhodnutí má výsledek podpořit;
+  \item jaká metrika definuje úspěch;
+  \item jaká data jsou k dispozici;
+  \item jaké jsou právní, technické a časové limity;
+  \item jak bude výsledek nasazen a udržován.
+\end{itemize}
+
+Projekt má mít \term{business kritéria úspěchu} i \term{technická kritéria úspěchu}. Business kritériem může být snížení churnu, rychlejší rozhodnutí nebo menší počet chyb. Technickým kritériem může být přesnost modelu, doba odezvy, dostupnost pipeline, kvalita dat nebo opakovatelnost výpočtu.
+
+\subsection*{Životní cyklus datového projektu}
+Nejpoužívanější obecnou kostrou pro analytický a data mining projekt je \term{CRISP-DM} -- \textit{Cross-Industry Standard Process for Data Mining}. Jeho výhodou je, že zdůrazňuje business porozumění, data, evaluaci a nasazení, nikoli jen modelování.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.70\linewidth]{assets/images/rizeni-datoveho-projektu/crisp-dm-process.png}
+  \caption[Životní cyklus CRISP-DM]{Životní cyklus CRISP-DM. Popis obrázku: projekt postupuje mezi business porozuměním, porozuměním datům, přípravou dat, modelováním, evaluací a nasazením; šipky ukazují, že postup je iterativní a projekt se může vracet k dřívějším fázím. Zdroj: Kenneth Jensen, \href{https://commons.wikimedia.org/wiki/File:CRISP-DM\_Process\_Diagram.png}{Wikimedia Commons}, licence CC BY-SA 3.0.}
+\end{figure}
+
+CRISP-DM má šest fází:
 \begin{enumerate}
-  \item \term{Porozumění businessu} - domluvit cíl, očekávání, kritéria úspěchu, omezení, cenu analýzy a rizika. V materiálech je zdůrazněna komunikace s vlastníkem dat a doménovým expertem.
-  \item \term{Porozumění datům} - zjistit dostupná data, jejich strukturu, rozsah, formát, význam polí, granularitu a kvalitu.
-  \item \term{Příprava dat} - čistit data, řešit chybějící hodnoty, duplicity, chybná data, transformovat formáty, diskretizovat, vytvářet odvozené proměnné a doplňovat externí data.
-  \item \term{Modelování} - vybrat analytické metody odpovídající cíli a povaze dat. Modelování je jen jedna část projektu, ne celý projekt.
-  \item \term{Vyhodnocení} - posoudit, zda výsledky odpovídají business cíli, zda jsou srozumitelné a důvěryhodné.
-  \item \term{Nasazení / využití} - předat výstupy, zapracovat do rozhodování, reportingu, procesu nebo aplikace.
+  \item \term{Business understanding} -- pochopení cílů, rozhodnutí, omezení, stakeholderů a kritérií úspěchu.
+  \item \term{Data understanding} -- získání prvních dat, popis zdrojů, průzkum struktury, významu a kvality.
+  \item \term{Data preparation} -- čištění, spojování, transformace, tvorba proměnných a příprava analytického datasetu.
+  \item \term{Modeling} -- výběr metod, trénování, experimenty, ladění parametrů a porovnání variant.
+  \item \term{Evaluation} -- ověření technické kvality i toho, zda výsledek řeší původní business problém.
+  \item \term{Deployment} -- předání, nasazení, integrace do reportingu nebo procesu, monitoring a údržba.
 \end{enumerate}
 
-Materiály uvádějí, že příprava dat a komunikace se zadavatelem jsou velmi pracné části. Samotné modelování může tvořit menší část práce než čištění, pochopení problému a interpretace.
+Fáze nejsou striktně lineární. Pokud se při přípravě dat zjistí, že klíčová proměnná není dostupná, projekt se vrací k business zadání. Pokud model technicky funguje, ale uživatelé mu nerozumějí, projekt se vrací k evaluaci a interpretaci. Pokud se po nasazení změní chování zákazníků, projekt pokračuje monitoringem a retrénováním.
+
+\term{Data Analytics Lifecycle} je příbuzný rámec pro data science a big data projekty. Typicky
+rozlišuje discovery, přípravu dat, plánování modelu, budování modelu, komunikaci výsledků a
+operacionalizaci. Oproti čistě sekvenčnímu řízení zdůrazňuje iteraci, nejistotu a to, že příprava dat
+často zabere většinu práce. \term{POSMAD} popisuje životní cyklus informací: plánování, získání,
+uložení a sdílení, údržbu, použití a likvidaci. Hodí se jako připomínka, že datový projekt nekončí
+vytvořením modelu nebo reportu, ale musí řešit celý život dat.
+
+\subsection*{Fáze CRISP-DM podrobněji}
+\term{Business understanding} určuje směr projektu. Řeší se:
+\begin{itemize}
+  \item business problém a cílové rozhodnutí;
+  \item přínosy, náklady a rizika;
+  \item uživatelé výstupu a jejich proces;
+  \item omezení dat, rozpočtu, času a compliance;
+  \item kritéria úspěchu a plán ověření.
+\end{itemize}
+
+Výstupem může být projektové zadání, analytická hypotéza, metriky úspěchu, seznam stakeholderů, předběžný plán a rozhodnutí, zda projekt vůbec dává smysl.
+
+\term{Data understanding} zjišťuje, s čím lze pracovat. Řeší se:
+\begin{itemize}
+  \item datové zdroje, vlastníci a přístupová práva;
+  \item význam polí a granularita záznamů;
+  \item rozsah historie a frekvence aktualizace;
+  \item kvalita dat, chybějící hodnoty, duplicity a extrémy;
+  \item první exploratorní analýza a kontrola plausibility.
+\end{itemize}
+
+Výstupem je popis dat, datový slovník, profil kvality dat, seznam problémů a rozhodnutí, zda data podporují původní cíl.
+
+\term{Data preparation} bývá nejpracnější část projektu. Zahrnuje:
+\begin{itemize}
+  \item extrakci dat ze zdrojů;
+  \item čištění a deduplikaci;
+  \item spojování tabulek a řešení klíčů;
+  \item imputaci chybějících hodnot;
+  \item transformaci formátů, jednotek, měn a časových pásem;
+  \item feature engineering;
+  \item rozdělení dat na trénovací, validační a testovací část;
+  \item dokumentaci transformačních pravidel.
+\end{itemize}
+
+Výstupem je analytický dataset, datová pipeline, popis transformací a testy kvality dat.
+
+\term{Modeling} neznamená jen strojové učení. Může jít o statistický model, segmentaci, pravidlový model, dashboardový výpočet, optimalizační model nebo simulaci. Důležité je:
+\begin{itemize}
+  \item zvolit metodu odpovídající cíli a datům;
+  \item oddělit trénování a nezávislé ověření;
+  \item porovnat jednoduchý baseline s pokročilejšími variantami;
+  \item sledovat interpretovatelnost, stabilitu a náklady na provoz;
+  \item zaznamenat parametry, data a výsledky experimentů.
+\end{itemize}
+
+\term{Evaluation} kontroluje, zda je výsledek použitelný. U modelu nestačí vysoká přesnost, pokud jsou chyby drahé, model diskriminuje, nedá se vysvětlit nebo je pomalý. Evaluace má zahrnovat:
+\begin{itemize}
+  \item technické metriky;
+  \item business dopad;
+  \item interpretaci a validaci doménovým expertem;
+  \item kontrolu biasu, stability a rizik;
+  \item srovnání s ručním postupem nebo stávajícím řešením;
+  \item rozhodnutí go/no-go pro nasazení.
+\end{itemize}
+
+\term{Deployment} převádí výsledek do praxe. Může jít o:
+\begin{itemize}
+  \item jednorázovou prezentaci a doporučení;
+  \item pravidelný report nebo dashboard;
+  \item datovou sadu pro další systémy;
+  \item API s predikcí;
+  \item batch scoring;
+  \item integraci do CRM, ERP, e-shopu nebo interní aplikace;
+  \item automatizovanou pipeline s monitoringem.
+\end{itemize}
+
+Nasazení musí mít vlastníka, plán obnovy, dokumentaci, práva, monitoring a postup pro změny.
+
+\subsection*{Metodiky a standardy}
+\term{CRISP-DM} je obecná metodika pro data mining a analytické projekty. Je dobrá pro vysvětlení životního cyklu a komunikaci se zadavatelem. Její slabina je, že původně neřeší moderní MLOps, cloudovou infrastrukturu, průběžný monitoring modelů a verzování dat tak podrobně jako současná praxe.
+
+\term{SEMMA} je rámec spojený se SAS: \textit{Sample, Explore, Modify, Model, Assess}. Je užitečný pro jádro analytické práce:
+\begin{itemize}
+  \item \term{Sample} -- výběr nebo vytvoření datové množiny;
+  \item \term{Explore} -- průzkum dat a vztahů;
+  \item \term{Modify} -- úpravy proměnných a příprava dat;
+  \item \term{Model} -- tvorba modelů;
+  \item \term{Assess} -- posouzení a porovnání modelů.
+\end{itemize}
+
+SEMMA je více technicky orientovaná na modelovací workflow. CRISP-DM je vhodnější pro řízení celého projektu, protože začíná business porozuměním a končí nasazením.
+
+\term{TDSP} a podobné data science lifecycle rámce zdůrazňují týmovou práci, opakovatelnost, projektovou strukturu, verzování artefaktů a nasazení do aplikací. V moderních organizacích často doplňují CRISP-DM o technické postupy pro cloud, DevOps a produkční provoz.
+
+\term{DAMA-DMBOK} není metodika jednoho analytického projektu, ale znalostní rámec pro data management. Pro datové projekty je důležitý hlavně kvůli oblastem jako data governance, datová architektura, metadata, data quality, bezpečnost dat a správa referenčních dat.
+
+\term{PMBOK}, \term{PRINCE2} a \term{IPMA} jsou obecné projektové standardy. PMBOK pracuje se
+znalostními oblastmi a procesy řízení projektu, PRINCE2 klade velký důraz na obchodní opodstatnění
+projektu a role v dočasné projektové organizaci, IPMA zdůrazňuje kompetence projektového manažera.
+\term{MMDIS ŘÍP} je rámec pro řízení IS/ICT projektů, kde je užitečné odlišit obecný řídicí postup od
+věcného postupu konkrétní dodávky. \term{The Ten Steps} je metodika zaměřená na projekty zvyšování
+kvality dat.
+
+\term{Agilní metodiky} jsou vhodné, pokud se požadavky i poznání dat postupně zpřesňují. Dávají smysl pro tvorbu dashboardů, datových produktů, pipeline i modelů, pokud projekt dodává inkrementy a sbírá zpětnou vazbu. Agilita ale neznamená absenci dokumentace; u datových projektů musí zůstat dokumentované zdroje, transformace, metriky, rozhodnutí a omezení.
+
+\term{Vodopádový přístup} může být vhodný pro silně regulované nebo dobře definované projekty, například migraci reportingu s pevným zadáním. U výzkumnějších analytických úloh je rizikový, protože předpokládá, že cíl i data jsou dopředu dostatečně známé.
+
+\subsection*{Scrum a agilní řízení}
+Scrum je rámec pro iterativní vývoj. Pracuje s produktovým backlogem, sprinty, pravidelnou kontrolou výstupů a retrospektivou. V datovém projektu pomáhá udržet krátkou zpětnou vazbu a bránit tomu, aby tým měsíce pracoval na řešení, které se nakonec nepoužije.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.88\linewidth]{assets/images/rizeni-datoveho-projektu/scrum-process.png}
+  \caption[Scrum proces]{Zjednodušený Scrum proces. Popis obrázku: požadavky jsou řazeny v produktovém backlogu, část práce se vybírá do sprintu a na konci sprintu vzniká použitelný inkrement. U datového projektu může být inkrementem průzkum dat, první dashboard, datová pipeline, baseline model nebo nasazené API. Zdroj: \href{https://commons.wikimedia.org/wiki/File:Scrum_process.svg}{Wikimedia Commons}, autor Lakeworks, licence CC BY-SA 4.0.}
+\end{figure}
+
+Role ve Scrumu:
+\begin{itemize}
+  \item \term{Product Owner} odpovídá za hodnotu produktu a prioritu backlogu;
+  \item \term{Scrum Master} pomáhá týmu dodržovat Scrum a odstraňovat překážky;
+  \item \term{Developers} vytvářejí inkrement, u datového projektu mohou zahrnovat analytiky, datové inženýry, vývojáře, testery nebo MLOps specialisty.
+\end{itemize}
+
+Scrum události:
+\begin{itemize}
+  \item \term{Sprint Planning} -- plán práce a cíl sprintu;
+  \item \term{Daily Scrum} -- krátká koordinace a kontrola překážek;
+  \item \term{Sprint Review} -- ukázka výstupu a zpětná vazba stakeholderů;
+  \item \term{Sprint Retrospective} -- zlepšení způsobu práce;
+  \item \term{Sprint} -- časový rámec, ve kterém vzniká použitelný inkrement.
+\end{itemize}
+
+V datových projektech se Scrum musí používat pragmaticky. Není dobré dělit práci jen na technické úkoly typu \uv{natrénovat model}. Lepší backlog obsahuje položky spojené s hodnotou nebo nejistotou:
+\begin{itemize}
+  \item ověřit dostupnost a kvalitu dat o objednávkách;
+  \item připravit baseline model pro srovnání;
+  \item vytvořit první dashboard pro regionální manažery;
+  \item ověřit interpretovatelnost modelu s doménovým expertem;
+  \item nasadit batch scoring do testovacího prostředí;
+  \item zavést monitoring datové kvality.
+\end{itemize}
 
 \subsection*{Organizace projektu a role}
-Z materiálů k MMDIS a projektům lze odvodit role použitelné i pro datový projekt:
+Datový projekt potřebuje jasné role. Jedna osoba může zastávat více rolí, ale odpovědnosti musí být zřejmé.
+
+\term{Sponzor projektu} zajišťuje mandát, rozpočet a rozhoduje o prioritách. Bez sponzora se projekt snadno zasekne na přístupu k datům nebo na adopci výsledku.
+
+\term{Business vlastník} rozumí procesu, ve kterém se výsledek použije. Pomáhá definovat cíle, metriky a interpretační pravidla.
+
+\term{Product Owner} nebo \term{projektový manažer} řídí backlog, koordinuje stakeholdery, sleduje plán, kapacity, rizika a rozhodnutí. V menších projektech tuto roli často sdílí seniorní analytik s business vlastníkem.
+
+\term{Vlastník dat} odpovídá za význam, dostupnost a pravidla použití dat. Pomáhá rozhodnout, kdo smí data používat a jak se mají interpretovat.
+
+\term{Data steward} spravuje datové definice, číselníky, kvalitu dat a metadata. Je důležitý zejména u podnikových datových platforem.
+
+\term{Doménový expert} vysvětluje proces, výjimky a význam proměnných. Kontroluje, zda výsledky dávají smysl mimo technické metriky.
+
+\term{Datový analytik} provádí exploraci, statistické vyhodnocení, vizualizace a interpretaci.
+
+\term{Data scientist} vytváří modely, experimenty, validaci a vysvětlení prediktivních nebo pokročilých analytických metod.
+
+\term{Datový inženýr} připravuje datové pipeline, integraci, transformace, úložiště a provozní datovou infrastrukturu.
+
+\term{ML engineer / MLOps specialista} převádí model do produkce, řeší verzování, CI/CD, monitoring, škálování, retrénování a rollback.
+
+\term{IT architekt, bezpečnost a právník} řeší integraci, provozní architekturu, bezpečnost, licencování, osobní údaje a compliance.
+
+\term{Uživatel výstupu} používá dashboard, model nebo doporučení. Musí být zapojen už během vývoje, protože přijetí výsledku je součást úspěchu.
+
+\subsection*{Komunikace a řízení stakeholderů}
+Datový projekt selhává častěji kvůli nejasnému cíli, nedůvěře a špatné adopci než kvůli samotné matematice. Komunikace proto musí být řízená.
+
+Důležité komunikační mechanismy:
 \begin{itemize}
-  \item \term{zadavatel / sponzor} - určuje smysl projektu, rozhoduje o zdrojích a očekávaném přínosu;
-  \item \term{vlastník business procesu} - zná proces, ve kterém mají být výsledky použity;
-  \item \term{vlastník dat} - odpovídá za dostupnost a význam dat;
-  \item \term{doménový expert} - pomáhá interpretovat proměnné a výsledky;
-  \item \term{datový analytik / data scientist} - provádí analýzu, modelování a interpretaci;
-  \item \term{datový inženýr} - připravuje datové pipeline, integraci a úložiště;
-  \item \term{uživatel výstupu} - používá report, dashboard, model nebo doporučení.
+  \item úvodní workshop k cíli, procesu a datům;
+  \item pravidelné review výsledků s business vlastníkem;
+  \item zápisy rozhodnutí a otevřených otázek;
+  \item datový slovník a definice metrik;
+  \item průběžné ukázky prototypů;
+  \item vysvětlení nejistoty, omezení a chyb modelu;
+  \item plán změnového řízení pro uživatele.
 \end{itemize}
 
-Důležitá je průběžná komunikace. Materiály u CRISP-DM zdůrazňují budování důvěry vlastníka dat a doménového experta, protože bez důvěry se výsledky nemusí použít.
+U datových výstupů je nutné komunikovat nejen číslo, ale i jeho význam. Například model s přesností 90 \% nemusí být dobrý, pokud chybuje právě u drahých případů. Dashboard s přesnými daty nemusí být užitečný, pokud ukazuje metriky, podle kterých nikdo nerozhoduje.
 
-\subsection*{Metodiky řízení: rigorózní a agilní přístup}
-Materiály rozlišují rigorózní a agilní metodiky. Pro datový projekt je užitečné znát rozdíl.
+\subsection*{Plánování práce a řízení rozsahu}
+Datový projekt je vhodné plánovat po inkrementech. Každý inkrement má ověřit určitou hodnotu nebo snížit nejistotu.
 
-\term{Rigorózní metodiky} předpokládají, že procesy lze popsat, plánovat, řídit a měřit. Mají více dokumentace, formalit a předem definovaných kroků. Hodí se pro stabilnější prostředí, větší projekty a situace s nutností silné kontroly.
-
-\term{Agilní metodiky} kladou důraz na fungující výstup, častou komunikaci, reakci na změnu, spolupráci se zákazníkem, krátké iterace a samoorganizující se týmy. V datových projektech se hodí, protože data i požadavky se často během práce zpřesňují.
-
-Scrum lze popsat jako rámec s Product Ownerem, týmem a Scrum Masterem. Práce probíhá ve sprintech, na začátku se plánuje sprint backlog, každý den probíhá krátká porada a na konci sprintu review a retrospektiva.
-
-\subsection*{Standardy a výstupy}
-Z dodaných materiálů lze jako standard pro data mining uvést CRISP-DM. Dále materiály uvádějí metodiky IS/ICT a IT governance rámce jako ITIL a COBIT, ale ty jsou pro datový projekt spíše doplňkové.
-
-Typické výstupy datového projektu:
+Příklady milníků:
 \begin{itemize}
-  \item zadání a business cíle;
-  \item popis dat a datových zdrojů;
+  \item schválené zadání a metriky úspěchu;
+  \item získaná data a vyřešená přístupová práva;
+  \item datový profil a rozhodnutí o proveditelnosti;
+  \item první analytický dataset;
+  \item baseline model nebo první verze dashboardu;
+  \item validace s doménovým expertem;
+  \item pilotní nasazení;
+  \item produkční provoz a monitoring;
+  \item vyhodnocení dopadu po nasazení.
+\end{itemize}
+
+Užitečné pojmy:
+\begin{itemize}
+  \item \term{WBS} -- hierarchický rozpad práce na menší balíky a úkoly;
+  \item \term{backlog} -- seznam práce seřazený podle priority;
+  \item \term{user story} -- požadavek popsaný z pohledu uživatele;
+  \item \term{acceptance criteria} -- podmínky, podle kterých se pozná splnění;
+  \item \term{definition of done} -- společná definice hotové práce;
+  \item \term{MVP} -- minimální použitelná verze, která ověří hodnotu;
+  \item \term{timebox} -- pevně omezený čas na průzkum nebo experiment;
+  \item \term{baseline plánu} -- schválený výchozí plán termínů, rozsahu a nákladů, vůči kterému se
+  měří odchylky;
+  \item \term{kritická cesta} -- sled závislých úkolů určující nejkratší možnou dobu trvání projektu;
+  \item \term{PERT} -- odhad trvání úloh přes optimistický, nejpravděpodobnější a pesimistický scénář;
+  \item \term{nárazník} -- časová nebo kapacitní rezerva pro nejistotu a zpoždění.
+\end{itemize}
+
+U experimentálních úloh je důležitý \term{timebox}. Tým například dostane dva týdny na ověření, zda data umožňují predikovat churn. Pokud se signál nenajde, není to selhání, ale řízené zjištění, které chrání rozpočet.
+
+\subsection*{Dokumentace a výstupy}
+Dokumentace nemá být formální přítěž. U datových projektů chrání opakovatelnost a důvěru. Minimum dokumentace by mělo odpovědět na otázky: odkud data přišla, co se s nimi stalo, jak byl výsledek vytvořen, jak se má interpretovat a kdo za něj odpovídá.
+
+Typické výstupy:
+\begin{itemize}
+  \item projektové zadání a cíl;
+  \item seznam stakeholderů a rolí;
   \item datový slovník;
-  \item dokumentace čištění a transformací;
+  \item popis zdrojů, přístupů a oprávnění;
+  \item profil kvality dat;
+  \item dokumentace transformací;
   \item analytický dataset;
-  \item model nebo report;
-  \item vyhodnocení kvality modelu;
-  \item doporučení a plán využití výsledků.
+  \item kód, notebooky a pipeline;
+  \item experiment log;
+  \item model card nebo popis modelu;
+  \item report, dashboard nebo API dokumentace;
+  \item plán nasazení a rollbacku;
+  \item monitoring a provozní runbook;
+  \item závěrečné vyhodnocení dopadu.
 \end{itemize}
 
-\todohead
+U reportingu je důležitá dokumentace definic metrik. U modelu je důležitá dokumentace trénovacích dat, metrik, omezení, známých rizik a scénářů, ve kterých model nemá být použit.
+
+\subsection*{Nástroje pro podporu řízení}
+Nástroje samy projekt neřídí, ale pomáhají držet práci, artefakty a odpovědnosti pohromadě.
+
+\term{Projektové a týmové řízení}:
 \begin{itemize}
-  \item Doplnit standardy a metodiky mimo CRISP-DM: SEMMA, TDSP, případně DAMA-DMBOK pro data management.
-  \item Doplnit nástroje řízení projektu: Jira, Trello, MS Project, Git, GitLab/GitHub, MLflow, DVC, Airflow.
-  \item Doplnit MLOps a životní cyklus modelu po nasazení: monitoring, drift, retraining, verzování dat a modelů.
-  \item Doplnit rizika datového projektu: nedostupná data, nízká kvalita, nejasný cíl, právní omezení, nepřijetí uživateli.
+  \item Jira -- backlog, úkoly, workflow, sprinty, chyby a požadavky;
+  \item Trello -- jednoduché kanban tabule;
+  \item Microsoft Project -- plánování harmonogramu, závislostí a kapacit;
+  \item Azure DevOps nebo GitLab -- backlog, repozitáře, CI/CD a releasy;
+  \item Confluence, Notion nebo wiki -- dokumentace, zápisy a rozhodnutí.
+\end{itemize}
+
+\term{Verzování a spolupráce na kódu}:
+\begin{itemize}
+  \item Git -- verzování kódu, review změn, historie a větve;
+  \item GitHub, GitLab, Bitbucket -- sdílené repozitáře, pull requesty a CI/CD;
+  \item pre-commit, testy a code review -- kontrola kvality před sloučením.
+\end{itemize}
+
+\term{Data engineering a orchestrace}:
+\begin{itemize}
+  \item Apache Airflow -- plánování a monitoring workflow jako DAG;
+  \item dbt -- transformace dat, testy a dokumentace SQL modelů;
+  \item Spark, Databricks nebo cloudové datové platformy -- zpracování rozsáhlých dat;
+  \item Great Expectations nebo podobné nástroje -- testy kvality dat.
+\end{itemize}
+
+\term{Experimenty, modely a data}:
+\begin{itemize}
+  \item MLflow -- tracking experimentů, model registry a životní cyklus modelu;
+  \item DVC -- verzování dat, modelů a ML pipeline spolu s Gitem;
+  \item Jupyter nebo Quarto -- explorace, prototypování a reprodukovatelné výstupy;
+  \item registry artefaktů -- ukládání modelů, datasetů, kontejnerů a konfigurací.
+\end{itemize}
+
+\term{Monitoring a provoz}:
+\begin{itemize}
+  \item logování běhů pipeline;
+  \item alerty při selhání obnovy dat;
+  \item monitoring latence, dostupnosti a nákladů;
+  \item monitoring datové kvality;
+  \item monitoring modelového driftu a výkonu v čase.
+\end{itemize}
+
+\subsection*{MLOps a životní cyklus modelu po nasazení}
+U projektů se strojovým učením nasazením práce nekončí. Model je závislý na datech a prostředí. Jakmile se změní chování zákazníků, proces, produkt, cenová politika nebo zdrojová data, může se změnit i kvalita modelu.
+
+\term{MLOps} aplikuje principy DevOps na strojové učení. Cílem je, aby modely šly opakovatelně trénovat, testovat, nasazovat, monitorovat a zlepšovat. Důležité prvky:
+\begin{itemize}
+  \item verzování kódu, dat, konfigurace a modelů;
+  \item experiment tracking;
+  \item automatizované testy dat a modelu;
+  \item CI/CD pro pipeline a modelové služby;
+  \item model registry a schvalovací workflow;
+  \item oddělení vývoje, testu a produkce;
+  \item monitoring kvality predikcí, driftu a technických metrik;
+  \item retraining a rollback;
+  \item auditovatelnost a governance modelů.
+\end{itemize}
+
+Rozlišují se zejména:
+\begin{itemize}
+  \item \term{data drift} -- změní se rozdělení vstupních dat;
+  \item \term{concept drift} -- změní se vztah mezi vstupy a cílovou proměnnou;
+  \item \term{model decay} -- model postupně ztrácí přesnost nebo business hodnotu;
+  \item \term{training-serving skew} -- rozdíl mezi daty použitými při trénování a daty v produkci.
+\end{itemize}
+
+Příklad: model pro predikci odchodu zákazníka je natrénován na období před změnou ceníku. Po změně ceníku se chování zákazníků změní a model začne podhodnocovat riziko u určitého segmentu. Monitoring musí problém zachytit a proces musí určit, zda se model retrénuje, nahradí nebo dočasně vypne.
+
+\subsection*{Rizika datového projektu}
+Rizika je vhodné řídit od začátku. Nestačí je sepsat na konci, když už projekt selhal.
+
+Typická rizika:
+\begin{itemize}
+  \item \term{nejasný cíl} -- stakeholder chce \uv{AI}, ale není jasné, jaké rozhodnutí se má zlepšit;
+  \item \term{nedostupná data} -- data existují, ale tým nemá oprávnění nebo technický přístup;
+  \item \term{nízká kvalita dat} -- chybějící hodnoty, duplicity, nekonzistentní definice;
+  \item \term{malý signál v datech} -- dostupná data neumožňují požadovanou predikci;
+  \item \term{únik dat při validaci} -- model omylem používá informace, které v produkci nebudou známé;
+  \item \term{právní omezení} -- osobní údaje, citlivé atributy, souhlasy, retenční pravidla;
+  \item \term{bias a férovost} -- model systematicky znevýhodňuje skupinu uživatelů;
+  \item \term{neinterpretovatelnost} -- uživatelé nebo regulátor nerozumějí rozhodnutí modelu;
+  \item \term{technický dluh} -- notebook se změní na produkční řešení bez testů a dokumentace;
+  \item \term{nepřijetí uživateli} -- výsledek nezapadne do procesu nebo uživatelé modelu nevěří;
+  \item \term{nákladový růst} -- cloudové výpočty, licence nebo ruční anotace jsou dražší, než se čekalo;
+  \item \term{závislost na dodavateli} -- řešení nelze snadno provozovat nebo rozvíjet interně.
+\end{itemize}
+
+Protiopatření:
+\begin{itemize}
+  \item proof of concept s jasným timeboxem;
+  \item datový audit před plným projektem;
+  \item baseline model nebo jednoduché pravidlo pro srovnání;
+  \item zapojení právníků a bezpečnosti od začátku;
+  \item průběžná validace s doménovým expertem;
+  \item pilotní nasazení před plošným rolloutem;
+  \item monitoring po nasazení;
+  \item dokumentovaný postup pro rollback a retraining.
+\end{itemize}
+
+\subsection*{Kvalita a evaluace}
+Kvalita datového projektu se neměří jen tím, zda byl projekt dokončen podle plánu. Důležitá je použitelnost a dopad. Je třeba oddělit několik úrovní kvality:
+\begin{itemize}
+  \item \term{kvalita dat} -- úplnost, přesnost, konzistence, aktuálnost, validita;
+  \item \term{kvalita modelu} -- metriky, stabilita, generalizace, kalibrace, interpretovatelnost;
+  \item \term{kvalita systému} -- dostupnost, latence, bezpečnost, náklady, škálovatelnost;
+  \item \term{kvalita rozhodnutí} -- zda výsledek pomáhá dělat lepší rozhodnutí;
+  \item \term{kvalita adopce} -- zda uživatelé výstup používají správně a pravidelně.
+\end{itemize}
+
+U prediktivních modelů je nutné rozlišit offline evaluaci a skutečný dopad. Offline metriky jako accuracy, AUC, RMSE nebo MAE říkají, jak model fungoval na testovacích datech. Business dopad se ukáže až v procesu, například A/B testem, pilotem, změnou konverze, snížením nákladů nebo rychlejší reakcí.
+
+\subsection*{Datová governance v projektu}
+Governance určuje pravidla, kdo může s daty pracovat, jak se data definují, jak se kontroluje kvalita a kdo za co odpovídá. V datovém projektu je governance praktická nutnost, ne jen administrativní téma.
+
+Projekt má řešit:
+\begin{itemize}
+  \item klasifikaci dat podle citlivosti;
+  \item právní základ zpracování osobních údajů;
+  \item minimalizaci dat -- nepoužívat víc dat, než je potřeba;
+  \item správu přístupových práv;
+  \item anonymizaci nebo pseudonymizaci;
+  \item datový slovník a metadata;
+  \item lineage -- původ dat a transformační cestu;
+  \item vlastníka dat a vlastníka metriky;
+  \item retenční pravidla;
+  \item audit přístupů a změn.
+\end{itemize}
+
+V praxi governance pomáhá řešit i obyčejné spory typu \uv{proč má finance jiné tržby než obchod}. Pokud nejsou metriky a datové zdroje definované, řízení projektu se rychle změní na vyjednávání o významu čísel.
+
+\subsection*{Příklad průběhu projektu}
+Firma chce snížit odchod zákazníků. Projekt může probíhat takto:
+\begin{enumerate}
+  \item Business vlastník definuje churn a vysvětlí, jak se dnes zákazníci oslovují.
+  \item Tým stanoví cíl: zlepšit priorizaci retenčních kampaní a snížit zbytečné kontaktování.
+  \item Data owner schválí použití dat z CRM, fakturace, zákaznické podpory a webové analytiky.
+  \item Analytik provede data understanding a zjistí, že část historických kontaktů není spolehlivě zaznamenaná.
+  \item Tým upraví rozsah: první verze bude predikovat riziko pouze pro segment s kvalitní historií.
+  \item Datový inženýr připraví pipeline a analytický dataset.
+  \item Data scientist vytvoří baseline model a porovná ho s pokročilejšími variantami.
+  \item Doménový expert zkontroluje nejdůležitější prediktory a podezřelé segmenty.
+  \item Product Owner rozhodne o pilotu v jednom obchodním týmu.
+  \item MLOps specialista nasadí batch scoring, monitoring vstupních dat a logování výsledků kampaně.
+  \item Po pilotu se vyhodnotí dopad na retenci, náklady a práci obchodníků.
+\end{enumerate}
+
+Tento příklad ukazuje, že modelování je jen jedna část. Stejně důležité jsou definice, data, pipeline, validace, nasazení, měření dopadu a přijetí uživateli.
+
+\pozor
+\begin{itemize}
+  \item Datový projekt nezačíná modelem, ale business problémem a rozhodnutím, které má být podpořeno.
+  \item CRISP-DM je iterativní. Návrat z modelování zpět k datům nebo zadání je normální, ne chyba.
+  \item Příprava dat a komunikace se stakeholdery často zaberou více práce než samotný algoritmus.
+  \item Úspěch modelu není jen technická metrika. Důležitý je business dopad, interpretace a adopce.
+  \item Agilní řízení neznamená chaos. I agilní datový projekt potřebuje dokumentaci, definice metrik a governance.
+  \item MLOps řeší život modelu po nasazení: monitoring, drift, retraining, verzování a rollback.
+  \item Nástroj typu Jira, MLflow nebo Airflow nenahradí jasné zadání a odpovědnosti.
+\end{itemize}
+
+\subsection*{Shrnutí ke zkoušce}
+Řízení datového projektu spojuje projektové řízení, datovou analytiku, data engineering, governance a zavedení výsledků do praxe. Základní logiku dobře vystihuje CRISP-DM: porozumění businessu, porozumění datům, příprava dat, modelování, evaluace a nasazení. Proces je iterativní, protože cíle, data a modely se během projektu zpřesňují.
+
+Kromě CRISP-DM je dobré znát SEMMA, TDSP, agilní řízení, Scrum, DAMA-DMBOK a principy MLOps. Datový projekt potřebuje jasné role: sponzor, business vlastník, vlastník dat, doménový expert, analytik, data scientist, datový inženýr, MLOps specialista a uživatel výstupu. Typické nástroje podporují backlog, dokumentaci, verzování kódu, orchestrace pipeline, experiment tracking, model registry a monitoring.
+
+Hlavní rizika jsou nejasný cíl, nedostupná nebo nekvalitní data, právní omezení, špatná evaluace, technický dluh a nepřijetí uživateli. Dobře řízený datový projekt proto průběžně ověřuje hodnotu, kvalitu dat, interpretaci, provozní použitelnost a dopad na rozhodování.
+
+\subsection*{Zdroje}
+\begin{itemize}
+  \item IBM:
+    \href{https://www.ibm.com/docs/en/spss-modeler/SaaS?topic=dm-crisp-help-overview}{CRISP-DM Help Overview}.
+  \item IBM:
+    \href{https://www.ibm.com/docs/en/spss-modeler/18.6.0?topic=projects-crisp-dm-view}{CRISP-DM View}.
+  \item SAS:
+    \href{https://documentation.sas.com/doc/en/emref/15.3/n061bzurmej4j3n1jnj8bbjjm1a2.htm}{Introduction to SEMMA}.
+  \item Microsoft Learn:
+    \href{https://learn.microsoft.com/en-us/shows/dev-intro-to-data-science/what-is-the-data-science-lifecycle-2-of-28}{What is the Data Science Lifecycle?}.
+  \item Scrum Guides:
+    \href{https://scrumguides.org/scrum-guide.html}{The 2020 Scrum Guide}.
+  \item Agile Manifesto:
+    \href{https://agilemanifesto.org/}{Manifesto for Agile Software Development}.
+  \item DAMA International:
+    \href{https://dama.org/about-dama/what-is-data-management/}{What is Data Management?}.
+  \item Google Cloud:
+    \href{https://docs.cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning}{MLOps: Continuous delivery and automation pipelines in machine learning}.
+  \item MLflow:
+    \href{https://www.mlflow.org/docs/2.2.1/model-registry.html}{MLflow Model Registry}.
+  \item DVC:
+    \href{https://dvc.org/doc/use-cases/versioning-data-and-models}{Versioning Data and Models}.
+  \item Apache Airflow:
+    \href{https://airflow.apache.org/docs/apache-airflow/2.11.0/}{What is Airflow?}.
+  \item Atlassian:
+    \href{https://support.atlassian.com/jira-software-cloud/docs/what-is-an-issue/}{What is a work item?}.
+  \item Microsoft Support:
+    \href{https://support.microsoft.com/en-us/office/the-project-triangle-8c892e06-d761-4d40-8e1f-17b33fdcf810}{The project triangle}.
+  \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:CRISP-DM\_Process\_Diagram.png}{CRISP-DM Process Diagram}.
+  \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Project-triangle-en.svg}{Project-triangle-en.svg}.
+  \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Scrum_process.svg}{Scrum process.svg}.
 \end{itemize}
 
 \newpage

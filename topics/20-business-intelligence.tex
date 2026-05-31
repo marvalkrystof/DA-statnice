@@ -1,60 +1,558 @@
 \section{Business intelligence. Principy, technologické komponenty, nástroje}
 
-\subsection*{Smysl BI v podniku}
-Materiály vysvětlují BI jako technologii a přístup, který integruje data z podnikových oblastí a poskytuje managementu informace v požadované struktuře. Podniky uchovávají velké množství dat v systémech ERP, CRM, SCM a dalších aplikacích. Tato data jsou typicky v transakčních databázích OLTP, které jsou vhodné pro provozní změny, ale nevhodné pro složité souhrnné analýzy.
+\subsection*{Základní vymezení}
+\term{Business intelligence} (BI) je soubor metod, procesů, datových struktur a softwarových nástrojů, které převádějí podniková data na informace použitelné pro řízení. Nejde jen o dashboardy, ale o celý řetězec od zdrojových systémů přes integraci a modelování dat až po reporting, analytiku, správu metrik a rozhodování.
 
-BI řeší dva hlavní problémy:
+Smyslem BI je zmenšit rozdíl mezi tím, co podnik ve svých systémech už ví, a tím, co umí rychle a spolehlivě použít při rozhodování. Typická otázka BI není \uv{jak uložit objednávku}, ale například:
 \begin{itemize}
-  \item analytická data pocházejí z různých systémů s odlišnou strukturou;
-  \item management potřebuje rychlé, přesné a srozumitelné informace pro rozhodování.
+  \item jak se vyvíjejí tržby podle regionu, produktu a prodejního kanálu;
+  \item kteří zákazníci mají nejvyšší marži a jak se mění jejich chování;
+  \item kde vznikají zpoždění v dodavatelském řetězci;
+  \item jaký je rozdíl mezi plánem, skutečností a predikcí;
+  \item které ukazatele vyžadují manažerskou reakci.
 \end{itemize}
 
-Bez BI mohou být informace nedostupné, získávané pomalu nebo nekonzistentní, což vede k intuitivnímu rozhodování nepodloženému fakty. BI má umožnit rozhodování založené na datech.
+BI má být \term{manažerský informační systém} založený na datech. Dobře navržené BI poskytuje konzistentní definice ukazatelů, historický pohled, možnost detailního rozkladu výsledků a kontrolovatelný původ dat. Špatně navržené BI se pozná podle toho, že různé reporty ukazují různá čísla pro stejnou metriku, uživatelé si posílají exporty v Excelu a většina času se tráví vysvětlováním, proč data nesedí.
 
-\subsection*{Princip BI: multidimenzionální pohled}
-Základním principem BI je multidimenzionální pohled na data. To znamená, že sledované ukazatele lze zobrazovat podle různých dimenzí. Například tržby lze analyzovat podle času, regionu, produktu, zákazníka, prodejního kanálu nebo organizační jednotky.
+\subsection*{BI, OLTP a rozhodování}
+Podnikové aplikace typu ERP, CRM, e-shop, účetní systém, HR systém nebo skladový systém ukládají data především pro provoz. Takové systémy se označují jako \term{OLTP} -- \textit{On-Line Transaction Processing}. Jsou optimalizované pro velké množství krátkých transakcí:
+\begin{itemize}
+  \item vložení objednávky;
+  \item změnu stavu faktury;
+  \item aktualizaci skladové zásoby;
+  \item registraci zákazníka;
+  \item zaúčtování platby.
+\end{itemize}
 
-Technologie založená na multidimenzionálních databázích se nazývá OLAP - \textit{On-Line Analytical Processing}. OLAP umožňuje rychlé analytické dotazy, agregace, drill-down, roll-up a změnu pohledu na stejná data.
+Analytické zpracování je jiné. Uživatel se neptá na jeden záznam, ale na souhrny nad velkým objemem dat. Potřebuje agregace, trendy, porovnání období, hierarchie a filtraci podle více pohledů. Tato vrstva se označuje jako \term{OLAP} -- \textit{On-Line Analytical Processing}.
 
-\subsection*{Architektura BI}
-Materiály popisují tok dat ve zjednodušené podobě:
+Rozdíl mezi OLTP a OLAP:
+\begin{itemize}
+  \item \term{OLTP} pracuje s aktuálními provozními daty a podporuje každodenní transakce.
+  \item \term{OLAP} pracuje s historickými a agregovanými daty a podporuje analýzu.
+  \item \term{OLTP} typicky používá normalizované relační modely, aby se data neopakovala.
+  \item \term{OLAP} často používá dimenzionální modely, aby byly dotazy rychlé a srozumitelné.
+  \item \term{OLTP} odpovídá na otázku \uv{co se právě stalo}.
+  \item \term{OLAP} odpovídá na otázku \uv{co to znamená pro řízení}.
+\end{itemize}
+
+BI proto obvykle nečte složité reporty přímo z produkčních databází. Důvodem je výkon, bezpečnost, historie, kvalita dat i rozdílný datový model. Produkční systém má chránit provoz, zatímco BI má poskytovat stabilní analytickou vrstvu.
+
+\subsection*{Typická architektura BI}
+Architektura BI popisuje tok dat od zdrojových systémů k uživatelům:
 \[
-\text{zdrojové systémy} \rightarrow \text{ETL} \rightarrow \text{datový sklad} \rightarrow \text{OLAP} \rightarrow \text{analýzy a reporting}
+\begin{aligned}
+\text{zdrojové systémy}
+&\rightarrow \text{ETL/ELT}
+\rightarrow \text{staging / ODS} \\
+&\rightarrow \text{DWH / data mart / lakehouse}
+\rightarrow \text{sémantická vrstva} \\
+&\rightarrow \text{reporty, dashboardy, analýzy a alerty}.
+\end{aligned}
 \]
 
-\term{Produkční databáze} jsou zdrojové systémy, například ERP, SCM, CRM, finanční systémy nebo externí systémy. Jsou optimalizované pro provozní zpracování a ukládání dat v reálném čase, nikoli pro analytické úlohy.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.84\linewidth]{assets/images/business-intelligence/data-warehouse.png}
+  \caption[Zjednodušená architektura datového skladu]{Zjednodušená architektura datového skladu. Popis obrázku: data z provozních databází a externích zdrojů procházejí integrační vrstvou do datového skladu, nad kterým vznikají datová tržiště, OLAP a reporting. Zdroj: \href{https://commons.wikimedia.org/wiki/File:Datawarehouse.png}{Wikimedia Commons}, public domain.}
+\end{figure}
 
-\term{ETL} je datová pumpa. Jejím úkolem je data získat, transformovat a nahrát do analytických struktur. Pracuje často dávkově v pravidelných intervalech.
+\term{Zdrojové systémy} jsou interní i externí systémy, ze kterých BI čerpá data. Patří sem ERP, CRM, SCM, finanční systémy, výrobní systémy, logy, webová analytika, data z call centra, otevřená data, reklamní platformy nebo datové služby třetích stran.
 
-\term{DSA} je dočasné úložiště extrahovaných dat. Data zde bývají detailní, aktuální, často nekonzistentní a ve stejné struktuře jako ve zdrojových systémech.
+\term{ETL} znamená \textit{Extract, Transform, Load}. Data se nejprve extrahují, potom čistí a transformují a nakonec nahrávají do cílové analytické struktury. \term{ELT} znamená \textit{Extract, Load, Transform}. Data se nejprve nahrají do výkonné datové platformy a transformace probíhají až uvnitř ní. ELT je časté v cloudových skladech a lakehouse architekturách.
 
-\term{ODS} je operativní úložiště aktuálních a konsolidovaných dat. Může sloužit pro jednoduché dotazy nad aktuálními daty nebo jako centrální databáze referenčních údajů.
+\term{Staging area} nebo \term{DSA} je dočasná technická vrstva, do které se ukládají data vytažená ze zdrojů. Slouží k auditovatelnosti, opakování zpracování a oddělení zdrojových systémů od transformační logiky. Data zde často ještě nejsou očištěná ani sjednocená.
 
-\term{Datový sklad} je integrovaný, subjektově orientovaný, stálý a časově rozlišený souhrn dat pro podporu managementu.
+\term{ODS} -- \textit{Operational Data Store} -- je konsolidované úložiště aktuálních provozních dat. Stojí mezi provozními systémy a datovým skladem. Používá se pro operativní reporting, sjednocení referenčních údajů nebo integraci aplikací, které potřebují relativně čerstvá data.
 
-\term{Datové tržiště} je menší datový sklad určený pro omezený okruh uživatelů nebo specifickou oblast.
+\term{Datový sklad} (\textit{data warehouse}, DWH) je centrální analytické úložiště. Je subjektově orientované, integrované, časově rozlišené a relativně neměnné. Uchovává historii a připravuje data pro rozhodování.
 
-\term{OLAP databáze} obsahuje jednu nebo více OLAP kostek. Kostky často obsahují předzpracované agregace podle hierarchií dimenzí.
+\term{Datové tržiště} (\textit{data mart}) je menší oblast datového skladu zaměřená na konkrétní proces, oddělení nebo doménu, například prodej, finance, logistiku nebo marketing. Může být závislé na centrálním DWH, nebo vzniknout jako samostatné analytické úložiště.
 
-\subsection*{Reporting a analýzy}
-Reporting je dotazování do databází a prezentace výsledků. Materiály rozlišují:
+\term{Sémantická vrstva} převádí technický datový model na podnikové pojmy. Definuje metriky, dimenze, hierarchie, vztahy, oprávnění a výpočty. Uživatelé pak pracují s pojmy jako tržby, marže, zákazník, region nebo měsíc, nikoli s technickými názvy tabulek a sloupců.
+
+\term{Prezentační vrstva} zahrnuje reporty, dashboardy, ad hoc analýzy, exporty, alerty, embedded analytiku, API a v moderních nástrojích také konverzační dotazy nad daty. Tato vrstva je nejviditelnější, ale její kvalita závisí na nižších vrstvách.
+
+\subsection*{Datový sklad}
+Datový sklad je centrální komponenta klasického BI. Jeho úkolem není pouze ukládat velká data, ale vytvářet důvěryhodný historický základ pro analýzu. Charakteristické vlastnosti DWH:
 \begin{itemize}
-  \item \term{standardní reporting} - předdefinované reporty v pravidelných intervalech;
-  \item \term{ad hoc reporting} - jednorázový specifický dotaz vytvořený uživatelem.
+  \item \term{subjektová orientace} -- data jsou organizována podle podnikových témat, například zákazník, produkt, prodej nebo finance;
+  \item \term{integrace} -- data z různých zdrojů jsou sjednocena, například v kódech měn, identifikátorech zákazníků nebo číselnících;
+  \item \term{časová rozlišenost} -- datový sklad uchovává historii a umožňuje sledovat vývoj v čase;
+  \item \term{neměnnost} -- data se typicky nepřepisují stejným způsobem jako v provozní databázi, ale přibývají nové verze, snímky nebo období;
+  \item \term{podpora rozhodování} -- struktury jsou optimalizované pro analytické dotazy, agregace a reporting.
 \end{itemize}
 
-BI dále souvisí s data miningem. Datový sklad poskytuje kvalitní zdroj pro analytické metody, které hledají strategické informace a skryté vztahy v datech.
-
-\subsection*{Vazba BI na podnikové aplikace}
-Materiály uvádějí BI jako jednu z rozšiřujících oblastí ERP II vedle CRM a SCM. ERP poskytuje provozní data z financí, nákupu, výroby, logistiky a HR. CRM poskytuje zákaznická data. SCM poskytuje data o dodavatelském řetězci. BI tato data integruje a převádí do podoby vhodné pro rozhodování.
-
-\todohead
+Důležitý pojem je \term{granularita}. Udává, jak detailní jsou data v tabulce faktů. Například jeden řádek může představovat:
 \begin{itemize}
-  \item Doplnit hvězdicové a sněhové schéma, fact table a dimension table.
-  \item Doplnit OLAP operace: slice, dice, drill-down, roll-up, pivot.
-  \item Doplnit moderní BI nástroje: Power BI, Tableau, Qlik, Looker.
-  \item Doplnit rozdíl DWH, data lake a lakehouse.
-  \item Doplnit governance v BI: metadata, datový katalog, kvalita dat, vlastnictví dat.
+  \item jednu položku objednávky;
+  \item jednu objednávku;
+  \item denní souhrn pro produkt a prodejnu;
+  \item měsíční souhrn za region.
+\end{itemize}
+
+Čím detailnější granularita, tím flexibilnější analýzy, ale tím větší objem dat a náročnější zpracování. U dimenzionálního modelování je proto zásadní nejprve jasně říct, co přesně znamená jeden řádek faktové tabulky.
+
+\subsection*{Dimenzionální modelování}
+V BI se často používá \term{dimenzionální modelování}. Jeho cílem je uspořádat data tak, aby odpovídala přirozeným analytickým otázkám. Základ tvoří \term{faktové tabulky} a \term{dimenzní tabulky}.
+
+\term{Faktová tabulka} obsahuje měřitelné události nebo stavy. Typické sloupce jsou:
+\begin{itemize}
+  \item cizí klíče do dimenzí, například zákazník, produkt, čas, prodejna;
+  \item numerické ukazatele, například množství, tržba, sleva, náklad, marže;
+  \item technické údaje, například identifikátor dávky nebo čas nahrání.
+\end{itemize}
+
+\term{Dimenzní tabulka} obsahuje kontext faktů. Popisuje, podle čeho se fakta filtrují, seskupují a interpretují. Dimenze může být například čas, produkt, zákazník, region, obchodník, kampaň nebo organizační jednotka. Dimenze mají často hierarchie:
+\[
+\text{den} \rightarrow \text{měsíc} \rightarrow \text{kvartál} \rightarrow \text{rok}.
+\]
+
+Příklad faktu a dimenzí:
+\begin{itemize}
+  \item fakt: prodej položky objednávky;
+  \item měřítka: počet kusů, tržba, náklad, marže;
+  \item dimenze: datum, produkt, zákazník, prodejní kanál, region;
+  \item granularita: jeden řádek odpovídá jedné prodané položce v objednávce.
+\end{itemize}
+
+\subsection*{Hvězdicové schéma}
+\term{Hvězdicové schéma} (\textit{star schema}) má uprostřed faktovou tabulku a kolem ní denormalizované dimenzní tabulky. Dimenze jsou napojeny přímo na faktovou tabulku. Model je pro uživatele čitelný a pro analytické nástroje výkonný.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\linewidth]{assets/images/business-intelligence/star-schema.png}
+  \caption[Hvězdicové schéma]{Hvězdicové schéma. Popis obrázku: uprostřed je faktová tabulka s měřenými hodnotami a klíči do okolních dimenzí; dimenze poskytují kontext pro filtrování a agregace. Zdroj: \href{https://commons.wikimedia.org/wiki/File:Star-schema.png}{Wikimedia Commons}, autor SqlPac, licence CC BY-SA 3.0.}
+\end{figure}
+
+Výhody hvězdicového schématu:
+\begin{itemize}
+  \item je srozumitelné pro analytiky i business uživatele;
+  \item dotazy mají méně spojení než u plně normalizovaného modelu;
+  \item dobře se hodí pro nástroje typu Power BI, Tableau nebo Qlik;
+  \item podporuje rychlé agregace podle dimenzí;
+  \item odděluje měření od popisného kontextu.
+\end{itemize}
+
+Nevýhodou je opakování některých hodnot v dimenzích. U analytických modelů je to často přijatelný kompromis, protože čitelnost a výkon dotazů jsou důležitější než úplná normalizace.
+
+\subsection*{Sněhové schéma}
+\term{Sněhové schéma} (\textit{snowflake schema}) normalizuje některé dimenze do více tabulek. Například dimenze produkt se může rozdělit na produkt, značku, kategorii a dodavatele. Výsledný model připomíná vločku, protože kolem faktu vzniká více úrovní vztahů.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.86\linewidth]{assets/images/business-intelligence/snowflake-schema.png}
+  \caption[Sněhové schéma]{Sněhové schéma. Popis obrázku: faktová tabulka je napojena na dimenze, ale některé dimenze jsou dále rozloženy do dalších relačních tabulek. Zdroj: \href{https://commons.wikimedia.org/wiki/File:Snowflake-schema.png}{Wikimedia Commons}, autor SqlPac, licence CC BY-SA 3.0.}
+\end{figure}
+
+Výhody sněhového schématu:
+\begin{itemize}
+  \item menší duplicita hodnot v dimenzích;
+  \item lepší správa rozsáhlých a sdílených číselníků;
+  \item vhodné pro některé komplexní podnikové modely.
+\end{itemize}
+
+Nevýhody sněhového schématu:
+\begin{itemize}
+  \item více spojení v dotazech;
+  \item horší čitelnost pro běžné uživatele;
+  \item složitější návrh a údržba;
+  \item někdy horší výkon v samoobslužných BI nástrojích.
+\end{itemize}
+
+U zkoušky je dobré říct, že hvězdicové a sněhové schéma nejsou konkurenční databázové technologie, ale varianty dimenzionálního modelu. Hvězda preferuje jednoduchost a výkon, vločka normalizaci a úsporu duplicity.
+
+\subsection*{Typy faktů a dimenzí}
+Faktové tabulky mohou mít různé typy:
+\begin{itemize}
+  \item \term{transakční fakt} -- jeden řádek odpovídá události, například prodeji položky;
+  \item \term{periodický snímek} -- jeden řádek odpovídá stavu za období, například denní stav skladu;
+  \item \term{akumulační snímek} -- jeden řádek sleduje proces s více milníky, například objednávku od vytvoření po doručení;
+  \item \term{factless fact table} -- faktová tabulka bez numerické metriky, používá se pro evidenci události nebo vztahu, například účast studenta na kurzu.
+\end{itemize}
+
+Dimenze mohou být:
+\begin{itemize}
+  \item \term{konformní dimenze} -- sdílená napříč více datovými tržišti, například jednotná dimenze času nebo zákazníka;
+  \item \term{pomalu se měnící dimenze} -- dimenze, jejíž atributy se v čase mění, například adresa zákazníka;
+  \item \term{degenerovaná dimenze} -- identifikátor uložený přímo ve faktové tabulce, například číslo objednávky;
+  \item \term{role-playing dimenze} -- stejná dimenze použitá v různých rolích, například datum objednání, datum odeslání a datum zaplacení.
+\end{itemize}
+
+U pomalu se měnících dimenzí se často rozlišuje:
+\begin{itemize}
+  \item \term{SCD typ 1} -- změna přepíše původní hodnotu, historie se neuchová;
+  \item \term{SCD typ 2} -- vznikne nová verze řádku s platností od-do, historie se uchová;
+  \item \term{SCD typ 3} -- uchová se omezený počet historických hodnot ve sloupcích.
+\end{itemize}
+
+\subsection*{OLAP a multidimenzionální pohled}
+OLAP umožňuje analyzovat měřítka podle více dimenzí. Často se používá metafora \term{OLAP kostky}. Kostka není nutně fyzická databáze ve tvaru krychle; je to způsob, jak chápat data jako kombinaci měřítek, dimenzí a hierarchií.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.58\linewidth]{assets/images/business-intelligence/olap-cube.png}
+  \caption[OLAP kostka]{OLAP kostka. Popis obrázku: stejný ukazatel lze analyzovat podle více dimenzí, například času, produktu a regionu; výběrem části kostky vzniká konkrétní analytický pohled. Zdroj: \href{https://commons.wikimedia.org/wiki/File:Olap-3d-cube.png}{Wikimedia Commons}, autoři Margaret Rouse, olap.com a Guru99, licence CC BY-SA 4.0.}
+\end{figure}
+
+Základní OLAP operace:
+\begin{itemize}
+  \item \term{slice} -- výběr jedné hodnoty dimenze, například pouze rok 2025;
+  \item \term{dice} -- výběr podmnožiny podle více dimenzí, například roky 2024--2025, region Praha a kategorie elektronika;
+  \item \term{drill-down} -- přechod na detailnější úroveň hierarchie, například rok $\rightarrow$ měsíc $\rightarrow$ den;
+  \item \term{roll-up} -- agregace na vyšší úroveň, například den $\rightarrow$ měsíc $\rightarrow$ rok;
+  \item \term{pivot} -- změna uspořádání dimenzí v pohledu, například přesun produktu ze sloupců do řádků;
+  \item \term{drill-through} -- přechod ze souhrnu na detailní záznamy, které souhrn tvoří.
+\end{itemize}
+
+Typy OLAP:
+\begin{itemize}
+  \item \term{MOLAP} -- multidimenzionální úložiště s předpočítanými agregacemi, často velmi rychlé pro opakované dotazy;
+  \item \term{ROLAP} -- OLAP nad relační databází, typicky nad hvězdicovým nebo sněhovým schématem;
+  \item \term{HOLAP} -- hybridní přístup, který kombinuje relační detail s multidimenzionálními agregacemi.
+\end{itemize}
+
+Moderní BI nástroje často skrývají technické detaily OLAPu. Uživatel pracuje s reportem a slicery, ale pod tím běží model s dimenzemi, metrikami, filtry a agregacemi.
+
+\subsection*{Reporting, dashboardy a KPI}
+\term{Reporting} je pravidelná nebo jednorázová prezentace dat. Může mít podobu tabulek, grafů, PDF, webového reportu, datové sady nebo e-mailové distribuce.
+
+Základní typy reportingu:
+\begin{itemize}
+  \item \term{standardní reporting} -- předdefinované reporty s pravidelným během, například měsíční finanční report;
+  \item \term{ad hoc reporting} -- jednorázový dotaz vytvořený podle aktuální potřeby;
+  \item \term{self-service BI} -- uživatelé si tvoří vlastní pohledy nad schválenými daty;
+  \item \term{embedded BI} -- analytika je vložena do jiné aplikace;
+  \item \term{alerting} -- automatické upozornění při splnění podmínky, například překročení nákladů.
+\end{itemize}
+
+\term{Dashboard} je přehledová obrazovka, která sleduje důležité ukazatele. Nemá být skladištěm všech grafů. Dobrý dashboard:
+\begin{itemize}
+  \item má jasný účel a cílového uživatele;
+  \item rozlišuje přehledové metriky a diagnostický detail;
+  \item používá konzistentní definice ukazatelů;
+  \item ukazuje kontext, například plán, minulost nebo benchmark;
+  \item umožňuje filtrovat a rozkládat problém bez ztráty významu;
+  \item upozorňuje na výjimky, nezahlcuje dekorací.
+\end{itemize}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.90\linewidth]{assets/images/business-intelligence/marketing-dashboard.png}
+  \caption[Ukázka BI dashboardu]{Ukázka BI dashboardu. Popis obrázku: dashboard kombinuje klíčové metriky, časové řady a grafy segmentů do jedné přehledové obrazovky pro rychlé rozhodování. Zdroj: \href{https://commons.wikimedia.org/wiki/File:Marketing\_dashboard.png}{Wikimedia Commons}, autor HelicalInsight OpenSourceBI, licence CC BY-SA 4.0.}
+\end{figure}
+
+\term{KPI} -- \textit{Key Performance Indicator} -- je klíčový ukazatel výkonnosti. KPI musí mít jasnou definici, vlastníka, jednotku, periodicitu, cílovou hodnotu a pravidlo interpretace. Příklady:
+\begin{itemize}
+  \item měsíční tržby;
+  \item hrubá marže;
+  \item retence zákazníků;
+  \item počet reklamací;
+  \item průměrná doba doručení;
+  \item plnění rozpočtu.
+\end{itemize}
+
+Častá chyba je považovat každý graf za KPI. KPI je ukazatel svázaný s řízením výkonu, nikoli libovolná metrika v reportu.
+
+\subsection*{Sémantická vrstva a metriky}
+Sémantická vrstva je místo, kde se technická data překládají do obchodního jazyka. V malém BI řešení může být skrytá přímo v jednom reportu. Ve větší organizaci je samostatnou řízenou vrstvou, protože různé týmy potřebují používat stejné definice.
+
+Sémantická vrstva typicky obsahuje:
+\begin{itemize}
+  \item názvy a popisy metrik;
+  \item výpočty, například marže = tržby - náklady;
+  \item hierarchie, například produktová kategorie a produkt;
+  \item vztahy mezi tabulkami;
+  \item bezpečnostní pravidla a řádková oprávnění;
+  \item datové typy, formáty, jednotky a měny;
+  \item certifikaci nebo označení důvěryhodných datových sad.
+\end{itemize}
+
+V Power BI se tento koncept projevuje jako \term{sémantický model}. V Lookeru se modelovací vrstva definuje jazykem LookML. V Tableau se podobná role objevuje v publikovaných datových zdrojích, datových modelech a správě metrik. Princip je stejný: business uživatel se nemá učit fyzickou strukturu databáze, má pracovat s ověřeným významem dat.
+
+Bez sémantické vrstvy vzniká problém \uv{každý má svoji pravdu}. Týmy si samy definují tržby, aktivního zákazníka nebo marži, což vede ke konfliktům v reportech. Řízená sémantická vrstva podporuje princip \term{single source of truth}.
+
+\subsection*{Data quality a datová governance}
+BI je důvěryhodné jen tak, jak důvěryhodná jsou jeho data. \term{Data quality} řeší, zda jsou data úplná, přesná, konzistentní, aktuální, validní a jednoznačná. Pro BI jsou typické problémy:
+\begin{itemize}
+  \item duplicitní zákazníci;
+  \item různé kódy pro stejný produkt;
+  \item chybějící hodnoty v dimenzích;
+  \item nejednotné časové zóny a měny;
+  \item rozdíl mezi datem vytvoření a datem zaúčtování;
+  \item historické změny číselníků bez uchování platnosti;
+  \item ruční opravy mimo zdrojové systémy.
+\end{itemize}
+
+\term{Datová governance} je systém pravidel, rolí a procesů pro správu dat. V BI zahrnuje zejména:
+\begin{itemize}
+  \item \term{datové vlastnictví} -- kdo odpovídá za význam a kvalitu dat;
+  \item \term{data stewardship} -- praktická správa číselníků, definic a kvality;
+  \item \term{master data management} -- řízení kmenových dat, například zákazníků, produktů,
+  dodavatelů nebo organizačních jednotek, aby různé systémy používaly stejné identifikátory a významy;
+  \item \term{datový katalog} -- evidence datových sad, tabulek, metrik a jejich popisů;
+  \item \term{metadata} -- technické i business informace o datech;
+  \item \term{lineage} -- sledování původu dat a transformační cesty;
+  \item \term{přístupová práva} -- kdo smí vidět která data;
+  \item \term{certifikaci datových sad} -- označení schválených a podporovaných zdrojů;
+  \item \term{SLA} -- očekávaná dostupnost, frekvence obnovy a doba opravy.
+\end{itemize}
+
+Governance není protiklad self-service BI. Naopak, dobré self-service BI potřebuje schválené datové sady, jasné definice metrik a bezpečná práva. Bez governance samoobsluha rychle přejde do chaosu.
+
+\subsection*{Bezpečnost a ochrana dat}
+BI často zpřístupňuje citlivá data širokému okruhu uživatelů. Bezpečnost proto musí být součástí návrhu:
+\begin{itemize}
+  \item autentizace a autorizace uživatelů;
+  \item role-based access control, tedy oprávnění podle rolí;
+  \item row-level security, kdy uživatel vidí jen povolené řádky;
+  \item column-level security nebo maskování citlivých sloupců;
+  \item audit přístupů a změn;
+  \item šifrování dat při přenosu i uložení;
+  \item řízení exportů a sdílení reportů;
+  \item pravidla pro osobní údaje a compliance, například GDPR.
+\end{itemize}
+
+Příklad: obchodní ředitel může vidět všechny regiony, regionální manažer pouze svůj region a obchodník pouze vlastní zákazníky. Stejný report se tak může chovat různě podle identity uživatele.
+
+\subsection*{DWH, data lake a lakehouse}
+Moderní datová architektura často kombinuje datový sklad, data lake a lakehouse. Je důležité rozlišit jejich hlavní roli.
+
+\term{Data warehouse} je kurátorované relační analytické úložiště optimalizované pro BI, SQL dotazy, reporting a konzistentní metriky. Data jsou obvykle strukturovaná a transformovaná před použitím. Hodí se pro finanční reporting, manažerské dashboardy, regulované výstupy a stabilní podnikové ukazatele.
+
+\term{Data lake} je rozsáhlé úložiště surových nebo polozpracovaných dat v různých formátech. Může obsahovat strukturovaná, semi-strukturovaná i nestrukturovaná data: CSV, JSON, Parquet, logy, obrázky, texty nebo událostní data. Hodí se pro exploraci, machine learning, archivaci a práci s daty, jejichž využití ještě není přesně známé.
+
+\term{Lakehouse} kombinuje pružnost data lake s vlastnostmi datového skladu. Nad souborovým úložištěm přidává tabulkový formát, transakce, správu schématu, optimalizace dotazů a governance. Cílem je používat jednu platformu pro BI, pokročilou analytiku i datové inženýrství bez zbytečného kopírování dat.
+
+Praktické srovnání:
+\begin{itemize}
+  \item DWH je vhodný pro stabilní a dobře definované reporty.
+  \item Data lake je vhodný pro syrová, různorodá a objemná data.
+  \item Lakehouse je vhodný tam, kde organizace chce propojit BI a datovou vědu nad společnou datovou platformou.
+  \item DWH klade důraz na model před použitím dat.
+  \item Data lake klade důraz na uložení dat a pozdější interpretaci.
+  \item Lakehouse se snaží nabídnout obojí: otevřené uložení i řízené tabulky.
+\end{itemize}
+
+\subsection*{Technologické komponenty BI}
+BI řešení se skládá z více technologických komponent. V praxi nemusí být všechny oddělené, protože moderní cloudové platformy je často spojují do jedné služby.
+
+\term{Databázová a úložná vrstva}:
+\begin{itemize}
+  \item relační databáze a datové sklady;
+  \item sloupcová úložiště;
+  \item cloudové sklady;
+  \item objektová úložiště pro data lake;
+  \item formáty jako Parquet nebo Delta tabulky.
+\end{itemize}
+
+\term{Integrační vrstva}:
+\begin{itemize}
+  \item ETL a ELT nástroje;
+  \item datové pipeline;
+  \item konektory do aplikací a API;
+  \item plánování dávek;
+  \item streamové zpracování pro téměř reálný čas;
+  \item kontrola kvality dat a monitoring běhů.
+\end{itemize}
+
+\term{Modelovací vrstva}:
+\begin{itemize}
+  \item dimenzionální model;
+  \item sémantický model;
+  \item metriky a výpočty;
+  \item hierarchie a vztahy;
+  \item agregace a cache.
+\end{itemize}
+
+U interaktivních dashboardů se často používá \term{in-memory} zpracování, kdy je část datového modelu
+nebo agregací držena v operační paměti. Výhodou je velmi rychlá odezva při filtrování a drill-downu,
+nevýhodou jsou nároky na paměť, potřeba pravidelné obnovy a riziko, že uživatel pracuje se starší
+kopií dat, pokud refresh není dobře řízený.
+
+\term{Analytická a prezentační vrstva}:
+\begin{itemize}
+  \item reporty;
+  \item dashboardy;
+  \item ad hoc dotazy;
+  \item OLAP analýza;
+  \item embedded analytika;
+  \item notifikace a alerty.
+\end{itemize}
+
+\term{Governance a provoz}:
+\begin{itemize}
+  \item datový katalog;
+  \item lineage;
+  \item správa oprávnění;
+  \item monitoring obnovy;
+  \item verzování datových modelů;
+  \item testy kvality;
+  \item dokumentace metrik.
+\end{itemize}
+
+\subsection*{Moderní BI nástroje}
+BI nástroje se liší rozsahem, cílovou skupinou i technologickou filozofií. U zkoušky není nutné znát detailní konfiguraci každého produktu, ale je dobré umět vysvětlit jejich typickou roli.
+
+\term{Microsoft Power BI} je nástroj pro modelování, vizualizaci a sdílení reportů v ekosystému Microsoftu. Důležité pojmy jsou Power BI Desktop, Power BI Service, workspace, report, dashboard, semantic model, Power Query a DAX. Silnou stránkou je integrace s Excelem, Microsoft 365, Azure a Microsoft Fabric.
+
+\term{Tableau} je platforma zaměřená na vizuální analytiku a interaktivní práci s daty. Je známá silnými možnostmi vizualizace, explorace a tvorby dashboardů. Používá se pro business analýzu, datové příběhy a samoobslužnou analytiku.
+
+\term{Qlik Sense} používá asociativní analytický engine. Uživatel může procházet data interaktivně bez pevně dané cesty dotazování. Qlik je silný v samoobslužné exploraci, interaktivních dashboardech a práci s asociacemi mezi daty.
+
+\term{Looker} je BI platforma postavená kolem centrální sémantické vrstvy definované jazykem LookML. Důraz klade na opakovaně použitelné metriky, řízené datové modely a generování SQL nad databázemi.
+
+\term{Excel} je stále významný BI nástroj, zejména pro operativní analýzu, kontingenční tabulky a individuální práci. Jeho výhodou je dostupnost a znalost uživateli, rizikem je nekontrolované kopírování dat a nejednotné verze výpočtů.
+
+\term{Open-source a specializované nástroje} zahrnují například Apache Superset, Metabase nebo Grafana. Superset a Metabase se používají pro SQL reporting a dashboardy, Grafana hlavně pro metriky, monitoring a časové řady.
+
+Výběr nástroje by neměl začínat otázkou \uv{který dashboard vypadá nejlépe}. Důležitější je:
+\begin{itemize}
+  \item jak se nástroj napojí na datovou platformu;
+  \item jak spravuje metriky a datové modely;
+  \item jak řeší oprávnění a sdílení;
+  \item jak podporuje vývojový cyklus a verzování;
+  \item jak zvládá výkon, obnovu a velký počet uživatelů;
+  \item jak zapadá do dovedností organizace.
+\end{itemize}
+
+\subsection*{BI a pokročilá analytika}
+BI se tradičně soustředí na popis a diagnostiku: co se stalo a proč. Pokročilá analytika přidává predikci a doporučení: co se pravděpodobně stane a co udělat. V praxi se hranice stírá, protože BI nástroje často obsahují predikce, segmentaci, anomálie nebo přirozený jazyk.
+
+Vztah BI a data miningu:
+\begin{itemize}
+  \item BI poskytuje kvalitní data, metriky a kontext;
+  \item data mining a machine learning hledají vzory, segmenty, predikce a pravidla;
+  \item výsledky modelů se často vracejí do BI reportů jako skóre, doporučení nebo vysvětlení;
+  \item bez governance hrozí, že predikce bude interpretována bez znalosti datového původu.
+\end{itemize}
+
+Příklad: model predikuje pravděpodobnost odchodu zákazníka. BI dashboard potom ukazuje počet rizikových zákazníků podle segmentu, regionu a odpovědného obchodníka. Manažer nepotřebuje vidět trénovací kód modelu, ale potřebuje znát kvalitu modelu, pravidla obnovy a význam skóre.
+
+\subsection*{Výkon a provoz BI}
+BI systém musí být nejen správný, ale také použitelně rychlý. Výkon ovlivňuje:
+\begin{itemize}
+  \item model dat, zejména jasné rozdělení faktů a dimenzí;
+  \item velikost faktových tabulek a granularita;
+  \item počet a typ spojení;
+  \item sloupcové ukládání a komprese;
+  \item předpočítané agregace;
+  \item partitioning podle času nebo jiné vhodné dimenze;
+  \item inkrementální nahrávání místo plného přepočtu;
+  \item cache a materializované pohledy;
+  \item efektivní metriky a výpočty;
+  \item omezení zbytečně detailních vizualizací.
+\end{itemize}
+
+Provoz BI zahrnuje také monitoring. Je potřeba vědět, zda proběhla noční dávka, jak dlouho trvala obnova dat, které reporty jsou pomalé, kdo používá které datové sady a zda se nezměnila struktura zdrojového systému.
+
+Typické provozní metriky BI:
+\begin{itemize}
+  \item čas poslední úspěšné obnovy;
+  \item délka datové pipeline;
+  \item počet chybných záznamů;
+  \item dostupnost reportů;
+  \item průměrná doba načtení dashboardu;
+  \item počet aktivních uživatelů;
+  \item počet certifikovaných a necertifikovaných datových sad.
+\end{itemize}
+
+\subsection*{Postup tvorby BI řešení}
+Praktický návrh BI řešení může probíhat takto:
+\begin{enumerate}
+  \item Vyjasnit rozhodovací potřebu: kdo bude výstup používat a jaké rozhodnutí má podpořit.
+  \item Definovat metriky a dimenze: co přesně znamená tržba, marže, zákazník nebo aktivní smlouva.
+  \item Zmapovat zdroje dat a jejich kvalitu.
+  \item Navrhnout granularitu faktů a strukturu dimenzí.
+  \item Připravit integrační pipeline a pravidla transformace.
+  \item Vytvořit datový model a sémantickou vrstvu.
+  \item Navrhnout reporty a dashboardy podle uživatelských scénářů.
+  \item Ověřit čísla proti zdrojovým systémům a business vlastníkům.
+  \item Nastavit oprávnění, obnovu, monitoring a dokumentaci.
+  \item Zavést zpětnou vazbu a životní cyklus změn.
+\end{enumerate}
+
+Dobrý BI projekt nezačíná grafem, ale otázkou. Graf je až způsob odpovědi.
+
+\subsection*{Časté chyby}
+Časté chyby v BI:
+\begin{itemize}
+  \item reporty vznikají bez jasného rozhodovacího účelu;
+  \item metriky nejsou definované a každý tým počítá jinak;
+  \item BI se napojuje přímo na produkční databáze bez analytické vrstvy;
+  \item faktové a dimenzní atributy se míchají do jedné široké tabulky bez jasné granularity;
+  \item dashboard obsahuje příliš mnoho grafů a žádnou interpretaci priority;
+  \item chybí vlastník dat a pravidla kvality;
+  \item refresh dat je pomalý nebo nespolehlivý;
+  \item neřeší se bezpečnost exportů;
+  \item self-service BI nemá schválené datové sady;
+  \item uživatelé ztrácejí důvěru, protože čísla mezi reporty nesedí.
+\end{itemize}
+
+\pozor
+\begin{itemize}
+  \item BI není jen vizualizace. Vizualizace je až poslední vrstva nad datovou integrací, modelem a governance.
+  \item OLTP a OLAP mají rozdílný účel. OLTP podporuje provozní transakce, OLAP analytické dotazy.
+  \item Faktová tabulka obsahuje měření a cizí klíče do dimenzí. Dimenze obsahují popisný kontext.
+  \item Hvězdicové schéma je jednodušší a obvykle vhodnější pro BI nástroje. Sněhové schéma normalizuje dimenze, ale zvyšuje složitost.
+  \item Data lake není automaticky náhrada datového skladu. Bez modelu, kvality a metrik je to jen úložiště dat.
+  \item Self-service BI neznamená neřízené BI. Potřebuje sémantickou vrstvu, certifikované datové sady a governance.
+\end{itemize}
+
+\subsection*{Krátký příklad}
+Firma chce sledovat prodej v e-shopu. Zdrojová data jsou v e-shopové databázi, platební bráně, CRM a reklamních systémech. BI řešení může vypadat takto:
+\begin{itemize}
+  \item z e-shopu se extrahují objednávky, položky objednávek a produkty;
+  \item z CRM se doplní zákaznické segmenty;
+  \item z reklamních systémů se doplní náklady na kampaně;
+  \item staging uloží původní data pro audit;
+  \item transformace sjednotí měny, časová pásma, kódy produktů a zákazníky;
+  \item ve skladu vznikne faktová tabulka prodejů a dimenze času, produktu, zákazníka, kampaně a regionu;
+  \item sémantický model definuje tržby, marži, průměrnou hodnotu objednávky a konverzní poměr;
+  \item dashboard ukáže vývoj tržeb, marže a marketingové efektivity podle segmentů.
+\end{itemize}
+
+Manažer pak může začít na celkové tržbě za měsíc, provést drill-down na produktovou kategorii, vyfiltrovat konkrétní region a porovnat marži podle kampaní. To je typická hodnota BI: stejná data lze číst z více rozhodovacích pohledů.
+
+\subsection*{Shrnutí ke zkoušce}
+Business intelligence převádí podniková data na říditelné informace. Základní architektura zahrnuje zdrojové systémy, ETL nebo ELT, staging, ODS, datový sklad nebo lakehouse, sémantickou vrstvu a reportovací nástroje. Datový sklad je subjektově orientované, integrované, časově rozlišené a relativně neměnné úložiště pro rozhodování.
+
+Pro analytické modelování je klíčové rozlišit fakta a dimenze. Faktová tabulka obsahuje měřitelné události a dimenze dodávají kontext. Hvězdicové schéma je jednoduché a výkonné, sněhové schéma normalizuje dimenze. OLAP umožňuje multidimenzionální analýzu pomocí operací slice, dice, drill-down, roll-up a pivot.
+
+Moderní BI nástroje jako Power BI, Tableau, Qlik nebo Looker pomáhají vytvářet sémantické modely, reporty a dashboardy. Úspěšné BI ale nestojí pouze na nástroji. Potřebuje kvalitní data, jasné definice metrik, governance, bezpečnost, provozní monitoring a vazbu na skutečné rozhodování.
+
+\subsection*{Zdroje}
+\begin{itemize}
+  \item IBM:
+    \href{https://www.ibm.com/topics/business-intelligence}{What Is Business Intelligence?}.
+  \item Oracle:
+    \href{https://docs.oracle.com/cd/B13789_01/server.101/b10736/concept.htm}{Data Warehousing Concepts}.
+  \item Kimball Group:
+    \href{https://www.kimballgroup.com/2003/01/fact-tables-and-dimension-tables/}{Fact Tables and Dimension Tables}.
+  \item Microsoft Learn:
+    \href{https://learn.microsoft.com/en-us/power-bi/guidance/star-schema}{Understand star schema and the importance for Power BI}.
+  \item Microsoft Learn:
+    \href{https://learn.microsoft.com/en-us/power-bi/consumer/end-user-basic-concepts}{Power BI service basics: key concepts and terms}.
+  \item Google Cloud:
+    \href{https://docs.cloud.google.com/looker/docs/what-is-lookml}{Introduction to LookML}.
+  \item Tableau:
+    \href{https://help.tableau.com/current/tableau/en-us/tableau_product_overview.htm}{Tableau Product Overview}.
+  \item Qlik:
+    \href{https://help.qlik.com/en-US/sense/May2024/Subsystems/Hub/Content/Sense_Hub/Introduction/qlik-sense-product-family.htm}{Qlik Sense at a glance}.
+  \item Microsoft Fabric:
+    \href{https://www.microsoft.com/en-us/microsoft-fabric/resources/data-101/what-is-data-lake}{What is a data lake?}.
+  \item Azure Databricks:
+    \href{https://learn.microsoft.com/en-us/azure/databricks/lakehouse/}{What is a data lakehouse?}.
+  \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Datawarehouse.png}{Datawarehouse.png}.
+  \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Star-schema.png}{Star-schema.png}.
+  \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Snowflake-schema.png}{Snowflake-schema.png}.
+  \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Olap-3d-cube.png}{Olap-3d-cube.png}.
+  \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Marketing\_dashboard.png}{Marketing dashboard}.
 \end{itemize}
 
 \newpage

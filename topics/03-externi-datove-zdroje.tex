@@ -57,6 +57,8 @@ Veřejné registry & ARES, veřejný rejstřík, registr smluv, RÚIAN, insolven
 identifikace firem, vlastnické vazby, sídla, veřejné zakázky, riziko partnera \\
 Open data portály & data.gov.cz, data.europa.eu, městské a krajské portály &
 strojově čitelné datové sady, geodata, doprava, životní prostředí \\
+Výzkumné a datové repozitáře & Kaggle, UCI Machine Learning Repository, AWS Open Data &
+benchmarkové datasety, prototypy modelů, výuka, opakovatelné experimenty \\
 Komerční databáze & tržní databáze, ratingové databáze, kreditní informace, panelová data &
 tržní podíly, bonita, konkurence, cílení kampaní \\
 Web a dokumenty & weby firem, ceníky, e-shopy, výroční zprávy, tiskové zprávy, nabídky práce &
@@ -80,6 +82,9 @@ U státnic je užitečné umět uvést konkrétní zdroje a říct, k čemu se h
   správy a jejich metadata.
   \item \term{data.europa.eu} - oficiální evropský portál dat; sjednocuje metadata z institucí EU
   i členských států a obsahuje také datové sady s vysokou hodnotou.
+  \item \term{EU-SILC, ESS a VŠIT} - příklady sekundárních šetření pro sociální, ekonomické a
+  digitální chování domácností a jednotlivců; jsou užitečné, když potřebujeme standardizovanou
+  metodiku a srovnání v čase nebo mezi zeměmi.
   \item \term{ARES} - administrativní registr ekonomických subjektů; umožňuje vyhledávat údaje
   o ekonomických subjektech registrovaných v ČR a nabízí veřejné API.
   \item \term{Veřejný rejstřík a sbírka listin} - zákonem stanovené údaje o právnických osobách,
@@ -170,12 +175,19 @@ Přístup k externím zdrojům může mít různé podoby:
   \item \term{přímý databázový přístup} - typický u partnerských nebo placených zdrojů;
   \item \term{web scraping} - automatizované získávání dat z HTML stránky, pokud neexistuje vhodné
   API a pokud to dovolují právní, technická a etická omezení;
+  \item \term{wrapper} - extrakční pravidla nebo programová vrstva, která z webu či dokumentu udělá
+  strukturované záznamy, například ceník konkurence převede na tabulku produktů;
   \item \term{nákup dat} - komerční licence k datům, často s lepší dokumentací, podporou a SLA.
 \end{itemize}
 
 Pokud existuje API, je obvykle lepší než scraping. API je stabilnější, má jasnější strukturu, může
 vracet metadata a bývá navrženo pro strojové zpracování. Scraping je křehčí, protože změna HTML
 šablony může rozbít extrakční pravidla.
+
+Při spojování externích a interních zdrojů je často potřeba \term{schema matching}, tedy mapování
+polí se stejným významem, ale jiným názvem nebo granularitou. Například externí dataset může používat
+\uv{company\_id}, interní systém IČO a CRM vlastní zákaznický identifikátor. Bez správného mapování
+vznikají duplicity, chybné vazby a falešně přesné závěry.
 
 \subsection*{Napojení externích zdrojů do datové pipeline}
 Externí data je vhodné zapojovat stejně disciplinovaně jako interní zdroje. Typický tok:

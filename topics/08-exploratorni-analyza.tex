@@ -198,6 +198,18 @@ Z = XV,
 \]
 kde $V$ je matice vlastních vektorů.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\linewidth]{assets/images/exploratorni-analyza/pca-gaussian-scatter.png}
+  \caption[PCA a směry největší variability]{PCA hledá nové osy tak, aby první hlavní komponenta
+  zachytila co největší rozptyl dat a další komponenty vysvětlovaly zbývající variabilitu v
+  kolmých směrech. Popis obrázku: šedé body tvoří dvourozměrný mrak a šipky ukazují směry hlavních
+  komponent. Zdroj obrázku: Ben FrantzDale,
+  \href{https://commons.wikimedia.org/wiki/File:GaussianScatterPCA.png}{Wikimedia Commons},
+  licence CC BY-SA 3.0 / GFDL.}
+  \label{fig:pca-gaussian-scatter}
+\end{figure}
+
 \subsubsection*{Vysvětlená variabilita}
 
 Celková variabilita:
@@ -374,6 +386,17 @@ Vysoká absolutní hodnota:
 |\lambda_{jk}|
 \]
 znamená, že proměnná silně souvisí s daným faktorem.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.88\linewidth]{assets/images/exploratorni-analyza/factor-analysis-loadings.png}
+  \caption[Faktorové zátěže]{Faktorové zátěže ukazují, jak silně jsou pozorované proměnné spojeny
+  s latentními faktory. Popis obrázku: šipky reprezentují proměnné a jejich souřadnice vůči dvěma
+  faktorům; délka a směr šipky pomáhají interpretovat faktorovou strukturu. Zdroj obrázku:
+  Chamaemelum, \href{https://commons.wikimedia.org/wiki/File:Factoranaly.png}{Wikimedia Commons},
+  public domain chart.}
+  \label{fig:factor-analysis-loadings}
+\end{figure}
 
 \subsubsection*{Komunalita a unikátnost}
 
@@ -576,6 +599,17 @@ D_c^{-1/2}V\Delta.
 
 V praxi se většinou zobrazují první dvě dimenze.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\linewidth]{assets/images/exploratorni-analyza/correspondence-analysis-biplot.png}
+  \caption[Korespondenční mapa]{Korespondenční mapa zobrazuje řádkové a sloupcové kategorie v
+  nízkodimenzionálním prostoru podle jejich profilů. Popis obrázku: modré body/šipky ukazují
+  řádkové kategorie a červené sloupcové kategorie; vzdálenost od středu signalizuje silnější
+  příspěvek k asociaci. Zdroj obrázku: Sigbert,
+  \href{https://commons.wikimedia.org/wiki/File:BiplotCA.svg}{Wikimedia Commons}, licence CC0 1.0.}
+  \label{fig:correspondence-analysis-biplot}
+\end{figure}
+
 \subsubsection*{Interpretace}
 
 \begin{itemize}
@@ -651,6 +685,18 @@ S_W^{-1}(\bar{\mathbf{x}}_1-\bar{\mathbf{x}}_2).
 
 Tedy směr diskriminační funkce je dán rozdílem skupinových průměrů, upraveným o vnitroskupinovou
 kovarianci.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.76\linewidth]{assets/images/exploratorni-analyza/lda-projection-static.png}
+  \caption[LDA projekce]{Lineární diskriminační analýza hledá projekci, ve které jsou známé skupiny
+  co nejlépe oddělené vzhledem k variabilitě uvnitř skupin. Popis obrázku: zelené a červené body
+  jsou dvě skupiny a černá osa ukazuje směr projekce použitý pro diskriminaci. Zdroj obrázku:
+  Amélia O. F. da S.,
+  \href{https://commons.wikimedia.org/wiki/File:LDA\_Projection\_Illustration\_01.gif}{Wikimedia Commons},
+  licence CC BY-SA 4.0; pro PDF použit statický snímek z animace.}
+  \label{fig:lda-projection}
+\end{figure}
 
 \subsubsection*{Více skupin}
 
@@ -891,7 +937,15 @@ Algoritmus iterativně:
     \item Použití diskriminační analýzy bez kontroly předpokladů a bez validace klasifikace.
 \end{itemize}
 
-\subsection*{Shrnutí otázky}
+\pozor
+U zkoušky je důležité rozlišit, co která metoda optimalizuje. PCA maximalizuje vysvětlenou variabilitu,
+ne separaci skupin ani vztah k cílové proměnné. Faktorová analýza není jen \uv{jiný název pro PCA},
+protože pracuje s latentními faktory a unikátní variabilitou. Korespondenční analýza se používá pro
+kontingenční tabulky a vzdálenosti mezi řádkovými a sloupcovými body se nečtou stejně přímo jako
+vzdálenosti uvnitř jednoho typu bodů. Diskriminační analýza je supervised metoda, a proto vyžaduje
+známé skupiny a validaci klasifikační úspěšnosti.
+
+\subsection*{Shrnutí ke zkoušce}
 
 Exploratorní analýza slouží k pochopení dat, nalezení vzorů, odhalení problémů a přípravě dat pro další
 modelování. Redukční metody pomáhají zjednodušit složitá data.
@@ -930,5 +984,25 @@ J(\mathbf{a})
 \]
 
 Všechny tyto metody jsou citlivé na kvalitu dat, chybějící hodnoty, outliery a škálování proměnných.
+
+\subsection*{Zdroje}
+\begin{itemize}
+    \item NIST/SEMATECH e-Handbook of Statistical Methods:
+    \href{https://itl.nist.gov/div898/handbook/eda/eda.htm}{Exploratory Data Analysis}.
+    \item scikit-learn User Guide:
+    \href{https://scikit-learn.org/stable/modules/decomposition.html}{Decomposing signals in components}.
+    \item scikit-learn User Guide:
+    \href{https://scikit-learn.org/stable/modules/lda_qda.html}{Linear and Quadratic Discriminant Analysis}.
+    \item R Documentation, FactoMineR:
+    \href{https://search.r-project.org/CRAN/refmans/FactoMineR/html/CA.html}{Correspondence Analysis}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:GaussianScatterPCA.png}{File:GaussianScatterPCA.png}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Factoranaly.png}{File:Factoranaly.png}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:BiplotCA.svg}{File:BiplotCA.svg}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:LDA\_Projection\_Illustration\_01.gif}{File:LDA\_Projection\_Illustration\_01.gif}.
+\end{itemize}
 
 \newpage

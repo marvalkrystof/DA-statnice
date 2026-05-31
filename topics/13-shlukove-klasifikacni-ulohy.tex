@@ -27,6 +27,10 @@ který dokáže přiřadit nová pozorování do správné třídy.
     \item klient je dobrý / rizikový žadatel o úvěr.
 \end{itemize}
 
+Klasifikace je vhodná tehdy, když máme historická data s už známou třídou a chceme rozhodnout o novém
+případu. U zkoušky je důležité odlišit ji od shlukování: u klasifikace jsou třídy předem dané, u shlukování
+se skupiny teprve hledají.
+
 \subsection*{Základní postup klasifikace}
 
 \begin{enumerate}
@@ -38,6 +42,39 @@ který dokáže přiřadit nová pozorování do správné třídy.
     \item případně ladit hyperparametry,
     \item použít model na nové objekty.
 \end{enumerate}
+
+\subsection*{Hodnocení klasifikace}
+
+Klasifikační model se nehodnotí jen podle chyby na trénovacích datech. Důležitá je chyba na validační nebo
+testovací množině, protože ta lépe ukazuje generalizaci na nová data.
+
+Pro binární klasifikaci se používá confusion matrix:
+\[
+\begin{array}{c|cc}
+ & \text{Skutečně pozitivní} & \text{Skutečně negativní}\\
+\hline
+\text{Predikováno pozitivní} & TP & FP\\
+\text{Predikováno negativní} & FN & TN
+\end{array}
+\]
+
+Z ní se počítají například:
+\[
+Accuracy=\frac{TP+TN}{TP+FP+FN+TN},
+\]
+\[
+Precision=\frac{TP}{TP+FP},
+\qquad
+Recall=\frac{TP}{TP+FN},
+\]
+\[
+F_1=
+2\cdot
+\frac{Precision\cdot Recall}{Precision+Recall}.
+\]
+
+U nevyvážených tříd může být accuracy zavádějící. Například u 1 \% podvodů bude model, který vždy predikuje
+``nepodvod'', mít accuracy 99 \%, ale prakticky žádnou hodnotu pro detekci podvodů.
 
 \subsection*{Rozhodovací stromy}
 
@@ -63,9 +100,30 @@ Strom vytváří pravidla typu:
 
 Výhodou stromů je, že jsou snadno interpretovatelné a lze je převést na pravidla nebo rozhodovací tabulky.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.58\linewidth]{assets/images/shlukove-klasifikacni-ulohy/decision-tree-cart-titanic.png}
+  \caption[CART rozhodovací strom]{Ukázka jednoduchého klasifikačního stromu typu CART. Popis obrázku:
+  vnitřní uzly testují atributy, větve odpovídají výsledkům testu a listy dávají predikci třídy. Strom je
+  dobře čitelný, ale při velké hloubce se snadno přizpůsobí náhodným detailům trénovacích dat. Zdroj
+  obrázku: Stephen Milborrow,
+  \href{https://commons.wikimedia.org/wiki/File:CART\_tree\_titanic\_survivors.png}{Wikimedia Commons},
+  licence CC BY-SA 3.0 nebo GFDL 1.2.}
+  \label{fig:cart-tree-titanic}
+\end{figure}
+
+\paragraph{Predikce v listu.}
+Klasifikační strom obvykle predikuje většinovou třídu v listu. Pravděpodobnost třídy lze odhadnout jako podíl
+pozorování dané třídy v listu:
+\[
+\hat{P}(Y=k\mid x\in L)
+=
+\frac{n_{Lk}}{n_L}.
+\]
+
 \subsection*{TDIDT}
 
-Materiály pracují s třídou algoritmů \term{TDIDT}:
+Do rodiny algoritmů \term{TDIDT} patří postupy založené na indukci stromu shora dolů:
 \[
 \text{Top-Down Induction of Decision Trees}.
 \]
@@ -78,6 +136,9 @@ Obecný postup:
     \item v každém poduzlu postup opakujeme,
     \item končíme, když je uzel dostatečně čistý nebo nelze dále dělit.
 \end{enumerate}
+
+TDIDT je greedy algoritmus: v každém uzlu zvolí lokálně nejlepší rozdělení a už se k němu nevrací. Proto je
+rychlý a srozumitelný, ale nemusí najít globálně nejlepší strom.
 
 Příklady algoritmů:
 \begin{itemize}
@@ -351,7 +412,8 @@ Nevýhody:
     \item sklon k přeučení,
     \item nestabilita -- malá změna dat může změnit strom,
     \item preferování některých typů atributů,
-    \item horší predikční výkon než ensemble metody.
+    \item u samotného stromu často slabší predikční výkon než u ensemble metod, například náhodných lesů
+    nebo boostingu.
 \end{itemize}
 
 \subsection*{Shlukování}
@@ -373,6 +435,22 @@ Shluk by měl být:
     \item externě odlišný,
     \item pokud možno izolovaný.
 \end{itemize}
+
+\subsection*{Typy shlukovacích metod}
+
+Shlukovací algoritmy lze dělit podle toho, jakou strukturu shluků předpokládají:
+
+\begin{itemize}
+    \item \textbf{particionální metody} -- přímo rozdělí data do $k$ shluků, typicky k-means,
+    \item \textbf{hierarchické metody} -- vytvářejí strom sloučení nebo dělení, výsledkem je dendrogram,
+    \item \textbf{hustotní metody} -- hledají oblasti vysoké hustoty oddělené řídkými oblastmi, například
+    DBSCAN,
+    \item \textbf{modelové metody} -- předpokládají pravděpodobnostní model dat, například Gaussian mixture
+    models.
+\end{itemize}
+
+Volba metody závisí na tvaru shluků, měřítku dat, počtu pozorování, šumu, outlierech a na tom, zda potřebujeme
+předem zadat počet shluků.
 
 \subsection*{Míry vzdálenosti a podobnosti}
 
@@ -448,6 +526,16 @@ Postup:
     \item opakujeme, dokud se přiřazení nemění nebo není dosažen limit iterací.
 \end{enumerate}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.94\linewidth]{assets/images/shlukove-klasifikacni-ulohy/k-means-iterations.png}
+  \caption[K-means iterace]{Iterativní průběh k-means. Popis obrázku: algoritmus začne inicializací
+  centroidů, poté střídá přiřazení bodů k nejbližšímu centroidu a přepočet centroidů. Končí, když se
+  přiřazení nebo centroidy přestanou měnit. Zdroj obrázku: Mquantin,
+  \href{https://commons.wikimedia.org/wiki/File:K-means.png}{Wikimedia Commons}, licence CC BY-SA 4.0.}
+  \label{fig:k-means-iterations}
+\end{figure}
+
 \subsubsection*{Parametry k-means}
 
 \begin{itemize}
@@ -518,6 +606,18 @@ Vyšší hodnota znamená lepší přiřazení objektu ke shluku.
 
 Hierarchické shlukování vytváří hierarchii shluků. Výsledkem je dendrogram.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\linewidth]{assets/images/shlukove-klasifikacni-ulohy/hierarchical-clustering-dendrogram.png}
+  \caption[Dendrogram hierarchického shlukování]{Dendrogram hierarchického shlukování. Popis obrázku:
+  jednotlivá pozorování jsou listy stromu a vnitřní uzly ukazují postupná sloučení shluků. Vodorovný nebo
+  svislý řez dendrogramem určuje počet zvolených shluků; čím vyšší je spojení, tím vzdálenější shluky se
+  slučují. Zdroj obrázku: Thebiologyprimer,
+  \href{https://commons.wikimedia.org/wiki/File:UPGMA\_Dendrogram\_Hierarchical.svg}{Wikimedia Commons},
+  licence CC BY-SA 4.0.}
+  \label{fig:hierarchical-dendrogram}
+\end{figure}
+
 \subsubsection*{Aglomerativní shlukování}
 
 Postup zdola nahoru:
@@ -573,6 +673,27 @@ D(C_g,C_h)=d(\mu_g,\mu_h).
 
 Wardova metoda minimalizuje nárůst vnitroshlukového součtu čtverců při sloučení shluků.
 
+\subsection*{DBSCAN}
+
+DBSCAN je hustotní shlukovací algoritmus. Nevyžaduje předem zadat počet shluků a umí označit izolované body
+jako šum.
+
+Základní parametry:
+\begin{itemize}
+    \item $\varepsilon$ -- maximální vzdálenost okolí bodu,
+    \item $minPts$ -- minimální počet sousedů nutný pro jádrový bod.
+\end{itemize}
+
+Typy bodů:
+\begin{itemize}
+    \item \term{core point} -- má v $\varepsilon$-okolí alespoň $minPts$ bodů,
+    \item \term{border point} -- neleží v hustém jádru, ale je dosažitelný z jádrového bodu,
+    \item \term{noise point} -- není dosažitelný z žádného hustého shluku.
+\end{itemize}
+
+Výhodou DBSCAN je schopnost najít i nekulovité shluky a odlišit šum. Nevýhodou je citlivost na volbu
+$\varepsilon$ a horší chování při shlucích s velmi rozdílnou hustotou.
+
 \subsection*{Asociační pravidla}
 
 Asociační pravidla hledají vztahy mezi položkami nebo hodnotami atributů. Typické použití je analýza
@@ -589,6 +710,9 @@ Například:
 \]
 
 Antecedent je levá strana pravidla, sukcedent je pravá strana.
+
+Na rozdíl od klasifikace nemusí být předem určena cílová proměnná. Pravidla se typicky hledají proto, aby
+odhalila zajímavé souvýskyty, například pro cross-selling, doporučování, kontrolu kvality nebo popis segmentů.
 
 \subsection*{Transakční data}
 
@@ -632,6 +756,18 @@ Kde:
     \item $d$ nesplňuje ani antecedent, ani sukcedent.
 \end{itemize}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.70\linewidth]{assets/images/shlukove-klasifikacni-ulohy/association-rule-venn.png}
+  \caption[Vztah antecedentu a sukcedentu]{Vennův diagram pro pravidlo $X\Rightarrow Y$. Popis obrázku:
+  levý kruh odpovídá transakcím obsahujícím antecedent $X$, pravý kruh transakcím obsahujícím sukcedent
+  $Y$ a průnik podporuje pravidlo $X\Rightarrow Y$. Čím větší je průnik vzhledem k levému kruhu, tím vyšší
+  je confidence pravidla. Zdroj obrázku: Mekaylatravis,
+  \href{https://commons.wikimedia.org/wiki/File:Association\_Rule\_Mining\_Venn\_Diagram.png}{Wikimedia
+  Commons}, licence CC BY-SA 4.0.}
+  \label{fig:association-rule-venn}
+\end{figure}
+
 \subsection*{Základní charakteristiky pravidel}
 
 Podpora:
@@ -652,9 +788,18 @@ P(Suc|Ant)
 \frac{a}{a+b}.
 \]
 
-Coverage:
+Coverage, tedy podpora antecedentu:
 \[
 coverage(Ant\Rightarrow Suc)
+=
+P(Ant)
+=
+\frac{a+b}{a+b+c+d}.
+\]
+
+Recall, pokud pravidlo používáme jako klasifikační pravidlo pro třídu $Suc$:
+\[
+recall(Ant\Rightarrow Suc)
 =
 P(Ant|Suc)
 =
@@ -676,6 +821,10 @@ Interpretace liftu:
     \item $lift=1$ znamená nezávislost,
     \item $lift<1$ znamená negativní asociaci.
 \end{itemize}
+
+\paragraph{Pozor na confidence.}
+Vysoká confidence sama o sobě nestačí. Pokud je sukcedent velmi častý, může mít pravidlo vysokou confidence
+i bez skutečné asociace. Proto se sleduje i support a lift.
 
 \subsection*{Apriori algoritmus}
 
@@ -721,6 +870,20 @@ Pravidlo se ponechá, pokud:
 confidence(A\Rightarrow X\setminus A)\geq min\_confidence.
 \]
 
+\paragraph{Proč Apriori šetří výpočet.}
+Počet možných itemsetů roste exponenciálně s počtem položek. Apriori využívá antimonotónní vlastnost podpory:
+jakmile množina není častá, její nadmnožiny už nemohou být časté. Díky tomu se mnoho kandidátů vůbec nemusí
+procházet v databázi.
+
+\paragraph{Praktické nastavení.}
+Příliš nízký $min\_support$ vytvoří mnoho pravidel a výpočet může být drahý. Příliš vysoký $min\_support$
+naopak zahodí vzácné, ale důležité vztahy, například u fraud detekce. Příliš nízký $min\_confidence$ dává
+slabá pravidla; příliš vysoký může potlačit pravidla s dobrým liftem.
+
+\paragraph{Alternativy.}
+Známou alternativou je FP-Growth, který komprimuje transakční databázi do FP-tree a generuje časté itemsety
+bez opakovaného vytváření velkého množství kandidátů.
+
 \subsection*{GUHA a LISp-Miner}
 
 GUHA je česká tradice dobývání znalostí z databází. Kombinuje generování hypotéz s jejich ověřováním.
@@ -737,6 +900,16 @@ Ant \Rightarrow class.
 
 Z pravidel se vytvoří klasifikátor. Pravidla se typicky řadí podle spolehlivosti, podpory a jednoduchosti.
 
+U CBA se často pracuje s uspořádaným seznamem pravidel:
+\begin{enumerate}
+    \item pravidla se seřadí podle confidence, při shodě podle supportu a délky,
+    \item při predikci se použije první pravidlo, které pokryje daný objekt,
+    \item pokud žádné pravidlo nepokryje objekt, použije se defaultní pravidlo, typicky většinová třída.
+\end{enumerate}
+
+Výhodou CBA je interpretovatelnost. Nevýhodou je nutnost pracovat s nominálními položkami; numerické
+proměnné se proto často diskretizují do intervalů.
+
 \subsection*{Srovnání klasifikace, shlukování a asociačních pravidel}
 
 \begin{itemize}
@@ -750,14 +923,27 @@ Z pravidel se vytvoří klasifikátor. Pravidla se typicky řadí podle spolehli
     nehledáme třídy ani shluky, ale vztahy mezi položkami nebo atributy.
 \end{itemize}
 
-\subsection*{Shrnutí otázky}
+\subsection*{Pozor u zkoušky}
+
+\begin{itemize}
+    \item U klasifikace je cílová třída známá v trénovacích datech; u shlukování žádnou cílovou třídu nemáme.
+    \item Rozhodovací strom je interpretovatelný, ale greedy a nestabilní. Proti přeučení se používá pruning,
+    omezení hloubky, minimální velikost listu nebo ensemble metody.
+    \item Information gain preferuje atributy s mnoha hodnotami, proto C4.5 používá gain ratio.
+    \item K-means vyžaduje předem zadat $k$ a je citlivý na škálování, inicializaci a outliery.
+    \item Dendrogram neříká automaticky jediný správný počet shluků; počet vznikne až volbou řezu.
+    \item U asociačních pravidel nehodnotit jen confidence. Důležité jsou support a lift.
+\end{itemize}
+
+\subsection*{Shrnutí ke zkoušce}
 
 Klasifikační úlohy přiřazují objekty do předem známých tříd. Rozhodovací stromy jsou interpretovatelné
 klasifikátory, které postupně dělí data podle atributů. ID3 používá entropii a information gain, C4.5 přidává
 gain ratio, podporu spojitých atributů a pruning. Stromy jsou srozumitelné, ale snadno se přeučí.
 
 Shlukování je učení bez učitele. Cílem je najít homogenní a dobře oddělené skupiny. K-means minimalizuje
-vzdálenost objektů od centroidů, hierarchické metody vytvářejí dendrogram.
+vzdálenost objektů od centroidů, hierarchické metody vytvářejí dendrogram a DBSCAN hledá husté oblasti
+oddělené řídkými oblastmi.
 
 Asociační pravidla hledají souvislosti typu:
 \[
@@ -765,5 +951,29 @@ Ant \Rightarrow Suc.
 \]
 Hodnotí se pomocí podpory, confidence a liftu. Apriori používá vlastnost, že nadmnožina nečasté množiny
 nemůže být častá.
+
+\subsection*{Zdroje}
+
+\begin{itemize}
+    \item scikit-learn User Guide:
+    \href{https://scikit-learn.org/stable/modules/tree.html}{Decision Trees}.
+    \item scikit-learn User Guide:
+    \href{https://scikit-learn.org/stable/modules/clustering.html}{Clustering}.
+    \item mlxtend User Guide:
+    \href{https://rasbt.github.io/mlxtend/user\_guide/frequent\_patterns/apriori/}{Apriori}.
+    \item mlxtend User Guide:
+    \href{https://rasbt.github.io/mlxtend/user\_guide/frequent\_patterns/association\_rules/}{Association
+    rules}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:CART\_tree\_titanic\_survivors.png}{CART tree titanic
+    survivors}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:K-means.png}{K-means}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:UPGMA\_Dendrogram\_Hierarchical.svg}{UPGMA dendrogram}.
+    \item Wikimedia Commons:
+    \href{https://commons.wikimedia.org/wiki/File:Association\_Rule\_Mining\_Venn\_Diagram.png}{Association
+    rule mining Venn diagram}.
+\end{itemize}
 
 \newpage
