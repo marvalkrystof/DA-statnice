@@ -1,46 +1,401 @@
 \section{Etika a regulace při sběru a uchovávání dat}
 
+\subsection*{Smysl etiky a regulace v datové analytice}
+Datová analytika nepracuje jen s technickými záznamy. Data mohou popisovat lidi, jejich chování,
+zdraví, finance, názory, polohu, práci nebo vztahy. Výstupy analýz mohou ovlivnit cenu služby,
+schválení úvěru, výběr uchazeče o práci, cílení reklamy, interní kontrolu zaměstnanců nebo veřejné
+rozhodování. Proto nestačí otázka, zda data umíme získat a zpracovat. Je nutné řešit také to, zda
+je takové zpracování zákonné, přiměřené, bezpečné, vysvětlitelné a společensky přijatelné.
+
+\term{Regulace} stanoví minimální závazná pravidla. V evropském prostředí jde hlavně o GDPR, český
+zákon č. 110/2019 Sb., o zpracování osobních údajů, pravidla pro elektronickou komunikaci a nově také
+AI Act u vybraných systémů umělé inteligence. \term{Etika} jde dál než samotná zákonnost. Ptá se,
+zda je zpracování férové, zda lidé rozumějí dopadům, zda nedochází k diskriminaci, zda se s daty
+nepracuje invazivně a zda analytik nepřekračuje účel, pro který byla data získána.
+
 \subsection*{Informační etika}
-Materiály definují informační etiku jako oblast morálky uplatňovanou při vzniku, šíření, transformaci, ukládání, vyhledávání, využívání a organizaci informací. Pro datovou analytiku je to přímo použitelné: analytik nepracuje jen s čísly, ale s informacemi, které mohou ovlivnit lidi, organizace i rozhodování.
+\term{Informační etika} je oblast morálky spojená se vznikem, šířením, transformací, ukládáním,
+vyhledáváním, využíváním a organizací informací. Pro datovou analytiku je přímo použitelná: analytik
+nepracuje s neutrálními čísly, ale s informacemi, které mohou mít dopad na lidi, organizace a veřejné
+rozhodování.
 
-Informační etika vytváří rámec pro posuzování práce s informacemi a dopadů informačních technologií na společnost. Týká se knihovnictví, informatiky, publikační činnosti, žurnalistiky, ale v širším smyslu všech činností souvisejících s informacemi. Pro sběr a uchovávání dat je klíčové, že data mohou zasahovat do soukromí, vlastnictví, přístupu k informacím i přesnosti rozhodování.
+Typické etické otázky:
+\begin{itemize}
+  \item je sběr dat přiměřený účelu, nebo se sbírá vše \uv{pro jistotu};
+  \item vědí lidé, že jsou jejich údaje zpracovávány a k čemu;
+  \item lze výstup analýzy rozumně vysvětlit člověku, kterého se týká;
+  \item nevede použitý model k nepřímé diskriminaci určité skupiny;
+  \item jsou data přesná a aktuální, nebo mohou poškodit člověka chybným závěrem;
+  \item existuje odpovědná osoba, auditní stopa a možnost nápravy;
+  \item je riziko úniku dat úměrně ošetřené.
+\end{itemize}
 
-\subsection*{Masonovy čtyři oblasti informační etiky}
-Materiály uvádějí čtyři oblasti podle Richarda O. Masona. Pro státnice je dobré je znát jako rámec PAPA: Privacy, Accuracy, Property, Accessibility.
+\subsection*{Masonův rámec PAPA}
+Pro základní strukturu odpovědi se hodí Masonův rámec PAPA: \textit{Privacy, Accuracy, Property,
+Accessibility}.
 
-\term{Soukromí} řeší, jaké informace si lidé mohou ponechat pro sebe, jaké informace musí nebo mohou sdílet a za jakých podmínek. ICT zvyšují možnosti sledování, ukládání a kombinování dat. V analytice to znamená řešit, zda sbíraná data nejsou nepřiměřeně citlivá, zda je uživatel informován a zda lze data anonymizovat nebo pseudonymizovat.
+\term{Privacy - soukromí} řeší, jaké informace si lidé mohou ponechat pro sebe, jaké informace se o
+nich smí sbírat a za jakých podmínek. V analytice sem patří sledování chování uživatelů, spojování
+dat z více zdrojů, práce s polohou, profilování a citlivé segmentace.
 
-\term{Přesnost informací} se týká autenticity, správnosti a věrnosti informací. Analytik by měl pracovat s datovou kvalitou: úplnost, přesnost, konzistence, validita, včasnost, unikátnost a integrita. Chybná data mohou vést k chybným rozhodnutím.
+\term{Accuracy - přesnost} se týká správnosti, úplnosti a aktuálnosti informací. Chybná data mohou
+vést k chybnému rozhodnutí. Typickým problémem je zastaralý záznam v CRM, špatné spárování osob,
+duplicita, zkreslený trénovací dataset nebo model s vysokou chybovostí pro určitou skupinu.
 
-\term{Vlastnictví informací} řeší, kdo data vlastní, kdo má právo je používat a za jakých podmínek. V datové analytice sem patří autorská práva, licence, obchodní tajemství, smluvní omezení datových sad a odpovědnost za sdílení datasetů.
+\term{Property - vlastnictví a práva k informacím} řeší, kdo má právo data používat, sdílet, prodávat,
+licencovat nebo zveřejnit. Patří sem autorská práva, databázová práva, obchodní tajemství, licence
+datových sad, smluvní omezení API a práva subjektů údajů.
 
-\term{Dostupnost informací} řeší, kdo má k datům přístup a za jakých podmínek. Souvisí s digitální propastí, oprávněními, transparentností a spravedlivým přístupem. V organizaci se promítá do řízení přístupových práv, auditů a bezpečnostních pravidel.
+\term{Accessibility - dostupnost} řeší, kdo má k informacím přístup a kdo je z přístupu vyloučen.
+V organizaci se promítá do řízení oprávnění, rolí, auditních logů, principu need-to-know a dostupnosti
+dat pro oprávněné uživatele. Ve společnosti souvisí s digitální propastí a transparentností veřejných
+informací.
 
 \subsection*{Mikroetické a makroetické problémy}
-Mikroetické problémy se týkají chování jednotlivců v informačním procesu. Materiály uvádějí například soukromí, copyright, zabezpečení, počítačovou kriminalitu, tok dat přes hranice nebo tajení a falšování informací. Pro analytika to znamená nezneužívat přístup k datům, nemanipulovat výsledky, nepřivlastňovat si cizí data a dodržovat pravidla bezpečnosti.
+\term{Mikroetické problémy} se týkají chování jednotlivce nebo konkrétní organizace. Analytik by
+neměl zneužívat přístup k datům, vyhledávat informace bez pracovního důvodu, manipulovat výsledky,
+zamlčovat nejistotu, kopírovat data mimo schválené prostředí ani obcházet bezpečnostní pravidla.
 
-Makroetické problémy se týkají dopadu informačních technologií a dat na společnost. U datové analytiky jde například o automatizované rozhodování, diskriminaci modelů, masové sledování, nerovný přístup k informacím, dopady chybných predikcí a odpovědnost organizací za používání dat.
+\term{Makroetické problémy} se týkají širších dopadů dat a technologií na společnost. Patří sem
+masové sledování, automatizované rozhodování bez možnosti obrany, diskriminace modelů, informační
+asymetrie mezi firmou a zákazníkem, neprůhledné algoritmy, manipulativní personalizace a koncentrace
+datové moci u několika velkých subjektů.
 
 \subsection*{Etika sběru dat}
-Při sběru dat je důležité:
+Při sběru dat je potřeba řešit účel, přiměřenost, transparentnost a svobodnost rozhodnutí člověka.
+Dobrý sběr dat má jasný důvod a předem stanovené hranice.
+
+Zásady etického sběru:
 \begin{itemize}
-  \item sbírat jen data, která jsou pro účel skutečně potřebná;
-  \item vysvětlit účel sběru a způsob použití dat;
-  \item u dotazníků a rozhovorů respektovat anonymitu a citlivost odpovědí;
-  \item nepoužívat nátlak, zavádějící otázky ani skryté účely;
-  \item oddělit data, která umožňují identifikaci osoby, od analytických proměnných, pokud to jde;
-  \item zajistit bezpečné uložení a omezený přístup.
+  \item sbírat jen data potřebná pro konkrétní účel;
+  \item vysvětlit, kdo data sbírá, proč, jak dlouho je uchová a komu je předá;
+  \item u dotazníků a rozhovorů respektovat dobrovolnost, anonymitu a citlivost odpovědí;
+  \item nepoužívat nátlak, skryté účely, zavádějící otázky ani tmavé vzorce v rozhraní;
+  \item oddělit identifikační údaje od analytických proměnných, pokud identifikace není nutná;
+  \item nesbírat citlivé údaje jen proto, že mohou být \uv{někdy užitečné};
+  \item zohlednit zranitelné skupiny, například děti, pacienty, zaměstnance nebo klienty veřejné správy.
 \end{itemize}
 
 \subsection*{Etika uchovávání a používání dat}
-Při uchovávání dat je potřeba myslet na bezpečnost, životní cyklus dat a transparentnost. Nestačí data nasbírat; musí být jasné, kdo k nim má přístup, jak dlouho se uchovávají, kde jsou uložena, jak se zálohují, kdy se mažou a jak se řeší incident. Při používání výsledků je nutné prezentovat omezení dat a modelů, nevyvozovat závěry, které data nepodporují, a nezamlčovat nejistotu.
+Při uchovávání dat je potřeba řešit životní cyklus dat: vytvoření, použití, sdílení, archivaci,
+zálohování a smazání. Eticky i právně problematické je uchovávat osobní údaje neomezeně dlouho jen
+proto, že úložiště je levné.
 
-\todohead
+Důležité otázky:
 \begin{itemize}
-  \item Doplnit GDPR: osobní údaj, zvláštní kategorie údajů, správce a zpracovatel, právní tituly zpracování, souhlas, oprávněný zájem, informační povinnost.
-  \item Doplnit principy GDPR: zákonnost, korektnost, transparentnost, účelové omezení, minimalizace, přesnost, omezení uložení, integrita a důvěrnost, odpovědnost.
-  \item Doplnit anonymizaci, pseudonymizaci, DPIA a pravidla pro předávání dat mimo EU.
-  \item Doplnit etiku algoritmů: bias, fairness, explainability, odpovědnost a auditovatelnost modelů.
+  \item kdo je za dataset odpovědný;
+  \item kdo má přístup a zda je přístup pravidelně revidován;
+  \item jak dlouho se data uchovávají a podle jakého pravidla se mažou;
+  \item zda jsou data šifrovaná nebo pseudonymizovaná;
+  \item zda existuje auditní stopa, kdo s daty pracoval;
+  \item zda jsou zálohy chráněné stejně jako produkční data;
+  \item zda výstupy neprozrazují osobní údaje nepřímo, například přes malé skupiny v agregaci.
+\end{itemize}
+
+\subsection*{GDPR jako hlavní rámec ochrany osobních údajů}
+\term{GDPR} je obecné nařízení EU o ochraně osobních údajů. Vztahuje se na zpracování osobních údajů
+v souvislosti s činností správce nebo zpracovatele v EU a také na některé situace, kdy subjekt mimo
+EU nabízí zboží či služby lidem v EU nebo sleduje jejich chování. V ČR na GDPR navazuje zákon
+č. 110/2019 Sb., o zpracování osobních údajů. Dozorovým úřadem je Úřad pro ochranu osobních údajů
+(\term{ÚOOÚ}).
+
+\term{Osobní údaj} je jakákoli informace vztahující se k identifikované nebo identifikovatelné fyzické
+osobě. Nemusí jít jen o jméno a rodné číslo. Osobním údajem může být e-mail, telefon, IP adresa,
+cookie identifikátor, poloha, číslo zákazníka, fotografie, hlasový záznam nebo kombinace údajů, která
+umožní člověka rozpoznat.
+
+\term{Zpracování} je velmi široký pojem: sběr, záznam, uložení, strukturování, úprava, vyhledání,
+použití, zpřístupnění, předání, kombinování, omezení, výmaz i zničení dat. Už samotné uložení osobních
+údajů v databázi je zpracování.
+
+\term{Subjekt údajů} je člověk, kterého se osobní údaje týkají. GDPR chrání fyzické osoby, ne právnické
+osoby jako takové. Údaje o firmě nejsou samy o sobě osobní údaje, ale údaje o živnostníkovi, kontaktní
+osobě, zaměstnanci nebo jednateli osobními údaji být mohou.
+
+\subsection*{Správce, zpracovatel a příjemce}
+\term{Správce} určuje účely a prostředky zpracování. Rozhoduje tedy, proč a jak se osobní údaje
+zpracovávají. Příkladem je e-shop, který zpracovává údaje zákazníků pro vyřízení objednávky, nebo
+zaměstnavatel, který vede personální agendu.
+
+\term{Zpracovatel} zpracovává osobní údaje pro správce a podle jeho pokynů. Příkladem může být
+poskytovatel cloudového úložiště, externí mzdová firma, provozovatel e-mailingového nástroje nebo
+dodavatel analytické platformy. Vztah správce a zpracovatele má být upraven smlouvou nebo jiným
+právním aktem.
+
+\term{Společní správci} společně určují účely a prostředky zpracování. Musí si transparentně rozdělit
+odpovědnosti, zejména vůči subjektům údajů.
+
+\term{Příjemce} je subjekt, kterému jsou osobní údaje zpřístupněny. Nemusí být vždy zpracovatelem.
+Například dopravce, kterému e-shop předá adresu pro doručení, může být samostatným správcem pro vlastní
+část činnosti, nikoli zpracovatelem e-shopu.
+
+\subsection*{Zvláštní kategorie osobních údajů}
+GDPR přísněji chrání \term{zvláštní kategorie osobních údajů}. Patří sem údaje vypovídající o rasovém
+nebo etnickém původu, politických názorech, náboženském nebo filozofickém přesvědčení, členství v
+odborech, genetické údaje, biometrické údaje za účelem jedinečné identifikace, údaje o zdraví a údaje
+o sexuálním životě nebo sexuální orientaci.
+
+Zpracování těchto údajů je obecně zakázáno, pokud neplatí některá zvláštní výjimka, například výslovný
+souhlas, pracovněprávní povinnost, ochrana životně důležitých zájmů, zdravotní péče, veřejné zdraví
+nebo významný veřejný zájem stanovený právem. Pro analytiku to znamená, že citlivé proměnné nelze
+jen tak přidat do modelu, i když by zvýšily predikční přesnost.
+
+\subsection*{Právní tituly zpracování}
+Každé zpracování osobních údajů musí mít právní titul podle čl. 6 GDPR. Základní právní tituly jsou:
+\begin{itemize}
+  \item \term{souhlas} - svobodný, konkrétní, informovaný a jednoznačný projev vůle;
+  \item \term{plnění smlouvy} - zpracování nutné pro smlouvu nebo kroky před jejím uzavřením;
+  \item \term{právní povinnost} - například účetní, daňová nebo pracovněprávní evidence;
+  \item \term{životně důležité zájmy} - ochrana života nebo zdraví;
+  \item \term{veřejný zájem nebo výkon veřejné moci} - typicky veřejná správa;
+  \item \term{oprávněný zájem} - zájem správce nebo třetí strany, pokud nepřevažují práva a svobody
+  subjektu údajů.
+\end{itemize}
+
+Souhlas není univerzální řešení. Musí být odvolatelný a nesmí být vynucený. V pracovním vztahu bývá
+problematický, protože zaměstnanec nemusí být vůči zaměstnavateli ve skutečně svobodném postavení.
+U oprávněného zájmu je potřeba provést balanční test: existuje legitimní zájem, je zpracování nutné
+a nepřevažují práva subjektů údajů?
+
+\subsection*{Principy GDPR}
+GDPR stojí na několika principech. U zkoušky je dobré umět je nejen vyjmenovat, ale i vysvětlit na
+příkladu.
+
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.28\textwidth}
+                >{\raggedright\arraybackslash}p{0.61\textwidth}@{}}
+\hline
+\term{Princip} & \term{Význam v analytice} \\
+\hline
+Zákonnost, korektnost a transparentnost & zpracování má právní titul, není klamavé a člověk rozumí,
+co se s jeho údaji děje \\
+Účelové omezení & data získaná pro jeden účel nelze automaticky použít pro jiný neslučitelný účel \\
+Minimalizace údajů & sbírají se jen údaje potřebné pro danou úlohu, ne maximum dostupných atributů \\
+Přesnost & nepřesné nebo zastaralé údaje se opravují nebo mažou \\
+Omezení uložení & osobní údaje se neuchovávají déle, než je potřeba \\
+Integrita a důvěrnost & data jsou chráněna proti neoprávněnému přístupu, ztrátě, zničení a změně \\
+Odpovědnost & správce musí být schopen prokázat soulad s pravidly, nestačí tvrdit, že je dodržuje \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Informační povinnost a práva subjektů údajů}
+Transparentnost znamená, že subjekt údajů má dostat srozumitelné informace o zpracování. Typicky jde
+o identitu správce, účely zpracování, právní titul, kategorie údajů, příjemce, dobu uložení, práva
+subjektu údajů, možnost stížnosti u dozorového úřadu a informaci o automatizovaném rozhodování nebo
+profilování, pokud se používá.
+
+Základní práva subjektu údajů:
+\begin{itemize}
+  \item právo na informace;
+  \item právo na přístup k údajům;
+  \item právo na opravu;
+  \item právo na výmaz, někdy označované jako \uv{právo být zapomenut};
+  \item právo na omezení zpracování;
+  \item právo na přenositelnost údajů;
+  \item právo vznést námitku;
+  \item právo nebýt za určitých podmínek předmětem rozhodnutí založeného výhradně na automatizovaném
+  zpracování, včetně profilování, pokud má právní nebo obdobně významné účinky.
+\end{itemize}
+
+V analytickém projektu je proto nutné vědět, odkud data pocházejí, jaký je jejich účel, jak vyřídit
+žádost o přístup nebo výmaz a zda by výmaz jednoho člověka nerozbil auditovatelnost modelu. Tyto
+otázky se mají řešit při návrhu, ne až po obdržení žádosti.
+
+\subsection*{Ochrana dat od návrhu a ve výchozím nastavení}
+\term{Privacy by design} znamená, že ochrana osobních údajů je součástí návrhu systému od začátku.
+Nejde o dodatečné právní prohlášení po dokončení databáze. Příkladem je oddělení identifikačních
+údajů od analytických atributů, pseudonymizace, omezení přístupů, auditní logy, šifrování a pravidla
+retence.
+
+\term{Privacy by default} znamená, že výchozí nastavení má být co nejšetrnější. Systém nemá automaticky
+zveřejňovat profil, sdílet data se všemi odděleními, uchovávat údaje navždy nebo zapínat marketingové
+sledování bez vhodného právního titulu.
+
+\subsection*{Anonymizace a pseudonymizace}
+\term{Pseudonymizace} znamená, že se přímé identifikátory nahradí kódem nebo aliasem a dodatečné
+informace potřebné k přiřazení zpět ke konkrétnímu člověku se uchovávají odděleně. Pseudonymizovaná
+data jsou stále osobní údaje, protože při použití dodatečných informací je možné osobu znovu určit.
+
+\term{Anonymizace} znamená, že jednotlivce nelze identifikovat žádným rozumně pravděpodobným prostředkem.
+Pokud je anonymizace provedena správně, GDPR se na anonymizovaná data už nevztahuje. V praxi je ale
+anonymizace obtížná: kombinace věku, pohlaví, obce, zaměstnání a vzácné diagnózy může člověka odhalit
+i bez jména.
+
+Praktické techniky:
+\begin{itemize}
+  \item odstranění přímých identifikátorů;
+  \item nahrazení ID pseudonymem nebo hashem se solí;
+  \item generalizace hodnot, například věk na věkové skupiny;
+  \item agregace do skupin s dostatečným počtem osob;
+  \item potlačení vzácných kategorií;
+  \item přidání šumu nebo použití metod typu differential privacy u citlivých agregací.
+\end{itemize}
+
+\subsection*{Bezpečnost a uchovávání osobních údajů}
+GDPR vyžaduje bezpečnost přiměřenou riziku. Neexistuje jeden univerzální seznam opatření pro všechny
+systémy. Jiná opatření stačí pro newsletter s e-maily a jiná pro zdravotní data, biometrická data
+nebo úvěrové skórování.
+
+Typická technická a organizační opatření:
+\begin{itemize}
+  \item řízení přístupů podle rolí a princip nejmenších oprávnění;
+  \item vícefaktorové ověřování u citlivých systémů;
+  \item šifrování dat při přenosu a podle rizika i při uložení;
+  \item pseudonymizace analytických datasetů;
+  \item oddělení produkčních, testovacích a analytických prostředí;
+  \item logování a pravidelná kontrola přístupů;
+  \item zálohy, test obnovy a plán reakce na incident;
+  \item smluvní a bezpečnostní kontrola dodavatelů;
+  \item školení lidí, kteří s osobními údaji pracují.
+\end{itemize}
+
+\term{Doba uložení} má být odvozena od účelu a právních povinností. Účetní doklady se uchovávají
+podle zákonných lhůt, zákaznické chování pro personalizaci jen tak dlouho, jak je pro účel nezbytné,
+a testovací kopie databází by neměly obsahovat reálné osobní údaje, pokud to není nutné.
+
+\subsection*{Porušení zabezpečení osobních údajů}
+\term{Porušení zabezpečení osobních údajů} je incident vedoucí k náhodnému nebo protiprávnímu zničení,
+ztrátě, změně, neoprávněnému zpřístupnění nebo přístupu k osobním údajům. Může jít o hackerský útok,
+ztracený notebook, omylem odeslaný e-mail, špatně nastavené cloudové úložiště nebo interní neoprávněný
+přístup.
+
+Správce má incident posoudit podle rizika pro práva a svobody lidí. Pokud je pravděpodobné riziko,
+ohlašuje incident dozorovému úřadu bez zbytečného odkladu, pokud možno do 72 hodin od zjištění.
+Pokud je pravděpodobné vysoké riziko pro dotčené osoby, musí být informovány i ony. Zpracovatel
+oznamuje incident správci bez zbytečného odkladu.
+
+\subsection*{DPIA a pověřenec pro ochranu osobních údajů}
+\term{DPIA - Data Protection Impact Assessment} neboli posouzení vlivu na ochranu osobních údajů je
+analýza rizik pro práva a svobody lidí. Provádí se před zahájením zpracování, pokud zpracování
+pravděpodobně povede k vysokému riziku. Typicky půjde o rozsáhlé zpracování citlivých údajů, rozsáhlé
+systematické monitorování nebo automatizované hodnocení osob s významnými dopady.
+
+DPIA má popsat:
+\begin{itemize}
+  \item účel a rozsah zpracování;
+  \item nezbytnost a přiměřenost zpracování;
+  \item rizika pro subjekty údajů;
+  \item technická a organizační opatření ke snížení rizik;
+  \item zbytkové riziko a odpovědnost za rozhodnutí.
+\end{itemize}
+
+\term{Pověřenec pro ochranu osobních údajů} neboli DPO je povinný například u orgánů veřejné moci,
+u rozsáhlého pravidelného a systematického monitorování osob nebo u rozsáhlého zpracování zvláštních
+kategorií údajů. DPO radí správci nebo zpracovateli, monitoruje soulad s pravidly a spolupracuje
+s dozorovým úřadem.
+
+\subsection*{Předávání osobních údajů mimo EU/EHP}
+Předání osobních údajů do třetí země nebo mezinárodní organizaci je možné jen tehdy, pokud není
+oslabena úroveň ochrany zaručená GDPR. Prakticky se používají hlavně:
+\begin{itemize}
+  \item \term{rozhodnutí o odpovídající ochraně} vydané Evropskou komisí;
+  \item \term{standardní smluvní doložky} a posouzení rizik konkrétního předání;
+  \item \term{závazná podniková pravidla} pro skupiny podniků;
+  \item omezené výjimky pro specifické situace, například výslovný souhlas nebo nutnost pro smlouvu.
+\end{itemize}
+
+Pro analytickou praxi je důležité, že použití cloudové služby nebo externího API může znamenat předání
+dat mimo EU/EHP, i když uživatel sedí v ČR. Nestačí se dívat jen na sídlo dodavatele; je potřeba vědět,
+kde se data ukládají, kdo k nim má přístup, zda jsou zapojeni subdodavatelé a jaké jsou smluvní záruky.
+
+\subsection*{Elektronická komunikace, cookies a marketing}
+Vedle GDPR je u online sběru dat důležitá také regulace elektronické komunikace. Cookies, reklamní
+identifikátory, newslettery a behaviorální reklama často kombinují pravidla ochrany osobních údajů,
+pravidla pro elektronické komunikace a ochranu spotřebitele.
+
+Prakticky:
+\begin{itemize}
+  \item technicky nezbytné cookies lze obvykle použít bez souhlasu;
+  \item analytické, reklamní a profilovací cookies typicky vyžadují předchozí souhlas;
+  \item souhlas má být svobodný, informovaný, konkrétní a odvolatelný;
+  \item obchodní sdělení musí respektovat pravidla pro nevyžádanou komunikaci;
+  \item u profilování pro marketing je nutné počítat s právem vznést námitku.
+\end{itemize}
+
+\subsection*{Etika algoritmů a modelů}
+U datové analytiky a strojového učení vznikají zvláštní rizika. Model může být formálně přesný v
+průměru, ale nespravedlivý pro určitou skupinu. Může používat proxy proměnné, které nepřímo nahrazují
+chráněnou charakteristiku, například adresu jako zástupný znak pro socioekonomický status nebo etnické
+složení lokality.
+
+Důležité principy:
+\begin{itemize}
+  \item \term{fairness} - kontrolovat, zda model neznevýhodňuje určité skupiny;
+  \item \term{explainability} - umět vysvětlit podstatné důvody rozhodnutí nebo alespoň chování modelu;
+  \item \term{accountability} - mít odpovědnou osobu, dokumentaci, audit a možnost nápravy;
+  \item \term{human oversight} - u významných rozhodnutí ponechat smysluplný lidský dohled;
+  \item \term{robustness} - sledovat chyby, drift, zneužití a bezpečnost modelu;
+  \item \term{contestability} - umožnit člověku rozhodnutí napadnout nebo požádat o přezkum.
+\end{itemize}
+
+GDPR obsahuje pravidla pro automatizované individuální rozhodování včetně profilování. Subjekt údajů
+má za určitých podmínek právo nebýt předmětem rozhodnutí založeného výhradně na automatizovaném
+zpracování, pokud má právní nebo obdobně významné účinky. Pokud se takové rozhodování použije na
+základě výjimky, musí existovat vhodná ochranná opatření, například možnost lidského zásahu, vyjádření
+stanoviska a napadení rozhodnutí.
+
+AI Act doplňuje pro vysoce rizikové systémy AI další požadavky, například řízení rizik, kvalitu dat,
+dokumentaci, logování, transparentnost vůči nasazovateli, lidský dohled, přesnost, robustnost a
+kybernetickou bezpečnost. U datové analytiky je podstatné hlavně to, že kvalita trénovacích,
+validačních a testovacích dat, kontrola biasu a dokumentace nejsou jen technické detaily, ale součást
+řízení rizik.
+
+\subsection*{Praktický příklad}
+Firma chce vytvořit model pro predikci odchodu zákazníků. Má interní transakce, komunikaci se zákazníky,
+reklamace a webové chování.
+
+Správný postup:
+\begin{enumerate}
+  \item určit účel modelu, například retenční nabídka stávajícím zákazníkům;
+  \item ověřit právní titul pro jednotlivé zdroje dat;
+  \item nepoužívat citlivé údaje, pokud pro to není jasný právní důvod;
+  \item minimalizovat atributy a omezit dobu historie;
+  \item pseudonymizovat analytický dataset;
+  \item zkontrolovat, zda model nepoužívá problematické proxy proměnné;
+  \item dokumentovat zdroje dat, transformace, metriky modelu a omezení;
+  \item nastavit přístupová práva, retenci, monitoring driftu a proces pro žádosti subjektů údajů;
+  \item vysvětlit v interních pravidlech, kdo smí výstup použít a k jakému rozhodnutí.
+\end{enumerate}
+
+Chybný postup by byl stáhnout maximum dostupných dat, přidat je do modelu bez jasného účelu, výsledek
+použít pro agresivní marketing a údaje uchovávat bez stanovené doby výmazu.
+
+\pozor
+Nejčastější chyba u zkoušky je tvrdit, že GDPR znamená \uv{všechno jen se souhlasem}. Správně je:
+každé zpracování potřebuje právní titul, souhlas je jen jeden z nich a často není nejvhodnější. Druhá
+častá chyba je zaměnit pseudonymizaci za anonymizaci. Pseudonymizovaná data jsou stále osobní údaje.
+
+\subsection*{Shrnutí ke zkoušce}
+\begin{itemize}
+  \item Etika řeší férovost, přiměřenost, dopady a odpovědnost; regulace stanoví závazná pravidla.
+  \item Masonův rámec PAPA pokrývá soukromí, přesnost, vlastnictví a dostupnost informací.
+  \item GDPR chrání osobní údaje fyzických osob a vztahuje se na široce chápané zpracování.
+  \item Správce určuje účel a prostředky zpracování, zpracovatel jedná pro správce podle jeho pokynů.
+  \item Každé zpracování musí mít právní titul a respektovat principy GDPR: zákonnost, transparentnost,
+  účelové omezení, minimalizaci, přesnost, omezení uložení, integritu, důvěrnost a odpovědnost.
+  \item Zvláštní kategorie údajů, například zdravotní nebo biometrické údaje, vyžadují zvláštní opatrnost.
+  \item Subjekty údajů mají práva na informace, přístup, opravu, výmaz, omezení, přenositelnost,
+  námitku a ochranu před některým automatizovaným rozhodováním.
+  \item Bezpečnost zahrnuje technická i organizační opatření, retenci, řízení přístupů, šifrování,
+  audit a reakci na incidenty.
+  \item DPIA se provádí u rizikového zpracování, zejména u rozsáhlého monitoringu, citlivých údajů
+  nebo významného automatizovaného hodnocení osob.
+  \item Anonymizace odstraňuje identifikovatelnost, pseudonymizace ji jen omezuje.
+  \item U algoritmů je nutné řešit bias, vysvětlitelnost, lidský dohled, auditovatelnost a možnost nápravy.
+\end{itemize}
+
+\subsection*{Zdroje}
+\begin{itemize}
+  \item EUR-Lex: \href{https://eur-lex.europa.eu/legal-content/CS/TXT/?uri=CELEX:32016R0679}{Nařízení (EU) 2016/679 - GDPR}.
+  \item Evropská komise: \href{https://commission.europa.eu/law/law-topic/data-protection/rules-business-and-organisations/obligations/controllerprocessor/what-data-controller-or-data-processor_en}{What is a data controller or a data processor?}.
+  \item European Data Protection Board: \href{https://www.edpb.europa.eu/sme-data-protection-guide/faq-frequently-asked-questions/answer/what-difference-between_en}{Pseudonymised data and anonymised data}.
+  \item ÚOOÚ: \href{https://uoou.gov.cz/cinnost/ochrana-osobnich-udaju}{Ochrana osobních údajů}.
+  \item ÚOOÚ: \href{https://uoou.gov.cz/profesional/qa-otazky-a-odpovedi/posouzeni-vlivu-na-ochranu-osobnich-udaju}{DPIA - Posouzení vlivu na ochranu osobních údajů}.
+  \item ÚOOÚ: \href{https://uoou.gov.cz/profesional/poruseni-zabezpeceni-osobnich-udaju}{Porušení zabezpečení osobních údajů}.
+  \item EUR-Lex: \href{https://eur-lex.europa.eu/legal-content/CS/TXT/?uri=CELEX:32024R1689}{Nařízení (EU) 2024/1689 - AI Act}.
+  \item OECD: \href{https://www.oecd.org/en/topics/ai-principles.html}{AI Principles}.
 \end{itemize}
 
 \newpage

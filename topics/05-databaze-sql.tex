@@ -1,104 +1,603 @@
 \section{Databáze. Relační databázové systémy, jazyk SQL, návrh obsahu datové základny}
 
 \subsection*{Základní pojmy}
-\term{Data} jsou formalizované a fyzicky zaznamenané poznatky, zkušenosti nebo výsledky pozorování. \term{Informace} je smysluplná interpretace dat. \term{Databáze} je integrovaná počítačově zpracovaná množina perzistentních dat. \term{Systém řízení báze dat} je software, který umožňuje databázi vytvořit, používat, spravovat a udržovat. \term{Databázový systém} je SŘBD společně s databází.
+\term{Data} jsou formalizované a fyzicky zaznamenané poznatky, zkušenosti nebo výsledky pozorování.
+\term{Informace} je smysluplná interpretace dat v určitém kontextu. \term{Databáze} je integrovaná
+množina perzistentních dat, která jsou organizována tak, aby je bylo možné efektivně ukládat, vyhledávat,
+měnit a chránit.
 
-Materiály rozlišují relační databáze, NoSQL databáze a specializované databáze. Pro toto téma je hlavní relační model.
+\term{Systém řízení báze dat} neboli \term{SŘBD} je software, který umožňuje databázi vytvořit,
+spravovat a používat. Řeší ukládání dat, dotazování, integritu, transakce, souběžný přístup, obnovu
+po havárii, zálohování, řízení oprávnění a optimalizaci dotazů. \term{Databázový systém} je SŘBD
+společně s konkrétní databází, uživateli, aplikacemi a provozními pravidly.
 
-\subsection*{Relační databáze}
-Relační databáze ukládá data do tabulek. Tabulka má řádky a sloupce. Řádek odpovídá záznamu, sloupec odpovídá atributu. Tabulky jsou propojeny relacemi, typicky pomocí primárních a cizích klíčů.
+Základní typy databázových systémů:
+\begin{itemize}
+  \item \term{relační databáze} - data jsou uložena v tabulkách a vztahy se vyjadřují klíči;
+  \item \term{objektové databáze} - ukládají objekty včetně metod a vazeb;
+  \item \term{objektově-relační databáze} - relační základ doplněný o složitější typy a objekty;
+  \item \term{NoSQL databáze} - dokumentové, key-value, sloupcové nebo grafové databáze;
+  \item \term{specializované databáze} - například časové řady, fulltext, prostorová data nebo vektory.
+\end{itemize}
 
-Relační model je založen na matematickém pojetí relací. Prakticky to znamená, že každá tabulka má schéma, tedy názvy a typy sloupců, a integritní omezení. Každá tabulka má mít primární klíč, který jednoznačně identifikuje záznam. Primární klíč může být jednoduchý nebo složený. Cizí klíč odkazuje na primární nebo kandidátní klíč jiné tabulky a zajišťuje referenční integritu.
+Pro tuto otázku je klíčový relační model, jazyk SQL a návrh obsahu databáze.
+
+\subsection*{Relační model}
+Relační databáze ukládá data do tabulek. Tabulka má řádky a sloupce. Řádek odpovídá jednomu záznamu,
+sloupec odpovídá atributu a hodnota v buňce patří do určité domény. Relační model je založen na
+matematickém pojetí relací, ale v praxi se používají pojmy tabulka, sloupec a řádek.
 
 Důležité pojmy:
 \begin{itemize}
-  \item \term{entita} - typ objektů, o kterých chceme vést záznamy;
-  \item \term{atribut} - vlastnost entity nebo vztahu;
-  \item \term{vztah} - pojmenovaná spojitost mezi entitami;
-  \item \term{kardinalita} - četnost vazby, například 1:1, 1:N nebo M:N;
-  \item \term{parcialita} - volitelnost účasti entity ve vztahu;
+  \item \term{relace / tabulka} - množina záznamů stejného typu;
+  \item \term{n-tice / řádek} - jeden záznam v tabulce;
+  \item \term{atribut / sloupec} - vlastnost záznamu;
   \item \term{doména} - množina povolených hodnot atributu;
-  \item \term{integritní omezení} - pravidlo, které musí data splňovat.
+  \item \term{schéma} - popis struktury tabulek, sloupců, typů, klíčů a omezení;
+  \item \term{kardinalita tabulky} - počet řádků;
+  \item \term{stupeň tabulky} - počet sloupců.
 \end{itemize}
+
+Relační databáze se od obyčejné tabulky v tabulkovém procesoru liší hlavně tím, že má formální schéma,
+datové typy, integritní omezení, transakce, oprávnění, optimalizátor dotazů a podporu víceuživatelského
+přístupu.
+
+\subsection*{Klíče a integrita}
+\term{Kandidátní klíč} je množina atributů, která jednoznačně identifikuje řádek a je minimální:
+žádný její atribut nelze odebrat, aniž by jednoznačnost přestala platit. \term{Primární klíč} je
+vybraný kandidátní klíč používaný jako hlavní identifikátor řádku. \term{Alternativní klíč} je jiný
+kandidátní klíč, který nebyl zvolen jako primární.
+
+\term{Cizí klíč} je atribut nebo skupina atributů, která odkazuje na primární nebo kandidátní klíč
+jiné tabulky. Cizí klíč zajišťuje, že se v tabulce neobjeví odkaz na neexistující záznam.
+
+Základní typy integrity:
+\begin{itemize}
+  \item \term{entitní integrita} - každý řádek má být jednoznačně identifikovatelný; primární klíč
+  nesmí být prázdný;
+  \item \term{referenční integrita} - cizí klíč musí odkazovat na existující záznam, nebo být prázdný,
+  pokud je vztah volitelný;
+  \item \term{doménová integrita} - hodnota atributu musí odpovídat datovému typu, rozsahu a pravidlům;
+  \item \term{uživatelská integrita} - business pravidla, například \uv{datum dodání nesmí být před
+  datem objednávky}.
+\end{itemize}
+
+V SQL se integrita prosazuje pomocí omezení jako \texttt{PRIMARY KEY}, \texttt{FOREIGN KEY},
+\texttt{UNIQUE}, \texttt{NOT NULL}, \texttt{CHECK} a pomocí vhodných datových typů.
+
+\subsection*{Entity, atributy a vztahy}
+\term{Entita} je typ objektů, o kterých chceme vést záznamy, například zákazník, produkt, objednávka
+nebo pobočka. \term{Atribut} je vlastnost entity nebo vztahu, například jméno zákazníka, cena produktu
+nebo datum objednávky. \term{Vztah} je pojmenovaná spojitost mezi entitami.
+
+U vztahů sledujeme:
+\begin{itemize}
+  \item \term{kardinalitu} - kolik výskytů jedné entity může souviset s výskytem druhé entity,
+  například 1:1, 1:N nebo M:N;
+  \item \term{volitelnost} - zda se entita musí vztahu účastnit, nebo může existovat bez něj;
+  \item \term{identifikující vztah} - zda je existence jedné entity závislá na druhé;
+  \item \term{atributy vztahu} - například množství a cena položky ve vztahu objednávka-produkt.
+\end{itemize}
+
+Příklad: zákazník může vytvořit více objednávek, ale každá objednávka patří jednomu zákazníkovi.
+To je vztah 1:N. Objednávka obsahuje více produktů a produkt může být v mnoha objednávkách. To je
+vztah M:N, který se v relační databázi řeší spojovací tabulkou položek objednávky.
 
 \subsection*{Tři úrovně návrhu databáze}
-Materiály pracují s principem tří architektur: konceptuální, logická a fyzická úroveň.
+Návrh databáze se běžně rozlišuje na konceptuální, logickou a fyzickou úroveň.
 
-\term{Konceptuální model} popisuje realitu bez implementačních detailů. Zachycuje entity, jejich atributy, vztahy a omezení. Slouží jako zadání pro další fáze, dokumentace a nástroj kontroly konzistence. V ER modelování se snažíme vystihnout, jaké objekty v realitě existují a jak spolu souvisí.
+\term{Konceptuální model} popisuje realitu bez implementačních detailů. Zachycuje entity, atributy,
+vztahy, kardinality a důležitá business pravidla. Typickým nástrojem je ER model nebo UML třídní
+diagram. Cílem je porozumět doméně a dohodnout se s uživateli, co má databáze reprezentovat.
 
-\term{Logický model} převádí konceptuální model do termínů konkrétního typu databázové technologie. U relační databáze to znamená tabulky, sloupce, primární klíče, cizí klíče a integritní omezení. Logický model je ještě relativně nezávislý na konkrétním produktu, ale už respektuje relační strukturu.
+\term{Logický model} převádí konceptuální model do podoby konkrétního datového modelu. U relační
+databáze jde o tabulky, sloupce, primární a cizí klíče, datové typy a integritní omezení. Logický
+model je ještě relativně nezávislý na konkrétním SŘBD.
 
-\term{Fyzický model} popisuje realizaci v konkrétním prostředí. Řeší datové typy, indexy, způsob uložení, velikosti, rozmístění dat, výkon a technické parametry databáze.
+\term{Fyzický model} řeší realizaci v konkrétním databázovém systému. Patří sem konkrétní datové typy,
+indexy, partice, umístění dat, parametry úložiště, materializované pohledy, optimalizace výkonu,
+zálohování a provozní bezpečnost.
 
-\subsection*{Postup konceptuálního návrhu}
-Metodologie konceptuálního návrhu databáze v materiálech zahrnuje tyto kroky:
+\subsection*{Postup návrhu obsahu datové základny}
+Návrh obsahu databáze nezačíná tabulkami, ale pochopením účelu systému. Je potřeba vědět, jaké procesy
+má databáze podporovat, jaké údaje mají být evidovány a jaké dotazy nebo transakce nad nimi budou
+probíhat.
+
+Typický postup:
 \begin{enumerate}
-  \item Identifikovat hlavní entity v organizaci nebo doméně.
-  \item Identifikovat vztahy mezi entitami a určit jejich kardinalitu a volitelnost.
-  \item Identifikovat atributy a přiřadit je k entitám nebo vztahům.
-  \item Určit domény atributů.
-  \item Vybrat kandidátní, primární a alternativní klíče.
-  \item Případně určit generalizaci a specializaci entit.
-  \item Zkontrolovat redundanci a odstranit zbytečné vztahy.
-  \item Ověřit, zda model podporuje uživatelské transakce.
-  \item Posoudit model s uživateli nebo doménovými experty.
+  \item vymezit účel databáze a hranice domény;
+  \item identifikovat hlavní uživatele, aplikace a transakce;
+  \item identifikovat entity a jejich význam;
+  \item určit vztahy mezi entitami, kardinality a volitelnost;
+  \item určit atributy, domény a business pravidla;
+  \item zvolit kandidátní, primární a alternativní klíče;
+  \item vyřešit generalizaci a specializaci, pokud existuje;
+  \item převést ER model do relačního schématu;
+  \item normalizovat schéma a odstranit nežádoucí redundanci;
+  \item navrhnout fyzické prvky: datové typy, indexy, pohledy, partice a oprávnění;
+  \item ověřit návrh na typických datech a uživatelských transakcích;
+  \item dokumentovat význam tabulek, sloupců, klíčů a pravidel.
 \end{enumerate}
 
-Tento postup je důležitý, protože databáze není jen technické úložiště. Má reprezentovat realitu tak, aby podporovala požadované operace a budoucí analytické použití.
-
 \subsection*{Transformace ER modelu do relačního modelu}
-Při převodu konceptuálního modelu do relačního se používají základní pravidla:
+Při převodu konceptuálního modelu do relačního se používají stabilní pravidla:
 \begin{itemize}
-  \item entitní množina se převede na tabulku;
-  \item atributy se převedou na sloupce;
-  \item identifikátory se stanou primárním klíčem;
+  \item silná entita se převede na tabulku;
+  \item jednoduché atributy se převedou na sloupce;
+  \item identifikátor entity se stane primárním klíčem;
   \item vztah 1:N se obvykle řeší cizím klíčem na straně N;
-  \item vztah M:N se řeší spojovací tabulkou, která obsahuje dva cizí klíče a případně vlastní atributy;
-  \item volitelnost vztahu se promítá do možnosti hodnoty \texttt{NULL};
-  \item povinnost vztahu se promítá do \texttt{NOT NULL} a integritních omezení.
+  \item vztah 1:1 lze řešit cizím klíčem v jedné z tabulek, často na straně s povinnou účastí;
+  \item vztah M:N se řeší spojovací tabulkou;
+  \item atribut vztahu se ukládá do tabulky reprezentující vztah;
+  \item vícenásobný atribut se obvykle vyčlení do samostatné tabulky;
+  \item volitelná účast se promítá do možnosti hodnoty \texttt{NULL};
+  \item povinná účast se promítá do \texttt{NOT NULL} a referenčního omezení.
 \end{itemize}
 
-U generalizace a specializace existuje více možností: jedna tabulka pro celou hierarchii, tabulky jen pro specializované entity, nebo tabulka pro nadtyp i pro podtypy. Volba závisí na požadavcích na integritu, výkon, jednoduchost a množství společných atributů.
+Příklad relačního schématu pro objednávky:
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.27\textwidth}
+                >{\raggedright\arraybackslash}p{0.62\textwidth}@{}}
+\hline
+\term{Tabulka} & \term{Význam a hlavní sloupce} \\
+\hline
+\texttt{zakaznik} & zákazník; \texttt{zakaznik\_id} jako primární klíč, jméno, e-mail \\
+\texttt{objednavka} & objednávka; \texttt{objednavka\_id} jako primární klíč,
+\texttt{zakaznik\_id} jako cizí klíč \\
+\texttt{produkt} & produkt; \texttt{produkt\_id} jako primární klíč, název, cena, kategorie \\
+\texttt{polozka\_objednavky} & spojovací tabulka pro M:N; \texttt{objednavka\_id},
+\texttt{produkt\_id}, množství, jednotková cena \\
+\hline
+\end{tabular}
+\end{center}
 
-\subsection*{Normalizace a denormalizace}
-Materiály zdůrazňují minimalizaci redundance pomocí normalizace. Normalizace je postup návrhu tabulek tak, aby se omezily duplicity, aktualizační anomálie a nekonzistence. V materiálech je zmíněna sada normálních forem: první, druhá, třetí, Boyce-Coddova, čtvrtá a pátá.
+Spojovací tabulka je nutná, protože objednávka může obsahovat více produktů a tentýž produkt může
+být součástí více objednávek. Pokud má vztah vlastní atributy, například množství nebo cenu v okamžiku
+prodeje, patří právě do spojovací tabulky.
 
-Pro státnice je potřeba umět aspoň základní smysl:
+\subsection*{Generalizace a specializace}
+Generalizace a specializace řeší situaci, kdy existuje obecný typ entity a jeho podtypy. Například
+\texttt{osoba} může být zákazník, zaměstnanec nebo dodavatel. Podtypy sdílejí některé atributy, ale
+mají i vlastní atributy.
+
+V relačním modelu existují tři časté strategie:
 \begin{itemize}
-  \item 1NF - hodnoty v buňkách jsou atomické, neopakují se skupiny sloupců;
-  \item 2NF - neklíčové atributy závisí na celém složeném klíči, nejen na jeho části;
-  \item 3NF - neklíčové atributy nezávisí tranzitivně na jiných neklíčových atributech;
-  \item BCNF - silnější forma 3NF, kde determinant funkční závislosti má být kandidátním klíčem.
+  \item \term{jedna tabulka pro celou hierarchii} - jednoduché dotazy, ale mnoho prázdných hodnot;
+  \item \term{tabulka pro nadtyp a tabulky pro podtypy} - dobrá integrita, ale dotazy vyžadují spojení;
+  \item \term{samostatná tabulka pro každý konkrétní podtyp} - jednoduché pro oddělené podtypy,
+  ale horší práce se společnými atributy.
 \end{itemize}
 
-Denormalizace je naopak vědomé přidání redundance kvůli výkonu, typicky v analytických databázích nebo reportingu. Je nutné ji dělat kontrolovaně.
+Volba závisí na tom, zda jsou podtypy disjunktní, zda je účast v podtypu povinná, kolik mají společných
+atributů a jaké dotazy se budou používat.
 
-\subsection*{SQL a databázové jazyky}
-\term{SQL} je standardizovaný dotazovací jazyk pro práci s relačními databázemi. Slouží pro definici struktury, manipulaci s daty, dotazování, řízení oprávnění a transakce.
+\subsection*{Normalizace}
+\term{Normalizace} je postup návrhu relačního schématu, který omezuje redundanci a aktualizační
+anomálie. Cílem není vytvořit co nejvíce tabulek, ale aby každá skutečnost byla uložena na správném
+místě a jen jednou, pokud k duplicitě není dobrý důvod.
 
-U zkoušky je vhodné rozlišit části SQL:
+Typické anomálie:
 \begin{itemize}
-  \item \term{DDL} - definice struktury, například \texttt{CREATE}, \texttt{ALTER}, \texttt{DROP};
-  \item \term{DML} - manipulace s daty, například \texttt{INSERT}, \texttt{UPDATE}, \texttt{DELETE};
-  \item \term{DQL} - dotazování, hlavně \texttt{SELECT};
-  \item \term{DCL} - oprávnění, například \texttt{GRANT}, \texttt{REVOKE};
-  \item \term{TCL} - transakční řízení, například \texttt{COMMIT}, \texttt{ROLLBACK}.
+  \item \term{vkládací anomálie} - nelze vložit informaci bez jiné nesouvisející informace;
+  \item \term{aktualizační anomálie} - stejný údaj je na více místech a musí se měnit opakovaně;
+  \item \term{mazací anomálie} - smazáním jednoho záznamu se nechtěně ztratí jiná informace.
 \end{itemize}
 
-Základní dotaz v SQL vybírá sloupce z tabulek, filtruje řádky, spojuje tabulky a může agregovat hodnoty. U analytických dotazů se často používá \texttt{GROUP BY}, agregační funkce \texttt{COUNT}, \texttt{SUM}, \texttt{AVG}, \texttt{MIN}, \texttt{MAX}, třídění pomocí \texttt{ORDER BY} a spojování tabulek pomocí \texttt{JOIN}.
+\subsection*{Normální formy}
+\term{1NF - první normální forma} znamená, že hodnoty atributů jsou atomické a v tabulce nejsou
+opakující se skupiny sloupců. Špatně je například tabulka s atributy \texttt{telefon1},
+\texttt{telefon2}, \texttt{telefon3}. Lepší je samostatná tabulka telefonů zákazníka.
 
-Materiály zmiňují i další databázové jazyky: PL/SQL jako procedurální nadstavbu SQL, OQL pro objektové databáze, JPQL pro dotazování entit v Java Persistence API a XQuery pro práci s XML daty.
+\term{2NF - druhá normální forma} řeší složené klíče. Každý neklíčový atribut má záviset na celém
+složeném klíči, ne jen na jeho části. Například v tabulce položek objednávky s klíčem
+\texttt{(objednavka\_id, produkt\_id)} nesmí být název produktu, protože závisí jen na
+\texttt{produkt\_id}. Patří do tabulky produktů.
 
-\subsection*{Databázové transakce a souběh}
-Databáze musí řešit víceuživatelské zpracování. Pokud více transakcí pracuje se stejnými daty, mohou vznikat konflikty. Materiály uvádějí řešení pomocí zamykání. Zámky mohou být výlučné pro změny a sdílené pro čtení. Zamykat lze celou tabulku, stránku nebo řádek. Rizikem je deadlock, tedy zablokování, kdy dvě nebo více transakcí čekají na situaci, která nikdy nenastane.
+\term{3NF - třetí normální forma} odstraňuje tranzitivní závislosti mezi neklíčovými atributy. Pokud
+tabulka objednávek obsahuje \texttt{zakaznik\_id}, \texttt{psc} a \texttt{mesto}, přičemž město
+závisí na PSČ, nejde o čistou 3NF. Město a PSČ mají být ve zvláštní číselníkové tabulce, pokud se
+tento vztah v doméně používá jako pravidlo.
 
-\todohead
+\term{BCNF - Boyce-Coddova normální forma} je přísnější varianta 3NF. Pro každou netriviální funkční
+závislost má být determinant kandidátním klíčem. Prakticky řeší případy, kde 3NF ještě dovolí některé
+závislosti vedoucí k redundanci.
+
+\term{4NF a 5NF} řeší složitější vícenásobné a spojovací závislosti. U běžné zkouškové odpovědi
+stačí vysvětlit, že se používají pro pokročilé odstranění redundance u nezávislých vícehodnotových
+vztahů.
+
+\subsection*{Příklad normalizace}
+Špatně navržená tabulka:
+
+{\small
+\begin{verbatim}
+OBJEDNAVKA_NENORMALIZOVANA(
+  objednavka_id, datum, zakaznik_id, zakaznik_jmeno,
+  produkt_id, produkt_nazev, mnozstvi, jednotkova_cena
+)
+\end{verbatim}
+}
+
+Problémy:
 \begin{itemize}
-  \item Doplnit praktické SQL příklady: \texttt{JOIN}, \texttt{GROUP BY}, poddotazy, agregační funkce, \texttt{HAVING}.
-  \item Doplnit normální formy podrobněji na příkladu.
-  \item Doplnit indexy, optimalizaci dotazů a exekuční plán.
-  \item Doplnit integritní omezení: entitní, referenční a doménová integrita.
-  \item Doplnit rozdíl relační databáze versus datový sklad z hlediska modelování.
+  \item jméno zákazníka se opakuje v každé jeho objednávce;
+  \item název produktu se opakuje v každé položce;
+  \item změna názvu produktu musí proběhnout na více řádcích;
+  \item objednávka s více produkty způsobuje opakování údajů o objednávce.
+\end{itemize}
+
+Lepší rozklad:
+{\small
+\begin{verbatim}
+ZAKAZNIK(zakaznik_id, zakaznik_jmeno)
+OBJEDNAVKA(objednavka_id, datum, zakaznik_id)
+PRODUKT(produkt_id, produkt_nazev)
+POLOZKA_OBJEDNAVKY(objednavka_id, produkt_id, mnozstvi, jednotkova_cena)
+\end{verbatim}
+}
+
+Takový návrh odděluje zákazníky, objednávky, produkty a položky objednávek. Jednotková cena může
+zůstat v položce objednávky, protože vyjadřuje cenu v okamžiku prodeje a nemusí být stejná jako
+aktuální katalogová cena produktu.
+
+\subsection*{Denormalizace}
+\term{Denormalizace} je vědomé a kontrolované přidání redundance kvůli výkonu, jednodušším dotazům
+nebo analytickému použití. Například v reportovací tabulce lze uložit předpočítané měsíční tržby
+nebo název kategorie produktu, i když by šel dohledat přes vazby.
+
+Denormalizace má smysl, pokud:
+\begin{itemize}
+  \item normalizované dotazy jsou příliš pomalé;
+  \item systém je převážně čtecí a méně často se zapisuje;
+  \item jde o datový sklad, datové tržiště nebo OLAP vrstvu;
+  \item existuje proces, který udržuje redundantní hodnoty konzistentní.
+\end{itemize}
+
+V OLTP databázi je potřeba být s denormalizací opatrný, protože zvyšuje riziko nekonzistence při
+zápisu.
+
+\subsection*{SQL}
+\term{SQL} je standardizovaný jazyk pro práci s relačními databázemi. Slouží pro definici struktury,
+vkládání a změnu dat, dotazování, řízení přístupových práv a práci s transakcemi.
+
+Části SQL:
+\begin{itemize}
+  \item \term{DDL - Data Definition Language} - definice struktury: \texttt{CREATE}, \texttt{ALTER},
+  \texttt{DROP};
+  \item \term{DML - Data Manipulation Language} - manipulace s daty: \texttt{INSERT}, \texttt{UPDATE},
+  \texttt{DELETE};
+  \item \term{DQL - Data Query Language} - dotazování: hlavně \texttt{SELECT};
+  \item \term{DCL - Data Control Language} - oprávnění: \texttt{GRANT}, \texttt{REVOKE};
+  \item \term{TCL - Transaction Control Language} - transakce: \texttt{COMMIT}, \texttt{ROLLBACK},
+  \texttt{SAVEPOINT}.
+\end{itemize}
+
+\subsection*{DDL příklad}
+Příklad vytvoření tabulek a integritních omezení:
+
+{\small
+\begin{verbatim}
+CREATE TABLE zakaznik (
+  zakaznik_id INTEGER PRIMARY KEY,
+  jmeno       VARCHAR(100) NOT NULL,
+  email       VARCHAR(255) UNIQUE
+);
+
+CREATE TABLE objednavka (
+  objednavka_id INTEGER PRIMARY KEY,
+  zakaznik_id   INTEGER NOT NULL,
+  datum         DATE NOT NULL,
+  stav          VARCHAR(20) NOT NULL,
+  FOREIGN KEY (zakaznik_id) REFERENCES zakaznik(zakaznik_id),
+  CHECK (stav IN ('nova', 'zaplacena', 'stornovana'))
+);
+\end{verbatim}
+}
+
+Tento příklad ukazuje primární klíč, cizí klíč, povinné hodnoty, unikátnost e-mailu a doménové omezení
+pro stav objednávky.
+
+\subsection*{SELECT, filtrování a řazení}
+Základní dotaz vybírá sloupce, určuje zdrojovou tabulku a filtruje řádky:
+
+{\small
+\begin{verbatim}
+SELECT objednavka_id, datum, stav
+FROM objednavka
+WHERE stav = 'zaplacena'
+ORDER BY datum DESC;
+\end{verbatim}
+}
+
+Pořadí zápisu v SQL neodpovídá přesně logickému pořadí vyhodnocení. Zjednodušeně se nejdříve určí
+zdrojová data v \texttt{FROM}, potom se filtrují řádky ve \texttt{WHERE}, seskupují přes
+\texttt{GROUP BY}, filtrují skupiny přes \texttt{HAVING}, vybírají výstupní výrazy v \texttt{SELECT}
+a nakonec se řadí pomocí \texttt{ORDER BY}.
+
+\subsection*{JOIN}
+\term{JOIN} spojuje řádky z více tabulek podle podmínky. V relační databázi je to základní způsob,
+jak znovu spojit data rozdělená normalizací.
+
+{\small
+\begin{verbatim}
+SELECT z.jmeno, o.objednavka_id, o.datum
+FROM zakaznik z
+JOIN objednavka o
+  ON o.zakaznik_id = z.zakaznik_id
+WHERE o.stav = 'zaplacena';
+\end{verbatim}
+}
+
+Základní typy spojení:
+\begin{itemize}
+  \item \term{INNER JOIN} - vrací jen řádky, kde existuje shoda na obou stranách;
+  \item \term{LEFT JOIN} - vrací všechny řádky z levé tabulky a shody z pravé, jinak hodnoty
+  \texttt{NULL};
+  \item \term{RIGHT JOIN} - analogicky všechny řádky z pravé tabulky;
+  \item \term{FULL JOIN} - vrací řádky z obou stran, i když na druhé straně není shoda;
+  \item \term{CROSS JOIN} - kartézský součin, používá se opatrně.
+\end{itemize}
+
+\subsection*{Agregace, GROUP BY a HAVING}
+Agregace počítá souhrny nad skupinami řádků. Typické agregační funkce jsou \texttt{COUNT},
+\texttt{SUM}, \texttt{AVG}, \texttt{MIN} a \texttt{MAX}.
+
+{\small
+\begin{verbatim}
+SELECT z.zakaznik_id, z.jmeno, COUNT(*) AS pocet_objednavek
+FROM zakaznik z
+JOIN objednavka o
+  ON o.zakaznik_id = z.zakaznik_id
+GROUP BY z.zakaznik_id, z.jmeno
+HAVING COUNT(*) >= 3
+ORDER BY pocet_objednavek DESC;
+\end{verbatim}
+}
+
+\texttt{WHERE} filtruje jednotlivé řádky před agregací. \texttt{HAVING} filtruje skupiny po agregaci.
+Častá chyba je pokusit se použít agregační funkci ve \texttt{WHERE}.
+
+\subsection*{Poddotazy a množinové operace}
+\term{Poddotaz} je dotaz vložený uvnitř jiného dotazu. Používá se například pro test existence,
+porovnání s agregací nebo výběr z odvozené tabulky.
+
+{\small
+\begin{verbatim}
+SELECT z.zakaznik_id, z.jmeno
+FROM zakaznik z
+WHERE EXISTS (
+  SELECT 1
+  FROM objednavka o
+  WHERE o.zakaznik_id = z.zakaznik_id
+    AND o.stav = 'zaplacena'
+);
+\end{verbatim}
+}
+
+Množinové operace pracují s výsledky dotazů:
+\begin{itemize}
+  \item \texttt{UNION} sjednotí výsledky a odstraní duplicity;
+  \item \texttt{UNION ALL} sjednotí výsledky včetně duplicit;
+  \item \texttt{INTERSECT} vrátí průnik;
+  \item \texttt{EXCEPT} vrátí rozdíl.
+\end{itemize}
+
+\subsection*{NULL a tříhodnotová logika}
+\texttt{NULL} znamená neznámou nebo nepoužitelnou hodnotu. Není to totéž co nula, prázdný řetězec
+nebo hodnota \uv{ne}. V SQL se kvůli \texttt{NULL} používá tříhodnotová logika: výraz může být pravda,
+nepravda nebo neznámý.
+
+Správný test na prázdnou hodnotu:
+{\small
+\begin{verbatim}
+WHERE email IS NULL
+\end{verbatim}
+}
+
+Špatně:
+{\small
+\begin{verbatim}
+WHERE email = NULL
+\end{verbatim}
+}
+
+Při návrhu databáze je potřeba rozlišit, zda je \texttt{NULL} opravdu povolený význam domény, nebo
+jestli má být atribut povinný přes \texttt{NOT NULL}.
+
+\subsection*{Pohledy}
+\term{Pohled} neboli \texttt{VIEW} je uložený dotaz, který se navenek chová jako tabulka. Slouží ke
+zjednodušení složitých dotazů, řízení přístupu a oddělení aplikace od fyzické struktury tabulek.
+
+{\small
+\begin{verbatim}
+CREATE VIEW zaplacene_objednavky AS
+SELECT o.objednavka_id, z.jmeno, o.datum
+FROM objednavka o
+JOIN zakaznik z
+  ON z.zakaznik_id = o.zakaznik_id
+WHERE o.stav = 'zaplacena';
+\end{verbatim}
+}
+
+Některé systémy podporují také \term{materializované pohledy}. Ty ukládají výsledek dotazu fyzicky,
+a proto mohou zrychlit analytické dotazy, ale musí se obnovovat.
+
+\subsection*{Indexy}
+\term{Index} je pomocná datová struktura, která zrychluje vyhledávání, spojování, řazení nebo kontrolu
+unikátnosti. Typicky funguje podobně jako rejstřík v knize: umožní najít řádky bez procházení celé
+tabulky.
+
+Příklad:
+{\small
+\begin{verbatim}
+CREATE INDEX idx_objednavka_zakaznik
+ON objednavka(zakaznik_id);
+\end{verbatim}
+}
+
+Indexy nejsou zdarma. Zrychlují čtení, ale zpomalují zápis, protože při \texttt{INSERT},
+\texttt{UPDATE} a \texttt{DELETE} se musí aktualizovat i indexy. Zabírají také místo na disku. Proto
+se indexují hlavně sloupce často používané ve \texttt{WHERE}, \texttt{JOIN}, \texttt{ORDER BY},
+\texttt{GROUP BY} nebo unikátních omezeních.
+
+\subsection*{Optimalizace dotazů a exekuční plán}
+Moderní SŘBD má optimalizátor dotazů. Ten zvolí, jak dotaz provést: jaké použít indexy, v jakém pořadí
+spojit tabulky, zda číst celou tabulku, jak agregovat a jak řadit. Rozhoduje podle statistik o velikosti
+tabulek, rozložení hodnot a dostupných indexů.
+
+\term{Exekuční plán} ukazuje zvolený postup provedení dotazu. V PostgreSQL se používá například:
+
+{\small
+\begin{verbatim}
+EXPLAIN
+SELECT *
+FROM objednavka
+WHERE zakaznik_id = 10;
+\end{verbatim}
+}
+
+U zkoušky stačí umět říct, že pomalý dotaz se neřeší jen \uv{přidáním indexu}. Je potřeba zkontrolovat
+plán, selektivitu podmínky, velikost tabulek, join podmínky, aktuálnost statistik, nevhodné funkce
+nad indexovanými sloupci a zda dotaz nevrací zbytečně mnoho dat.
+
+\subsection*{Transakce a ACID}
+\term{Transakce} je logická jednotka práce s databází. Buď proběhne celá, nebo se její změny vrátí.
+Typickým příkladem je bankovní převod: odepsání z jednoho účtu a připsání na druhý účet musí být
+jedna konzistentní operace.
+
+Vlastnosti ACID:
+\begin{itemize}
+  \item \term{Atomicita} - transakce proběhne celá, nebo vůbec;
+  \item \term{Konzistence} - transakce převede databázi z jednoho konzistentního stavu do druhého;
+  \item \term{Izolovanost} - souběžné transakce se nemají navzájem nekorektně ovlivnit;
+  \item \term{Trvanlivost} - potvrzené změny přežijí pád systému.
+\end{itemize}
+
+Základní příkazy:
+{\small
+\begin{verbatim}
+BEGIN;
+UPDATE ucet SET zustatek = zustatek - 100 WHERE ucet_id = 1;
+UPDATE ucet SET zustatek = zustatek + 100 WHERE ucet_id = 2;
+COMMIT;
+\end{verbatim}
+}
+
+Pokud nastane chyba, použije se \texttt{ROLLBACK}. Pro částečné návraty lze použít \texttt{SAVEPOINT}.
+
+\subsection*{Souběh, izolace a zámky}
+Ve víceuživatelském systému běží transakce současně. Bez řízení souběhu by mohly vznikat problémy:
+\begin{itemize}
+  \item \term{dirty read} - transakce čte nepotvrzené změny jiné transakce;
+  \item \term{non-repeatable read} - opakované čtení stejného řádku vrátí jinou hodnotu;
+  \item \term{phantom read} - opakovaný dotaz vrátí jinou množinu řádků;
+  \item \term{lost update} - dvě transakce přepíšou změny navzájem.
+\end{itemize}
+
+Databáze používají úrovně izolace, zámky, multiversion concurrency control a detekci konfliktů.
+Zámky mohou být sdílené pro čtení a výlučné pro změny. Zamykat lze různě jemně: tabulku, stránku
+nebo řádek. Jemnější zámky zvyšují souběžnost, ale mají větší režii.
+
+\term{Deadlock} vznikne, když dvě nebo více transakcí čekají na zámky držené navzájem. Databázový
+systém deadlock detekuje a jednu transakci obvykle zruší, aby ostatní mohly pokračovat.
+
+\subsection*{Oprávnění a bezpečnost}
+Databáze často obsahuje citlivá provozní, finanční nebo osobní data. SŘBD proto musí podporovat řízení
+přístupu.
+
+Základní opatření:
+\begin{itemize}
+  \item uživatelské účty a role;
+  \item oprávnění na databáze, schémata, tabulky, pohledy a funkce;
+  \item princip nejmenších oprávnění;
+  \item oddělení aplikačních, administrátorských a analytických účtů;
+  \item šifrování komunikace a podle rizika i uložených dat;
+  \item auditní logy, zálohy a test obnovy.
+\end{itemize}
+
+Příklady příkazů:
+{\small
+\begin{verbatim}
+GRANT SELECT ON zaplacene_objednavky TO analytik;
+REVOKE UPDATE ON objednavka FROM analytik;
+\end{verbatim}
+}
+
+\subsection*{Relační databáze versus datový sklad}
+Relační databáze pro provozní systémy bývá navržena pro OLTP, tedy rychlé a bezpečné zpracování
+jednotlivých transakcí. Datový sklad je navržen pro OLAP, tedy analytické dotazy, agregace a historické
+srovnání.
+
+\begin{center}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.25\textwidth}
+                >{\raggedright\arraybackslash}p{0.31\textwidth}
+                >{\raggedright\arraybackslash}p{0.31\textwidth}@{}}
+\hline
+\term{Vlastnost} & \term{OLTP relační databáze} & \term{Datový sklad / OLAP} \\
+\hline
+Účel & provozní transakce & reporting a analytika \\
+Granularita & detailní aktuální záznamy & detailní i agregovaná historie \\
+Modelování & normalizace, integrita, nízká redundance & hvězda, sněhová vločka, dimenze a fakta \\
+Dotazy & krátké zápisy a čtení jednotek & delší agregace nad velkým objemem dat \\
+Aktualizace & časté změny jednotlivých řádků & dávkové nebo řízené načítání dat \\
+Priorita & konzistence a rychlý zápis & rychlé čtení, srovnání a historický pohled \\
+\hline
+\end{tabular}
+\end{center}
+
+To neznamená, že datový sklad není relační. Často je také uložen v relačním nebo relačně podobném
+systému, ale má jiný návrhový cíl. V provozní databázi chceme omezit duplicity a chránit transakce.
+V analytické vrstvě často přijímáme řízenou redundanci, aby šly rychle počítat přehledy podle času,
+produktu, zákazníka nebo regionu.
+
+\subsection*{Typické chyby návrhu databáze}
+\begin{itemize}
+  \item chybí primární klíče nebo se používají nestabilní přirozené identifikátory;
+  \item vztah M:N je uložen jako seznam hodnot v jednom sloupci;
+  \item nejsou definovány cizí klíče, takže vznikají neplatné odkazy;
+  \item používá se jeden univerzální textový sloupec místo správných datových typů;
+  \item \texttt{NULL} se používá bez jasného významu;
+  \item databáze neobsahuje omezení, protože se spoléhá jen na aplikační logiku;
+  \item schéma nerozlišuje aktuální stav a historii změn;
+  \item indexy se přidávají náhodně bez kontroly exekučního plánu;
+  \item provozní databáze se přetěžuje analytickými reporty.
+\end{itemize}
+
+\pozor
+U zkoušky je dobré neříkat jen \uv{databáze jsou tabulky}. Důležitý je celý rámec: relační model,
+klíče, integrita, normalizace, SQL, transakce, souběh, oprávnění a fyzická optimalizace. Stejně tak
+není správné tvrdit, že normalizace je vždy nejlepší. Pro OLTP je obvykle základním pravidlem, ale
+pro datové sklady a reporting se často používá řízená denormalizace.
+
+\subsection*{Shrnutí ke zkoušce}
+\begin{itemize}
+  \item Databáze je organizovaná množina perzistentních dat spravovaná SŘBD.
+  \item Relační model ukládá data do tabulek a vztahy vyjadřuje pomocí primárních a cizích klíčů.
+  \item Integrita zahrnuje entitní, referenční, doménová a uživatelská pravidla.
+  \item Návrh databáze má konceptuální, logickou a fyzickou úroveň.
+  \item ER model se převádí na tabulky, sloupce, klíče a spojovací tabulky pro M:N vztahy.
+  \item Normalizace omezuje redundanci a anomálie; denormalizace se používá kontrolovaně kvůli výkonu
+  nebo analytice.
+  \item SQL zahrnuje DDL, DML, DQL, DCL a TCL.
+  \item Základní dotazování používá \texttt{SELECT}, \texttt{WHERE}, \texttt{JOIN}, \texttt{GROUP BY},
+  \texttt{HAVING}, poddotazy a agregační funkce.
+  \item Indexy zrychlují čtení, ale zpomalují zápisy a je nutné je navrhovat podle dotazů.
+  \item Exekuční plán ukazuje, jak databáze dotaz provede.
+  \item Transakce mají vlastnosti ACID a databáze musí řešit izolaci, zámky a deadlocky.
+  \item Provozní relační databáze se návrhově liší od datového skladu, i když obě mohou používat
+  relační technologii.
+\end{itemize}
+
+\subsection*{Zdroje}
+\begin{itemize}
+  \item PostgreSQL Documentation: \href{https://www.postgresql.org/docs/current/ddl-constraints.html}{Constraints}.
+  \item PostgreSQL Documentation: \href{https://www.postgresql.org/docs/current/sql-select.html}{SELECT}.
+  \item PostgreSQL Documentation: \href{https://www.postgresql.org/docs/current/indexes.html}{Indexes}.
+  \item PostgreSQL Documentation: \href{https://www.postgresql.org/docs/current/using-explain.html}{Using EXPLAIN}.
+  \item PostgreSQL Documentation: \href{https://www.postgresql.org/docs/current/transaction-iso.html}{Transaction Isolation}.
+  \item PostgreSQL Documentation: \href{https://www.postgresql.org/docs/current/sql-grant.html}{GRANT}.
 \end{itemize}
 
 \newpage
