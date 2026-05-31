@@ -1,0 +1,729 @@
+\documentclass[12pt,a4paper]{article}
+\input{preamble}
+
+\lhead{\small Posudkové otázky - Data Analytics}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{2.4cm}
+  {\Large\bfseries Bakalářské studium\par}
+  \vspace{1.2cm}
+  {\Huge\bfseries Posudkové otázky ke státnicím\par}
+  \vspace{0.6cm}
+  {\LARGE\bfseries Data Analytics\par}
+  \vspace{0.8cm}
+  \rule{0.72\textwidth}{0.4pt}\par
+  \vspace{0.8cm}
+  {\large Vybrané otázky z posudků a odborných rozprav, seskupené podle uvedené komise\par}
+  \vfill
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Holý, Černý, Chudán}
+Uvedená komise: doc. Mgr. Vladimír Holý, Ph.D.; PhDr. Jan Černý, Ph.D.; Ing. David Chudán, Ph.D.
+
+\begin{enumerate}
+  \item \term{Jaké problémy vznikají, když regresní model pracuje s časovou řadou?}
+
+  Časové řady často porušují předpoklad nezávislých pozorování. Typické problémy jsou trend,
+  sezónnost, autokorelace chyb, nestacionarita, strukturální zlomy a proměnlivý rozptyl v čase.
+  Při modelování je potřeba testovat stacionaritu, pracovat se zpožděními, sezónními dummy proměnnými
+  nebo ARIMA/SARIMA strukturou a používat vhodné standardní chyby.
+
+  \item \term{Co je zdánlivá regrese?}
+
+  Zdánlivá regrese vzniká typicky u nestacionárních časových řad, které mají společný trend, ale
+  věcně spolu nemusí souviset. Model může mít vysoké $R^2$ a významné koeficienty, přestože vztah je
+  falešný. Řešením je zkoumat stacionaritu, pracovat s diferencemi, ověřit kointegraci nebo modelovat
+  vztah v podobě vhodné pro časové řady.
+
+  \item \term{Jak řešit autokorelovanou náhodnou složku?}
+
+  Nejprve je potřeba autokorelaci diagnostikovat, například reziduálním grafem, ACF/PACF nebo
+  Durbinovým-Watsonovým testem. Možné reakce jsou doplnit zpožděné proměnné, modelovat chyby jako
+  AR proces, použít GLS nebo použít robustní standardní chyby pro časové řady, například Newey-West.
+  V predikčních úlohách může dávat smysl přejít na modely ARIMA/SARIMA nebo dynamickou regresi.
+
+  \item \term{Co je etika a informační etika?}
+
+  Etika je systematické uvažování o tom, co je správné jednání. V datové analytice nejde jen o právní
+  soulad, ale také o přiměřenost, férovost, transparentnost a odpovědnost. Informační etika se týká
+  sběru, uchovávání, sdílení, zpracování a používání informací. Řeší soukromí, přesnost, vlastnictví
+  informací, dostupnost, odpovědnost za rozhodnutí a riziko poškození lidí chybným nebo neférovým
+  výstupem.
+
+  \item \term{Co jsou otevřená data a jak se liší od veřejně dostupných dat?}
+
+  Otevřená data jsou zveřejněná tak, aby byla strojově čitelná, dobře dokumentovaná, licenčně
+  použitelná a ideálně dostupná přes hromadné stažení nebo API. Veřejně dostupná data mohou být
+  pouze zobrazena na webu, ale nemusí mít licenci pro další použití, vhodný formát ani metadata.
+  PDF na webu tedy může být veřejné, ale nemusí být skutečně otevřeným datovým zdrojem.
+
+  \item \term{Jaké je základní členění strojového učení a jaké znáte unsupervised metody?}
+
+  Základní členění je učení s učitelem, učení bez učitele, učení s posilováním a někdy také
+  semi-supervised/self-supervised učení. Učení bez učitele hledá strukturu bez cílové proměnné.
+  Typické metody jsou shlukování, PCA a jiné redukce dimenze, asociační pravidla, detekce anomálií
+  a topic modeling.
+
+  \item \term{Jak fungují rozhodovací stromy a jaké existují další klasifikační metody?}
+
+  Rozhodovací strom rekurzivně dělí data podle pravidel typu \(x_j \le c\), aby v listech vznikly
+  co nejčistší skupiny. Pro klasifikaci se používá například Gini impurity nebo informační zisk.
+  Další klasifikační metody jsou logistická regrese, k-NN, naive Bayes, SVM, rozhodovací lesy,
+  gradient boosting a neuronové sítě.
+
+  \item \term{Co znamená \uv{random} v metodě random forest?}
+
+  Random forest kombinuje mnoho rozhodovacích stromů. Náhodnost vzniká jednak bootstrapováním
+  pozorování pro každý strom, jednak náhodným výběrem podmnožiny prediktorů při hledání splitu.
+  Cílem je snížit korelaci mezi stromy a tím snížit rozptyl výsledného modelu.
+
+  \item \term{Jaký je rozdíl mezi Business Intelligence a Competitive Intelligence?}
+
+  Business Intelligence se zaměřuje hlavně na interní data organizace a jejich přeměnu na reporty,
+  dashboardy, KPI a rozhodovací podporu. Competitive Intelligence sleduje vnější prostředí:
+  konkurenci, trh, zákazníky, technologie, regulaci a veřejné zdroje. BI typicky integruje provozní
+  data do datového skladu, CI častěji pracuje s externími zdroji, OSINT, webem, registry a tržními
+  informacemi.
+
+  \item \term{Jak se předzpracovávají nestrukturovaná data a jaké jsou typické úlohy NLP?}
+
+  Text se obvykle čistí, normalizuje, tokenizuje, převádí na lemmata nebo stemmy a reprezentuje pomocí
+  bag-of-words, TF-IDF, embeddingů nebo jazykových modelů. U dokumentů se řeší také indexace a
+  vyhledávání. Typické úlohy NLP jsou klasifikace textů, sentiment analysis, extrakce entit,
+  topic modeling, sumarizace, překlad, informační vyhledávání a question answering.
+
+  \item \term{Jak modelovat sezónnost v regresních modelech a časových řadách?}
+
+  V regresi lze použít sezónní dummy proměnné, Fourierovy členy, trend, zpožděné hodnoty a interakce.
+  V časových řadách se používají sezónní diference a sezónní AR/MA složky. SARIMA model se značí
+  \((p,d,q)(P,D,Q)_s\), kde \(s\) je délka sezóny, například 4 pro čtvrtletní data nebo 12 pro
+  měsíční data.
+
+  \item \term{Co znamená exploratorní analýza dat?}
+
+  Exploratorní analýza dat je fáze poznávání dat před modelováním. Hledají se chyby, chybějící
+  hodnoty, odlehlá pozorování, rozdělení proměnných, vztahy mezi proměnnými a možné hypotézy.
+  Používají se deskriptivní statistiky, histogramy, boxploty, scatterploty, korelace a datové
+  profilování. EDA nemá dokazovat definitivní závěry, ale pomáhá dobře formulovat další analýzu.
+
+  \item \term{Co je informační chování a Wilsonův model?}
+
+  Informační chování popisuje, jak lidé rozpoznají informační potřebu, hledají informace, vybírají
+  zdroje, vyhodnocují relevanci a informace používají. Wilsonův model zdůrazňuje kontext uživatele,
+  bariéry hledání, aktivaci informační potřeby a způsoby vyhledávání. Pro státnice stačí říct, že
+  vyhledávání není jen technický dotaz do systému, ale lidský proces ovlivněný potřebou, situací,
+  motivací a dostupností zdrojů.
+
+  \item \term{Co je booleovský model vyhledávání?}
+
+  Booleovský model reprezentuje dokumenty a dotaz pomocí termů a logických operátorů AND, OR a NOT.
+  Dokument buď podmínku splní, nebo nesplní; klasický model tedy nepracuje s plynulým skóre relevance.
+  Výhodou je přesná kontrola dotazu, nevýhodou křehkost: příliš úzký dotaz může vrátit málo výsledků,
+  příliš široký dotaz mnoho nerelevantních dokumentů.
+
+  \item \term{Jaké znáte heuristické a metaheuristické optimalizační algoritmy?}
+
+  Heuristiky hledají dobré řešení bez záruky globální optimality. Patří sem greedy algoritmy,
+  lokální hledání, hill climbing, tabu search, simulated annealing, genetické algoritmy, ant colony
+  optimization a particle swarm optimization. Používají se u rozsáhlých kombinatorických úloh, kde
+  přesné metody jako úplné prohledávání nebo MILP mohou být příliš pomalé.
+
+  \item \term{Co je OSINT a jak souvisí s externími zdroji?}
+
+  OSINT je získávání a vyhodnocování informací z otevřených zdrojů: webů, registrů, médií, sociálních
+  sítí, akademických databází, veřejných dokumentů a otevřených dat. V analytice slouží k doplnění
+  interních dat o kontext trhu, konkurence, událostí nebo rizik. I u OSINT je nutné řešit kvalitu,
+  licenci, metodiku, etiku a ochranu osobních údajů.
+
+  \item \term{Jak se vyhodnocují metody strojového učení?}
+
+  U klasifikace se používá confusion matrix, accuracy, precision, recall, F1, ROC křivka a AUC.
+  U regrese například MAE, MSE, RMSE a $R^2$. Důležité je oddělit trénovací, validační a testovací
+  data, případně použít k-fold cross-validation. Metrika se volí podle cíle: jiná je vhodná pro
+  nevyváženou klasifikaci a jiná pro symetrickou regresní chybu.
+
+  \item \term{Jaké jsou předpoklady lineární regrese a co se stane při jejich porušení?}
+
+  Základní předpoklady jsou linearita v parametrech, náhodný výběr nebo vhodný výběrový mechanismus,
+  žádná perfektní multikolinearita, exogenita, homoskedasticita a pro malé vzorky často normalita
+  chyb. Porušení exogenity vede k vychýlení, heteroskedasticita a autokorelace typicky kazí standardní
+  chyby, multikolinearita zvyšuje nejistotu koeficientů a špatný funkční tvar vede k chybné
+  interpretaci.
+
+  \item \term{Co znamená korelace 0,8 mezi proměnnými?}
+
+  Korelace 0,8 znamená silnou kladnou lineární souvislost, ale ne důkaz kauzality. V regresi mezi
+  vysvětlujícími proměnnými může jít o multikolinearitu, která zvětšuje standardní chyby a zhoršuje
+  interpretaci jednotlivých koeficientů. Pokud jde o korelaci mezi predikcí a skutečností, ukazuje
+  silnou shodu, ale je potřeba doplnit i chybu a validaci mimo trénovací data.
+
+  \item \term{Jaký je životní cyklus datového projektu a co se děje při nasazení?}
+
+  Typický cyklus lze popsat přes CRISP-DM: business understanding, data understanding, data preparation,
+  modeling, evaluation a deployment. Při nasazení se řeší integrace do procesu, přístupová práva,
+  dokumentace, monitoring kvality dat, monitoring výkonu modelu, školení uživatelů, provozní odpovědnost
+  a plán údržby. Projekt je úspěšný až tehdy, když výstup skutečně podporuje rozhodování.
+
+  \item \term{Jak zajistit, aby se výstup datového projektu používal?}
+
+  Je nutné zapojit uživatele už při zadání, navázat výstup na konkrétní rozhodnutí, dobře definovat
+  metriky úspěchu, zajistit srozumitelnou interpretaci, školení, podporu a vlastnictví procesu.
+  U dashboardů pomáhá governance metrik, kvalita dat a pravidelný refresh. U modelů je potřeba
+  monitoring, vysvětlitelnost a možnost zpětné vazby.
+
+  \item \term{Jaké jsou metody a nástroje pro vizualizaci dat?}
+
+  Základními metodami jsou tabulky, sloupcové a spojnicové grafy, histogramy, boxploty, scatterploty,
+  heatmapy, mapy, dashboardy a interaktivní reporty. Nástroje zahrnují Excel, Power BI, Tableau, Qlik,
+  Python knihovny, R a webové knihovny. Volba grafu se řídí otázkou: porovnání, trend, rozdělení,
+  vztah, geografie nebo struktura.
+
+  \item \term{Jaké jsou principy big data?}
+
+  Big data se obvykle popisují pomocí charakteristik volume, velocity, variety, veracity a value.
+  Nejde jen o velký objem, ale i o rychlost vzniku, různorodost formátů, nejistou kvalitu a schopnost
+  vytěžit užitečnou hodnotu. Typické nástroje jsou distribuované úložiště, Spark, cloudové datové
+  platformy, streamové systémy a data lake/lakehouse.
+
+  \item \term{Co jsou random effects v panelových datech?}
+
+  Random effects model předpokládá, že jednotkový nepozorovaný efekt je náhodný a nekoreluje s
+  vysvětlujícími proměnnými. Oproti fixed effects umožňuje odhadnout i vliv časově neměnných proměnných,
+  ale vyžaduje silnější předpoklad exogenity jednotkového efektu. Pokud tento předpoklad neplatí,
+  bývá vhodnější fixed effects model.
+\end{enumerate}
+
+\section{Zouhar, Chudán, Zimmermann}
+Uvedená komise: doc. Ing. Jan Zouhar, Ph.D.; Ing. David Chudán, Ph.D.; Ing. Pavel Zimmermann, Ph.D.
+
+\begin{enumerate}
+  \item \term{Jmenujte zástupce učení s učitelem.}
+
+  Učení s učitelem pracuje s cílovou proměnnou. Pro regresi lze uvést lineární regresi, rozhodovací
+  stromy, random forest, gradient boosting a neuronové sítě. Pro klasifikaci logistickou regresi,
+  naive Bayes, k-NN, SVM, rozhodovací stromy, ensemble metody a neuronové sítě.
+
+  \item \term{Jaké jsou typické aplikace shlukování?}
+
+  Shlukování se používá pro segmentaci zákazníků, hledání podobných produktů, seskupování dokumentů,
+  detekci anomálií, kompresi dat, předzpracování pro další modelování a exploraci dat. Výsledkem
+  není \uv{správná třída}, ale navržená struktura podobnosti, kterou je nutné věcně interpretovat.
+
+  \item \term{Jaké jsou základní výstupy asociačních pravidel?}
+
+  Výstupem jsou pravidla typu \(X \Rightarrow Y\), například \uv{kdo koupí X, často koupí Y}.
+  Hodnotí se pomocí support, confidence, lift a dalších měr. Support říká, jak často se položky
+  vyskytují, confidence podmíněnou pravděpodobnost důsledku a lift porovnání vůči náhodné nezávislosti.
+
+  \item \term{Popište SHAP values a jejich interpretaci.}
+
+  SHAP values vysvětlují predikci modelu jako součet příspěvků jednotlivých proměnných vůči základní
+  hodnotě. Kladná SHAP hodnota predikci zvyšuje, záporná ji snižuje. Výhodou je jednotný rámec pro
+  lokální vysvětlení jedné predikce i globální přehled důležitosti proměnných. Nevýhodou je výpočetní
+  náročnost a riziko chybné kauzální interpretace.
+
+  \item \term{Vysvětlete LASSO, Ridge a Elastic Net. Jak škálování ovlivní výsledky?}
+
+  Ridge přidává \(L_2\) penalizaci a zmenšuje koeficienty, ale obvykle je nenuluje. LASSO používá
+  \(L_1\) penalizaci a může koeficienty nastavit přesně na nulu, takže vybírá proměnné. Elastic Net
+  kombinuje obě penalizace. Škálování je důležité, protože penalizace závisí na velikosti koeficientů;
+  proměnné s různými jednotkami by byly penalizovány nerovnoměrně.
+
+  \item \term{Jak interpretovat koeficienty v logistické regresi?}
+
+  Logistická regrese modeluje logaritmus odds:
+  \[
+    \log\frac{p}{1-p}=x^\top\beta.
+  \]
+  Koeficient \(\beta_j\) říká změnu log-odds při jednotkové změně \(x_j\). Po exponenciaci
+  \(e^{\beta_j}\) dostaneme odds ratio. Pokud je \(e^{\beta_j}=1{,}5\), odds jsou při jednotkové změně
+  proměnné 1,5krát vyšší, za jinak stejných podmínek.
+
+  \item \term{Jak volit práh klasifikace a co je ROC křivka?}
+
+  Model často vrací skóre nebo pravděpodobnost a prahová hodnota rozhoduje, kdy případ označíme jako
+  pozitivní. Nižší práh zvyšuje citlivost, ale může snížit přesnost. ROC křivka zobrazuje vztah mezi
+  true positive rate a false positive rate při různých prazích. AUC shrnuje schopnost modelu řadit
+  pozitivní případy před negativní.
+
+  \item \term{Co jsou algoritmy vyhledávání dokumentů a booleovský model?}
+
+  Vyhledávání dokumentů může být založeno na booleovském modelu, vektorovém modelu, BM25 nebo
+  embeddingovém vyhledávání. Booleovský model používá operátory AND, OR a NOT a dokument splní, nebo
+  nesplní dotaz. Vektorové a probabilistické modely navíc řadí dokumenty podle relevance.
+\end{enumerate}
+
+\section{Kliegr, Holý, Kučera}
+Uvedená komise: doc. Ing. Tomáš Kliegr, Ph.D.; doc. Mgr. Vladimír Holý, Ph.D.; Ing. Jan Kučera, Ph.D.
+
+\begin{enumerate}
+  \item \term{Jak řešit chybějící pozorování u regresních modelů?}
+
+  Nejprve je nutné určit mechanismus chybění: MCAR, MAR nebo MNAR. Jednoduché možnosti jsou odstranění
+  neúplných řádků nebo doplnění průměrem/mediánem, ale mohou být zkreslující. Lepší bývá imputace
+  podle modelu, multiple imputation, indikátor chybění nebo metody, které chybějící hodnoty zvládají
+  přímo. Vždy je potřeba dopad otestovat citlivostní analýzou.
+
+  \item \term{Co se stane, když data nejsou missing completely at random?}
+
+  Pokud chybění souvisí s pozorovanými nebo nepozorovanými hodnotami, prosté vyřazení řádků může
+  způsobit výběrové zkreslení. Odhady koeficientů i průměrů pak nemusí reprezentovat populaci. U MAR
+  lze pomoci modelovou imputací podle známých proměnných, u MNAR je problém těžší a vyžaduje model
+  mechanismu chybění nebo citlivostní scénáře.
+
+  \item \term{Jak charakterizovat SQL a jaké dotazy použít pro agregace?}
+
+  SQL je deklarativní jazyk pro práci s relačními databázemi. Základní dotaz používá \texttt{SELECT},
+  \texttt{FROM}, \texttt{WHERE}, \texttt{JOIN}, \texttt{GROUP BY}, agregační funkce a \texttt{HAVING}.
+  Pro agregace se používá například \texttt{COUNT}, \texttt{SUM}, \texttt{AVG}, \texttt{MIN} a
+  \texttt{MAX}. \texttt{WHERE} filtruje řádky před agregací, \texttt{HAVING} filtruje skupiny po
+  agregaci.
+
+  \item \term{Co je databázová transakce a proč seskupovat SQL příkazy do transakcí?}
+
+  Transakce je logická jednotka práce v databázi. Buď proběhne celá, nebo se změny vrátí zpět. Má
+  splňovat ACID: atomicitu, konzistenci, izolaci a trvanlivost. Seskupení příkazů do transakce chrání
+  databázi před neúplnými změnami, například aby se při převodu peněz neodepsala částka bez jejího
+  připsání.
+
+  \item \term{Co je one-hot encoding?}
+
+  One-hot encoding převádí kategoriální proměnnou na sadu binárních příznaků. Například barva
+  \(\{\text{červená}, \text{modrá}, \text{zelená}\}\) se převede na tři sloupce s hodnotami 0/1.
+  U lineární regrese s interceptem se obvykle jedna kategorie vynechá jako referenční, aby nevznikla
+  perfektní multikolinearita.
+
+  \item \term{Co je p-hodnota?}
+
+  P-hodnota je pravděpodobnost, že za platnosti nulové hypotézy dostaneme stejně extrémní nebo
+  extrémnější testovou statistiku, než pozorujeme. Malá p-hodnota znamená, že pozorovaný výsledek je
+  pod nulovou hypotézou nepravděpodobný. Není to pravděpodobnost, že nulová hypotéza je pravdivá.
+
+  \item \term{Jaké metodiky použít pro řízení datového projektu a co je DMBOK?}
+
+  Pro analytické projekty se hodí CRISP-DM, SEMMA, TDSP nebo agilní řízení s inkrementy. Pro obecné
+  projektové řízení lze zmínit PMBOK, PRINCE2 nebo Scrum. DMBOK je znalostní rámec pro data management,
+  ne metodika jednoho projektu. Řeší data governance, data quality, metadata, datovou architekturu,
+  bezpečnost a správu kmenových dat.
+
+  \item \term{Jaké metody použít pro binární predikci typu obsazeno/neobsazeno?}
+
+  Jde o binární klasifikaci. Použít lze logistickou regresi, rozhodovací strom, random forest, gradient
+  boosting, SVM, naive Bayes nebo neuronovou síť. Výběr závisí na velikosti dat, interpretovatelnosti,
+  nelinearitách a nákladech chyb. Vyhodnocení by mělo zahrnovat confusion matrix, precision, recall,
+  F1, ROC/AUC a vhodný práh.
+
+  \item \term{Jaké metody lze použít pro krátké panely a regionální/obecní data?}
+
+  U panelových dat lze použít pooled OLS, fixed effects, random effects, first differences nebo
+  dynamické panelové modely podle délky panelu a cíle analýzy. U krátkých panelů je potřeba hlídat
+  malý počet časových období, heterogenitu jednotek, časové efekty, prostorovou závislost a robustní
+  standardní chyby.
+
+  \item \term{Jak se jmenuje první uzel rozhodovacího stromu a co znamená?}
+
+  První uzel je kořenový uzel. Obsahuje celý trénovací soubor a první rozhodovací pravidlo, které
+  model vybral jako nejpřínosnější pro rozdělení dat. Pro interpretaci je důležitý, protože ukazuje
+  proměnnou a hranici, která v daném stromu nejvíce snižuje nečistotu podle zvoleného kritéria.
+
+  \item \term{Jak postupovat při ověření hypotézy o negativních příspěvcích na sociálních sítích?}
+
+  Nejprve definovat hypotézu, populaci příspěvků, období, zdroje a jednotku analýzy. Poté sesbírat
+  data, vyčistit text, vytvořit nebo použít sentiment model a získat skóre sentimentu. Následně lze
+  testovat podíl negativních příspěvků, porovnat jej s běžným obdobím nebo benchmarkem a vyhodnotit
+  nejistotu. Dataset by měl obsahovat text, čas, zdroj, metadata, případně ruční label sentimentu pro
+  validaci.
+
+  \item \term{Jak se rozhodovací strom učí z dat a jaké algoritmy znáte?}
+
+  Strom se učí rekurzivním dělením dat. V každém uzlu hledá proměnnou a hranici, která nejvíce zlepší
+  čistotu skupin. Pro klasifikaci se používá Gini impurity nebo entropy, pro regresi snížení rozptylu
+  či MSE. Známé algoritmy jsou ID3, C4.5, CART a jejich moderní implementace v ensemble metodách.
+
+  \item \term{Jaké jsou právní a etické otázky web scrapingu?}
+
+  Je potřeba respektovat autorská a databázová práva, smluvní podmínky webu, ochranu osobních údajů,
+  přiměřené zatížení serveru a bezpečnostní omezení. Scraping může být problematický, pokud obchází
+  technické zábrany, stahuje neveřejná data, porušuje licenci, zpracovává osobní údaje bez právního
+  titulu nebo narušuje provoz služby.
+
+  \item \term{Jak robot pozná, které stránky může stáhnout?}
+
+  Základní vodítko je soubor \texttt{robots.txt}, který uvádí pravidla pro roboty podle user-agent.
+  Může zakazovat určité cesty nebo uvádět mapu webu. Právně to samo o sobě nemusí vyřešit všechny
+  otázky, ale z hlediska etikety web crawlerů je vhodné pravidla respektovat, používat rozumnou
+  frekvenci požadavků a identifikovat crawler.
+
+  \item \term{Co je AUC, ROC křivka a confusion matrix?}
+
+  Confusion matrix vznikne porovnáním skutečných tříd s predikovanými třídami při zvoleném prahu.
+  ROC křivka zobrazuje TPR proti FPR pro různé prahy. Jeden bod na ROC odpovídá jednomu prahu, ne
+  nově trénovanému klasifikátoru. AUC je plocha pod ROC křivkou a vyjadřuje schopnost modelu řadit
+  pozitivní případy před negativní.
+
+  \item \term{Co je TF-IDF?}
+
+  TF-IDF je reprezentace textu založená na četnosti termu v dokumentu a jeho vzácnosti v kolekci.
+  TF říká, jak často se slovo v dokumentu vyskytuje, IDF snižuje váhu slov běžných napříč dokumenty.
+  Výsledkem je řídký vektor dokumentu vhodný pro klasifikaci, vyhledávání nebo podobnost dokumentů.
+\end{enumerate}
+
+\section{Zamazal, Tomanová, Vencovský}
+Uvedená komise: doc. Ing. Ondřej Zamazal, Ph.D.; Ing. Petra Tomanová, Ph.D., MSc; Ing. Filip Vencovský, Ph.D.
+
+\begin{enumerate}
+  \item \term{Jaké architektury neuronových sítí znáte?}
+
+  Základní architektury jsou dopředné plně propojené sítě, konvoluční sítě pro obraz a lokální vzory,
+  rekurentní sítě pro sekvence, LSTM/GRU jako stabilnější rekurentní varianty, autoenkodéry, grafové
+  neuronové sítě a transformery. Volba závisí na typu dat: tabulky, obraz, text, časové řady, grafy
+  nebo sekvence.
+
+  \item \term{Jak fungují rekurentní sítě?}
+
+  Rekurentní síť zpracovává sekvenci postupně a udržuje skrytý stav, který nese informaci z předchozích
+  kroků. Hodí se pro text, časové řady a jiné sekvence. Základní RNN trpí problémem mizejících nebo
+  explodujících gradientů, proto se používají LSTM a GRU s bránami, které lépe řídí zapamatování a
+  zapomínání informace.
+
+  \item \term{Jaké jsou obecné zásady vizualizace dat a prezentace informací?}
+
+  Graf má odpovídat otázce, publiku a typu dat. Je potřeba volit vhodný graf, jasně popsat osy,
+  jednotky a zdroj, nepřetěžovat barvami, zvýraznit hlavní sdělení a nezakrývat nejistotu. U časových
+  řad je důležité ukázat trend, sezónnost a změny měřítka; u srovnání kategorií jsou často lepší
+  sloupcové nebo bodové grafy než koláče.
+
+  \item \term{Jaká rizika mají výstupy LLM při dalším zpracování?}
+
+  LLM může halucinovat, měnit formát odpovědi, generovat nepřesné citace, převzít bias z dat, být
+  citlivý na prompt a produkovat věrohodně znějící nepravdy. Při automatickém dalším zpracování je
+  nutné validovat strukturu, kontrolovat fakta, používat schémata, testy, lidskou kontrolu u rizikových
+  výstupů a uchovávat auditní stopu.
+
+  \item \term{Jak modelovat binární proměnnou TRUE/FALSE regresními metodami?}
+
+  Přirozenou volbou je logistická regrese, která modeluje pravděpodobnost jevu v intervalu 0 až 1.
+  Alternativou je probit model nebo lineární pravděpodobnostní model. Lineární model je jednoduchý,
+  ale může predikovat hodnoty mimo interval a mívá heteroskedasticitu. Logit a probit jsou vhodnější
+  pro interpretaci pravděpodobností a klasifikaci.
+
+  \item \term{Jak obecně probíhá trénování neuronových sítí?}
+
+  Síť provede dopředný průchod, spočítá predikci a ztrátovou funkci. Poté se pomocí backpropagation
+  vypočítají gradienty ztráty podle vah a optimalizační algoritmus, například SGD nebo Adam, váhy
+  upraví. Proces se opakuje po dávkách dat a epochách. Sleduje se trénovací a validační chyba, aby
+  se odhalilo přeučení.
+
+  \item \term{Je rozumné modelovat ceny akcií lineární regresí?}
+
+  Pro krátkodobou predikci cen akcií je jednoduchá lineární regrese často problematická. Ceny bývají
+  nestacionární, mají volatilitu měnící se v čase, šum a slabý predikční signál. Smysluplnější je
+  pracovat s výnosy než s cenami, testovat stacionaritu, používat validační období v čase a srovnat
+  model s jednoduchým benchmarkem.
+
+  \item \term{Co je stacionarita?}
+
+  Stacionární časová řada má stabilní statistické vlastnosti v čase, zejména střední hodnotu, rozptyl
+  a autokovariance. Slabá stacionarita znamená konstantní střední hodnotu a rozptyl a kovarianci
+  závislou jen na zpoždění. Nestacionaritu lze řešit diferencováním, odstraněním trendu, transformací
+  nebo modely, které ji výslovně zohledňují.
+
+  \item \term{Vysvětlete Transformer a self-attention.}
+
+  Transformer zpracovává sekvenci pomocí attention mechanismu místo rekurence. Self-attention počítá,
+  jak silně se jednotlivé tokeny mají navzájem vnímat. Tokeny se převádějí na query, key a value
+  vektory; podobnost query a key určí váhy, kterými se zprůměrují value vektory. Díky tomu model
+  zachycuje dlouhé závislosti a dobře paralelizuje trénování.
+
+  \item \term{Jak zapojit analýzu sentimentu do modelu?}
+
+  Texty lze označit sentimentem ručně, lexikonem nebo klasifikačním modelem. Výstupem může být třída
+  pozitivní/neutrální/negativní nebo plynulé skóre. Toto skóre lze použít jako vysvětlující proměnnou,
+  agregovat v čase, napojit na události a validovat proti ručně anotovanému vzorku. Je nutné hlídat
+  jazyk, doménu, sarkasmus, negaci a posun významu.
+\end{enumerate}
+
+\section{Zouhar, Vencovský, Zamazal}
+Uvedená komise: doc. Ing. Jan Zouhar, Ph.D.; Ing. Filip Vencovský, Ph.D.; doc. Ing. Ondřej Zamazal, Ph.D.
+
+\begin{enumerate}
+  \item \term{Používá se lineární regrese jen pro lineární vztahy?}
+
+  Lineární regrese je lineární v parametrech, ne nutně v původních proměnných. Lze zahrnout logaritmy,
+  kvadratické členy, polynomy, spliny, interakce nebo transformace proměnných. Model je stále lineární,
+  pokud parametry vstupují lineárně. Například \(y=\beta_0+\beta_1x+\beta_2x^2+u\) je lineární
+  regresní model v parametrech.
+
+  \item \term{Jaký je rozdíl mezi lineární a logistickou regresí?}
+
+  Lineární regrese modeluje střední hodnotu spojité závislé proměnné. Logistická regrese modeluje
+  pravděpodobnost binárního jevu přes logistickou funkci a log-odds. Lineární regrese minimalizuje
+  čtverce chyb, logistická se obvykle odhaduje maximální věrohodností. Logistická regrese je vhodná,
+  když je výstup 0/1.
+
+  \item \term{Jaký je vztah mezi lineární regresí a neuronovými sítěmi?}
+
+  Lineární regrese je velmi jednoduchý model: lineární kombinace vstupů bez skrytých vrstev. Neuronová
+  síť lze chápat jako skládání lineárních transformací a nelineárních aktivačních funkcí. Bez nelineárních
+  aktivací by vícevrstvá síť byla opět jen lineární transformace. Nelinearity dávají sítím schopnost
+  aproximovat složité vztahy.
+
+  \item \term{Jaká transakční data jsou vhodná pro predikci odchodu zákazníků?}
+
+  Užitečná jsou data o nákupech, frekvenci používání služby, poslední aktivitě, reklamacích, platbách,
+  komunikaci se zákaznickou podporou, změnách tarifu, kampaních, návštěvách webu a smluvních událostech.
+  Důležitá je historie v čase, protože churn je často proces postupného slábnutí aktivity. Kvalita,
+  aktuálnost a správné časové členění dat zásadně ovlivňují predikci.
+\end{enumerate}
+
+\section{Zouhar, Kliegr, Kučera}
+Uvedená komise: doc. Ing. Jan Zouhar, Ph.D.; doc. Ing. Tomáš Kliegr, Ph.D.; Ing. Jan Kučera, Ph.D.
+
+\begin{enumerate}
+  \item \term{Vysvětlete formáty JSON, XML a CSV.}
+
+  CSV je jednoduchý tabulkový textový formát, kde řádky reprezentují záznamy a sloupce jsou oddělené
+  oddělovačem. JSON reprezentuje objekty a pole pomocí dvojic klíč-hodnota a je vhodný pro hierarchická
+  data a API. XML používá značky, atributy a stromovou strukturu; je formálnější a často spojovaný se
+  schématy, ale bývá objemnější.
+
+  \item \term{Jaká je vnitřní struktura JSON?}
+
+  JSON obsahuje objekty ve složených závorkách, pole v hranatých závorkách, řetězce, čísla, logické
+  hodnoty a null. Objekt je množina dvojic klíč-hodnota, kde klíč je řetězec.
+  Hodnota může být skalární, objekt nebo pole. JSON je častý pro webová API, protože je čitelný a
+  dobře podporovaný programovacími jazyky.
+
+  \item \term{Jaké jsou základní datové struktury například v Pythonu?}
+
+  Mezi základní struktury patří list pro uspořádanou měnitelnou sekvenci, tuple pro neměnitelnou
+  sekvenci, dict pro mapování klíč-hodnota, set pro množinu unikátních prvků a string pro text.
+  V datové analýze se často používají také tabulkové struktury jako DataFrame a numerická pole.
+
+  \item \term{Jakými metodami zkoumat souvislost a kauzalitu mezi dvěma proměnnými?}
+
+  Pro popis souvislosti lze použít korelaci, kontingenční tabulku, scatterplot, regresi nebo testy
+  rozdílů mezi skupinami. Kauzalita vyžaduje silnější design: experiment, přirozený experiment,
+  instrumentální proměnné, difference-in-differences, regression discontinuity nebo důkladnou kontrolu
+  confounderů. Korelace sama o sobě kauzalitu nedokazuje.
+
+  \item \term{Lze zobecnit výsledek regrese na celou populaci?}
+
+  Ano, pokud jsou splněny předpoklady pro inferenci: vhodný výběr nebo věcně obhajitelný datový
+  mechanismus, správná specifikace modelu, exogenita, dostatečná kvalita dat a správně počítané
+  standardní chyby. Pokud data nejsou reprezentativní, je zobecnění omezené na populaci podobnou
+  pozorovanému vzorku.
+
+  \item \term{Co znamená koeficient $R^2$?}
+
+  $R^2$ vyjadřuje podíl variability závislé proměnné vysvětlený modelem v rámci daného vzorku. Hodnota
+  blízká 1 znamená dobrou shodu s pozorovanými daty, ale neznamená kauzalitu ani dobrou predikci mimo
+  vzorek. Při přidávání proměnných běžné $R^2$ neklesá, proto se sleduje i adjustované $R^2$.
+
+  \item \term{Jaké jsou nástroje statistické indukce?}
+
+  Statistická indukce používá odhady parametrů, intervaly spolehlivosti, testy hypotéz, p-hodnoty,
+  standardní chyby, bootstrap a modelové předpoklady. Cílem je z výběrových dat usuzovat na populaci
+  a vyjádřit nejistotu závěru.
+
+  \item \term{Uveďte příklad testu statistické hypotézy a vysvětlete standard error.}
+
+  Příkladem je t-test nulové hypotézy, že regresní koeficient je nula. Testová statistika je odhad
+  dělený standardní chybou. Standard error je směrodatná odchylka výběrového rozdělení odhadu; měří,
+  jak moc by se odhad měnil při opakovaném výběru. Menší standardní chyba znamená přesnější odhad.
+
+  \item \term{Jaká je role EDA v datové vědě?}
+
+  EDA pomáhá pochopit data, ověřit kvalitu, najít odlehlé hodnoty, rozdělení, vztahy, chybějící
+  hodnoty a možné hypotézy. Je důležitá před modelováním, protože špatně pochopená data vedou ke
+  špatným proměnným, chybné validaci a mylné interpretaci výsledků.
+
+  \item \term{Jak kvantifikovat asociační pravidla a co znamená support?}
+
+  Asociační pravidla se hodnotí pomocí support, confidence, lift a conviction. Support je relativní
+  četnost výskytu položek v pravidle v celém datasetu. Nízký support znamená, že pravidlo může být
+  zajímavé, ale týká se malé části dat. Confidence vyjadřuje spolehlivost pravidla a lift sílu vztahu
+  oproti nezávislosti.
+
+  \item \term{Jak klasifikovat regresní modely a volit je podle typu úlohy?}
+
+  Regresní modely lze členit na lineární, zobecněné lineární, nelineární, penalizované, robustní,
+  panelové, časové a strojově učené regresní modely. Pro spojitou proměnnou často stačí lineární
+  regrese, pro binární logit/probit, pro počty Poissonova nebo negativně binomická regrese, pro časová
+  data dynamické modely a pro predikci složitých nelinearit ensemble nebo neuronové sítě.
+
+  \item \term{Jak transformovat závislé a nezávislé proměnné v lineární regresi?}
+
+  Často se používají logaritmy, kvadratické členy, interakce, standardizace, dummy proměnné, spliny
+  nebo agregace. Logaritmus pomáhá interpretovat procentní změny a snižuje šikmost. Kvadratický člen
+  zachycuje zakřivení. Interakce říká, že efekt jedné proměnné závisí na hodnotě jiné proměnné.
+
+  \item \term{Jak vypadá SARIMA model?}
+
+  SARIMA se značí \((p,d,q)(P,D,Q)_s\). První trojice popisuje nesezónní autoregresní řád, diferencování
+  a klouzavý průměr. Druhá trojice popisuje sezónní AR, sezónní diferenci a sezónní MA složku.
+  Parametr \(s\) je délka sezóny, například 4 pro čtvrtletní data.
+
+  \item \term{Jak fungují neuronové sítě, backpropagation a aktivační funkce?}
+
+  Neuronová síť skládá lineární transformace a nelineární aktivační funkce. Dopředný průchod spočítá
+  predikci, ztrátová funkce změří chybu a backpropagation spočítá gradienty. Optimalizátor, například
+  SGD nebo Adam, upraví váhy. Aktivační funkce jako ReLU, sigmoid nebo tanh dodávají modelu nelinearitu.
+\end{enumerate}
+
+\section{Zouhar, Chudán, Vencovský}
+Uvedená komise: doc. Ing. Jan Zouhar, Ph.D.; Ing. David Chudán, Ph.D.; Ing. Filip Vencovský, Ph.D.
+
+\begin{enumerate}
+  \item \term{Ovlivní logaritmická transformace následné kódování podle kvantilů?}
+
+  Monotónní transformace, jako je logaritmus pro kladné hodnoty, nemění pořadí pozorování. Pokud se
+  tedy kategorie tvoří čistě podle kvantilů stejné proměnné, hranice v pořadí zůstanou stejné. Změní
+  se ale vzdálenosti mezi hodnotami a interpretace rozdílů. Pro modelování může být logaritmus užitečný,
+  i když samotné kvantilové zařazení nezmění.
+
+  \item \term{Jaké způsoby tokenizace a reprezentace textu znáte?}
+
+  Tokenizace může být po slovech, znacích, n-gramech nebo subword jednotkách jako BPE či WordPiece.
+  Reprezentace textu může být bag-of-words, TF-IDF, topic model, word embeddings, contextual embeddings
+  z modelů typu BERT nebo vektor dokumentu získaný agregací či transformerem. Volba závisí na velikosti
+  dat, jazyku, výpočetních zdrojích a úloze.
+
+  \item \term{Jak funguje TF-IDF?}
+
+  TF-IDF váží term podle četnosti v dokumentu a vzácnosti v celém korpusu. Častá slova v jednom
+  dokumentu dostanou vyšší váhu, ale slova častá ve všech dokumentech jsou potlačena. Výsledkem je
+  vektor dokumentu, který je vhodný pro klasifikaci, podobnost a vyhledávání, ale nezachycuje slovosled
+  ani hlubší význam jako kontextové embeddingy.
+
+  \item \term{Na jakém principu funguje BERT a čím je DistilBERT odlišný?}
+
+  BERT je transformerový jazykový model založený na bidirekcionálním self-attention. Učí se kontextové
+  reprezentace tokenů, takže význam slova závisí na okolním textu. DistilBERT je menší a rychlejší
+  varianta vzniklá distilací znalostí z BERTu. Má méně parametrů, bývá levnější na inference a často
+  si zachová velkou část výkonu původního modelu.
+
+  \item \term{Jaké etické a regulační otázky vznikají při sběru a uchovávání dat?}
+
+  Je potřeba řešit účel zpracování, právní titul, minimalizaci dat, informovaný souhlas nebo jiný
+  základ, bezpečnost, omezení doby uchování, práva subjektů údajů, audit, přístupová oprávnění a
+  spravedlivé použití modelů. Eticky je důležité, aby data nebyla používána k nečekaným, škodlivým
+  nebo diskriminačním účelům.
+
+  \item \term{Jak se liší kvantové ML od klasického deep learningu?}
+
+  Klasický deep learning běží na klasických výpočetních zařízeních a optimalizuje parametrické modely
+  pomocí gradientních metod. Kvantové ML využívá kvantové stavy, superpozici a kvantové obvody, často
+  v hybridních schématech. Potenciální výhody se týkají některých speciálních výpočtů, ale praktické
+  limity jsou šum, malý počet qubitů, obtížná škálovatelnost a nejasná výhoda pro běžné datové úlohy.
+
+  \item \term{Jak se liší ML a DL v možnostech paralelizace?}
+
+  Mnoho klasických ML metod lze paralelizovat přes vzorky, stromy, foldy validace nebo grid search.
+  Deep learning je přirozeně paralelizovatelný v maticových operacích na GPU/TPU a přes mini-batche.
+  U velkých modelů se používá datová paralelizace, modelová paralelizace a pipeline paralelizace.
+  Limitem je komunikace gradientů, paměť a synchronizace.
+
+  \item \term{Jak odhadovat časovou náročnost prolomení algoritmu z časových dat?}
+
+  Záleží na povaze dat. Pokud jde o čas do události, lze použít survival analýzu, hazardní modely nebo
+  regresi času do prolomení. Pokud jde o opakované pokusy v čase, lze použít časové řady nebo model
+  počtů. Důležité je zachytit cenzorování, velikost instance, parametry algoritmu, hardware a nejistotu
+  odhadu.
+
+  \item \term{Podle čeho volit lineární nebo zobecněný lineární model?}
+
+  Rozhoduje typ závislé proměnné a rozdělení chyby. Pro spojitou přibližně normální proměnnou je
+  vhodná lineární regrese. Pro binární proměnnou logit/probit, pro počty Poissonova nebo negativně
+  binomická regrese, pro podíly a pravděpodobnosti speciální modely podle kontextu. GLM používá link
+  funkci a rozdělení z exponenciální rodiny.
+
+  \item \term{Jaké unsupervised metody lze použít pro obrazová data?}
+
+  Lze použít shlukování embeddingů, PCA nebo autoenkodéry pro redukci dimenze, self-supervised učení,
+  segmentaci obrazu, detekci anomálií a generativní modely. Často se nejprve obraz převede na vektor
+  příznaků pomocí CNN nebo vision transformeru a teprve nad embeddingy se provádí shlukování či
+  vyhledávání podobnosti.
+
+  \item \term{Jak funguje AR(1) proces?}
+
+  AR(1) model má tvar
+  \[
+    y_t = c + \varphi y_{t-1} + \varepsilon_t.
+  \]
+  Aktuální hodnota závisí na předchozí hodnotě a náhodném šoku. Pokud \(|\varphi|<1\), proces je
+  stacionární a šoky postupně odeznívají. Čím je \(\varphi\) blíže 1, tím je řada perzistentnější.
+
+  \item \term{Jaký typ regrese použít pro predikci interakcí na sociálních sítích?}
+
+  Záleží na cílové proměnné. Pro počty reakcí je vhodná Poissonova nebo negativně binomická regrese,
+  protože jde o nezáporné počty a data bývají přerozptýlená. Pro binární vysoký/nízký engagement
+  logistická regrese. Pro silně nelineární predikci lze použít gradient boosting nebo neuronové sítě.
+
+  \item \term{Jak fungují enkodéry a dekodéry?}
+
+  Enkodér převádí vstup na vnitřní reprezentaci, která má zachytit podstatné informace. Dekodér z této
+  reprezentace generuje výstup, například rekonstruovaný vstup, překlad nebo text. V autoenkodéru se
+  učí kompaktní latentní reprezentace, v transformerových seq2seq modelech enkodér čte vstupní sekvenci
+  a dekodér generuje cílovou sekvenci.
+
+  \item \term{Jak se používají embeddingy v textových úlohách?}
+
+  Embedding převádí slovo, token, větu nebo dokument na hustý vektor. Podobné významy by měly mít
+  podobné vektory. Embeddingy se používají pro klasifikaci textů, vyhledávání podobných dokumentů,
+  doporučování, clustering, RAG a vstupy do neuronových modelů. Kontextové embeddingy mění reprezentaci
+  podle okolního textu.
+
+  \item \term{Proč se zabývat redukcí rozměru dat?}
+
+  Redukce rozměru snižuje počet proměnných při zachování důležité informace. Pomáhá vizualizaci,
+  odstranění redundance, snížení šumu, rychlejšímu výpočtu a někdy lepší generalizaci. Typické metody
+  jsou PCA, faktorová analýza, autoenkodéry, t-SNE a UMAP. Je ale nutné hlídat ztrátu interpretace.
+\end{enumerate}
+
+\section{Zouhar, Chudán, Vencovský: databáze a evaluace}
+Tato skupina pochází ze stejné komise jako předchozí část, ale otázky se v protokolech opakovaly
+u databází a evaluace modelů, proto jsou pro přehlednost oddělené.
+
+\begin{enumerate}
+  \item \term{Jaké typy databází znáte?}
+
+  Základní jsou relační databáze, dokumentové databáze, key-value úložiště, sloupcové databáze,
+  grafové databáze, časověřadé databáze, fulltextové indexy a analytické datové sklady. Volba závisí
+  na struktuře dat, transakčních požadavcích, dotazech, objemu, latenci a potřebě konzistence.
+
+  \item \term{Popište relační databáze.}
+
+  Relační databáze ukládá data do tabulek s řádky a sloupci. Vztahy se vyjadřují primárními a cizími
+  klíči. Důležité jsou integritní omezení, normalizace, SQL, transakce a ACID vlastnosti. Výhodou je
+  pevné schéma, konzistence a silná podpora dotazů; nevýhodou může být horší flexibilita pro velmi
+  proměnlivá nebo hierarchická data.
+
+  \item \term{Vysvětlete AUC a ROC křivku. Co představuje bod na ROC křivce?}
+
+  ROC křivka vzniká změnou klasifikačního prahu a zobrazuje true positive rate proti false positive
+  rate. Jeden bod odpovídá jednomu prahu. AUC je plocha pod ROC křivkou; hodnota 0,5 odpovídá náhodnému
+  řazení, 1 dokonalému řazení. AUC je nezávislá na konkrétním prahu, ale nemusí odpovídat business
+  nákladům chyb.
+\end{enumerate}
+
+\section*{Krátký seznam vynechaných typů otázek}
+\addcontentsline{toc}{section}{Krátký seznam vynechaných typů otázek}
+
+Vynechané byly zejména:
+\begin{itemize}
+  \item otázky z obhajoby závěrečné práce;
+  \item dotazy typu \uv{jak byste to použil ve své práci}, pokud bez konkrétní práce neměly obecnou
+  odpověď;
+  \item jednověté dotazy bez antecedentu, například \uv{uveďte příklad} nebo \uv{co je jeho cílem};
+  \item otázky k individuálním výsledkům studenta, konkrétním datasetům, použitým šumům, scénářům
+  nebo závěrům práce.
+\end{itemize}
+
+\end{document}

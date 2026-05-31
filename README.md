@@ -67,9 +67,15 @@ xelatex --version
 
 ## Struktura dokumentu
 
-Hlavní vstupní soubor je `main.tex`. Globální nastavení, balíčky a makra jsou
-v `preamble.tex`. Jednotlivé státnicové otázky jsou uložené samostatně v adresáři
-`topics/` a do hlavního dokumentu se skládají přes `\input`.
+Projekt obsahuje dva samostatné LaTeX dokumenty:
+
+- `main.tex` - hlavní příprava ke státnicím podle 22 oficiálních okruhů. Jednotlivé otázky jsou
+  uložené v adresáři `topics/` a do hlavního dokumentu se skládají přes `\input`.
+- `posudkove-otazky.tex` - samostatný doplňkový dokument s vybranými otázkami z posudků a odborných
+  rozprav. Zdrojovým souborem je `posudky_otazky.xlsx`; otázky k bakalářské práci, duplicitní vágní
+  dotazy a dotazy závislé na konkrétních výsledcích studenta jsou vynechané.
+
+Globální nastavení, balíčky a makra jsou v `preamble.tex` a používají je oba dokumenty.
 
 ## Kompilace a spuštění projektu
 
@@ -83,6 +89,18 @@ Výsledné PDF vznikne v:
 
 ```sh
 build/priprava.pdf
+```
+
+Posudkové otázky zkompiluješ samostatně:
+
+```sh
+make TEX=posudkove-otazky.tex JOBNAME=posudkove-otazky
+```
+
+Výsledné PDF vznikne v:
+
+```sh
+build/posudkove-otazky.pdf
 ```
 
 Pokud chceš zkompilovat jiný vstupní soubor, použij:
