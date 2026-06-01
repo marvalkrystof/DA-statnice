@@ -1,6 +1,6 @@
 \section{Zpracování textových dat. Lingvistické zpracování přirozeného jazyka, jazykové modely, analytické metody, existující nástroje}
 
-\subsection*{Základní vymezení}
+\subsection{Základní vymezení}
 
 Zpracování textových dat se zabývá převodem textu do podoby, se kterou mohou pracovat analytické algoritmy.
 Text jako takový je pro počítač pouze posloupnost znaků. Analytický model ale potřebuje příznaky:
@@ -35,7 +35,7 @@ může být převedena na:
     \item entita: zákazník.
 \end{itemize}
 
-\subsection*{Text není úplně bez struktury}
+\subsection{Text není úplně bez struktury}
 
 Text se často označuje jako nestrukturovaný, ale přirozený jazyk má mnoho vrstev:
 \begin{itemize}
@@ -64,7 +64,7 @@ Kromě toho má jazyk:
 nemusí bez úprav fungovat stejně dobře pro češtinu. U češtiny je důležitá hlavně kvalitní tokenizace,
 lemmatizace a morfologické značkování.
 
-\subsection*{Obecný pipeline zpracování textu}
+\subsection{Obecný pipeline zpracování textu}
 
 Typický postup:
 \begin{enumerate}
@@ -85,7 +85,7 @@ Typický postup:
 Ne všechny kroky jsou vždy potřeba. U moderních transformerových modelů se část jazykového zpracování učí
 uvnitř modelu, ale porozumění těmto krokům je pořád důležité pro diagnostiku chyb a interpretaci výsledků.
 
-\subsection*{Čištění a normalizace textu}
+\subsection{Čištění a normalizace textu}
 
 Čištění textu zahrnuje:
 \begin{itemize}
@@ -112,7 +112,7 @@ Normalizace může zahrnovat:
 \paragraph{Pozor.}
 Převod na malá písmena může zhoršit NER, protože velká písmena pomáhají poznat jména osob, organizací a míst.
 
-\subsection*{Tokenizace}
+\subsection{Tokenizace}
 
 Tokenizace rozděluje text na tokeny:
 \[
@@ -149,7 +149,7 @@ Moderní jazykové modely často nepracují přímo se slovy, ale se subword jed
 nebo unigram tokenizací. Výhoda je, že model umí zpracovat i neznámá nebo složená slova rozložením na části.
 Nevýhoda je horší interpretovatelnost tokenů a rozdílná délka vstupu podle použitého tokenizeru.
 
-\subsection*{Rozdělení na věty}
+\subsection{Rozdělení na věty}
 
 Sentence splitting rozděluje text na věty. Problém je, že tečka nemusí vždy znamenat konec věty:
 \begin{itemize}
@@ -161,7 +161,7 @@ Sentence splitting rozděluje text na věty. Problém je, že tečka nemusí vž
 
 Proto se používají pravidla nebo modely, které berou v úvahu kontext.
 
-\subsection*{Stop slova}
+\subsection{Stop slova}
 
 Stop slova jsou velmi častá slova, která často nenesou silný tematický význam:
 \[
@@ -188,9 +188,9 @@ Například slovo \uv{ne} je krátké a časté, ale pro sentiment je zásadní:
 \uv{dobré} $\neq$ \uv{ne dobré}.
 \end{center}
 
-\subsection*{Stemming a lemmatizace}
+\subsection{Stemming a lemmatizace}
 
-\subsubsection*{Stemming}
+\subsubsection{Stemming}
 
 Stemming převádí slova na hrubý kmen. Nemusí jít o skutečný slovníkový tvar.
 
@@ -215,7 +215,7 @@ Nevýhody:
     \item pro morfologicky bohaté jazyky může být příliš hrubý.
 \end{itemize}
 
-\subsubsection*{Lemmatizace}
+\subsubsection{Lemmatizace}
 
 Lemmatizace převádí slova na lemma, tedy základní slovníkový tvar.
 
@@ -242,7 +242,7 @@ Nevýhody:
     \item u neznámých slov může chybovat.
 \end{itemize}
 
-\subsection*{POS tagging a morfologická analýza}
+\subsection{POS tagging a morfologická analýza}
 
 POS tagging přiřazuje slovům slovní druh:
 \[
@@ -273,18 +273,18 @@ může být:
 
 Správná interpretace často závisí na kontextu.
 
-\subsection*{Syntaktické zpracování}
+\subsection{Syntaktické zpracování}
 
 Syntaktické zpracování analyzuje strukturu věty.
 
-\subsubsection*{Shallow parsing / chunking}
+\subsubsection{Shallow parsing / chunking}
 
 Chunking hledá fráze, například jmenné fráze:
 \begin{center}
 \uv{velmi dobrý fotoaparát} $\rightarrow$ noun phrase.
 \end{center}
 
-\subsubsection*{Full syntactic parsing}
+\subsubsection{Full syntactic parsing}
 
 Full parsing vytváří úplnější syntaktickou strukturu věty. Často se používá dependency parsing, který
 určuje vztahy mezi slovy:
@@ -323,7 +323,7 @@ Použití:
   \label{fig:q18-syntax-tree}
 \end{figure}
 
-\subsection*{Coreference resolution}
+\subsection{Coreference resolution}
 
 Coreference resolution řeší, které výrazy odkazují na stejnou entitu.
 
@@ -345,7 +345,7 @@ Coreference je důležitá pro:
     \item otázky a odpovědi.
 \end{itemize}
 
-\subsection*{Reprezentace textu pro modely}
+\subsection{Reprezentace textu pro modely}
 
 Algoritmy obvykle neumějí pracovat přímo s textem. Potřebují číselnou reprezentaci:
 \[
@@ -365,7 +365,7 @@ Základní přístupy:
     \item sentence embeddings.
 \end{itemize}
 
-\subsection*{Bag-of-words}
+\subsection{Bag-of-words}
 
 Bag-of-words reprezentuje dokument podle výskytu slov bez ohledu na jejich pořadí.
 
@@ -397,7 +397,7 @@ Nevýhody:
     \item nezvládá dobře synonymii a polysémii.
 \end{itemize}
 
-\subsection*{N-gramy}
+\subsection{N-gramy}
 
 N-gram je posloupnost $n$ tokenů:
 \[
@@ -424,7 +424,7 @@ Nevýhoda:
     \item velikost slovníku rychle roste s $n$.
 \end{itemize}
 
-\subsection*{TF-IDF reprezentace}
+\subsection{TF-IDF reprezentace}
 
 TF-IDF váha:
 \[
@@ -457,7 +457,7 @@ Kosinová podobnost:
 {\|d_i\|\|d_j\|}.
 \]
 
-\subsection*{Klasické jazykové modely}
+\subsection{Klasické jazykové modely}
 
 Jazykový model přiřazuje pravděpodobnost posloupnosti slov:
 \[
@@ -495,7 +495,7 @@ Problém:
     \item nepracuje dobře se synonymy ani s významem.
 \end{itemize}
 
-\subsection*{Word embeddings}
+\subsection{Word embeddings}
 
 Word embedding je vektorová reprezentace slova:
 \[
@@ -530,7 +530,7 @@ Podobnost slov lze měřit kosinovou podobností:
 {\|\mathbf{e}_a\|\|\mathbf{e}_b\|}.
 \]
 
-\subsection*{Distribuční hypotéza}
+\subsection{Distribuční hypotéza}
 
 Embeddingy vycházejí z distribuční hypotézy:
 \begin{center}
@@ -544,7 +544,7 @@ Například slova \uv{pes} a \uv{kočka} se často vyskytují v podobných konte
 
 Proto by jejich vektory měly být blízko.
 
-\subsection*{Word2Vec}
+\subsection{Word2Vec}
 
 Word2Vec je metoda pro učení slovních embeddingů pomocí jednoduché neuronové sítě.
 
@@ -564,7 +564,7 @@ Existují dvě základní varianty:
   \label{fig:q18-word2vec}
 \end{figure}
 
-\subsubsection*{CBOW}
+\subsubsection{CBOW}
 
 CBOW:
 \[
@@ -581,7 +581,7 @@ Vlastnosti:
     \item dobré pro častá slova.
 \end{itemize}
 
-\subsubsection*{Skip-gram}
+\subsubsection{Skip-gram}
 
 Skip-gram:
 \[
@@ -599,7 +599,7 @@ Vlastnosti:
     \item často používá negative sampling pro zrychlení trénování.
 \end{itemize}
 
-\subsection*{GloVe}
+\subsection{GloVe}
 
 GloVe je metoda založená na matici spoluvýskytů slov. Využívá globální informaci o tom, která slova se
 vyskytují ve stejných kontextech.
@@ -613,7 +613,7 @@ X_{ij}
 
 GloVe hledá vektory, které dobře vysvětlují poměry spoluvýskytů.
 
-\subsection*{Omezení klasických embeddingů}
+\subsection{Omezení klasických embeddingů}
 
 Word2Vec a GloVe jsou typicky \textbf{context-free}. Každé slovo má jeden vektor bez ohledu na význam.
 
@@ -629,7 +629,7 @@ může znamenat:
 
 Context-free embedding má pro oba významy jeden vektor.
 
-\subsection*{Kontextové embeddingy a transformery}
+\subsection{Kontextové embeddingy a transformery}
 
 Moderní modely jako BERT nebo GPT vytvářejí kontextové reprezentace. Stejné slovo může mít různý vektor
 podle věty.
@@ -665,7 +665,7 @@ Každý token se \uv{dívá} na jiné tokeny ve větě a určuje, které jsou pr
   \label{fig:q18-transformer}
 \end{figure}
 
-\subsection*{Typy jazykových modelů}
+\subsection{Typy jazykových modelů}
 
 \begin{itemize}
     \item \textbf{N-gramové modely} -- pravděpodobnost dalšího slova podle krátké historie.
@@ -682,9 +682,9 @@ Každý token se \uv{dívá} na jiné tokeny ve větě a určuje, které jsou pr
     a clustering dokumentů.
 \end{itemize}
 
-\subsection*{Analytické metody nad textem}
+\subsection{Analytické metody nad textem}
 
-\subsubsection*{Textová klasifikace}
+\subsubsection{Textová klasifikace}
 
 Textová klasifikace přiřazuje dokumentu třídu:
 \[
@@ -717,7 +717,7 @@ Vyhodnocení:
 Accuracy,\quad Precision,\quad Recall,\quad F_1.
 \]
 
-\subsubsection*{Clustering dokumentů}
+\subsubsection{Clustering dokumentů}
 
 Clustering hledá skupiny podobných dokumentů bez předem známých tříd.
 
@@ -737,7 +737,7 @@ Použitelné algoritmy:
     \item HDBSCAN.
 \end{itemize}
 
-\subsubsection*{Topic modeling}
+\subsubsection{Topic modeling}
 
 Topic modeling hledá skrytá témata v kolekci dokumentů.
 
@@ -787,7 +787,7 @@ Použití:
     \item tematická segmentace dokumentů.
 \end{itemize}
 
-\subsubsection*{Named Entity Recognition}
+\subsubsection{Named Entity Recognition}
 
 NER hledá pojmenované entity:
 \[
@@ -828,7 +828,7 @@ Rozlišuje se:
     \item \textbf{relaxed match} -- částečná shoda rozsahu nebo tolerantnější hodnocení.
 \end{itemize}
 
-\subsubsection*{Relation extraction}
+\subsubsection{Relation extraction}
 
 Relation extraction hledá vztahy mezi entitami:
 \[
@@ -850,7 +850,7 @@ Přístupy:
     \item LLM s následnou validací.
 \end{itemize}
 
-\subsection*{Sentiment analysis}
+\subsection{Sentiment analysis}
 
 Sentiment analysis neboli opinion mining se zabývá zjišťováním názorů, postojů, hodnocení a sentimentu
 vyjádřeného v textu.
@@ -867,7 +867,7 @@ Sentiment lze analyzovat na různých úrovních:
     \item \textbf{aspect-based} -- sentiment ke konkrétnímu aspektu entity.
 \end{itemize}
 
-\subsubsection*{Opinion quintuple}
+\subsubsection{Opinion quintuple}
 
 Formální reprezentace názoru:
 \[
@@ -888,7 +888,7 @@ Příklad:
 (\text{iPhone},\ \text{battery life},\ -,\ \text{user123},\ \text{2025-01-10}).
 \]
 
-\subsubsection*{Sentimentové lexikony}
+\subsubsection{Sentimentové lexikony}
 
 Lexikonový přístup používá seznamy slov s polaritou:
 \[
@@ -905,7 +905,7 @@ Problémy:
     \item nutné řešit negaci a modifikátory.
 \end{itemize}
 
-\subsubsection*{Shifters a modifikátory polarity}
+\subsubsection{Shifters a modifikátory polarity}
 
 Negace:
 \[
@@ -941,7 +941,7 @@ Věta:
 \end{quote}
 obsahuje pozitivní slovo \uv{skvělé}, ale celkový sentiment je negativní.
 
-\subsection*{Sumarizace textu}
+\subsection{Sumarizace textu}
 
 Sumarizace převádí dlouhý text nebo kolekci textů na kratší přehled.
 
@@ -964,7 +964,7 @@ U názorů je často důležitá \textbf{aspect-based sumarizace}, například:
 60 \% uživatelů chválí fotoaparát, 40 \% kritizuje baterii.
 \end{center}
 
-\subsection*{Question answering a RAG}
+\subsection{Question answering a RAG}
 
 Předtrénované jazykové modely mají omezení:
 \begin{itemize}
@@ -1012,7 +1012,7 @@ RAG umožňuje využít:
     \item lokální firemní dokumentaci.
 \end{itemize}
 
-\subsubsection*{Sparse a dense retrieval v RAG}
+\subsubsection{Sparse a dense retrieval v RAG}
 
 Sparse retrieval:
 \[
@@ -1027,7 +1027,7 @@ Dense retrieval:
 Dense retrieval je vhodný pro sémantickou podobnost, sparse retrieval je často lepší pro přesná klíčová
 slova, kódy a názvy.
 
-\subsection*{Knowledge graphs a KG-RAG}
+\subsection{Knowledge graphs a KG-RAG}
 
 Znalostní graf ukládá fakta jako uzly a hrany:
 \[
@@ -1047,9 +1047,9 @@ KG-RAG využívá místo nebo vedle textového korpusu strukturovaný znalostní
     \item menší riziko halucinací než u volného textu.
 \end{itemize}
 
-\subsection*{Vyhodnocení textových metod}
+\subsection{Vyhodnocení textových metod}
 
-\subsubsection*{Klasifikace}
+\subsubsection{Klasifikace}
 
 \[
 Accuracy=
@@ -1071,7 +1071,7 @@ F_1=
 2\frac{Precision\cdot Recall}{Precision+Recall}.
 \]
 
-\subsubsection*{IR}
+\subsubsection{IR}
 
 U vyhledávání:
 \begin{itemize}
@@ -1090,7 +1090,7 @@ Precision@k
 {k}.
 \]
 
-\subsubsection*{NER a IE}
+\subsubsection{NER a IE}
 
 U NER:
 \begin{itemize}
@@ -1106,7 +1106,7 @@ U relation extraction:
     \item správnost celého trojčlenu.
 \end{itemize}
 
-\subsubsection*{Sumarizace a generování}
+\subsubsection{Sumarizace a generování}
 
 Používají se automatické metriky:
 \begin{itemize}
@@ -1125,9 +1125,9 @@ U generativních modelů je však často nutné lidské hodnocení:
     \item bezpečnost.
 \end{itemize}
 
-\subsection*{Existující nástroje}
+\subsection{Existující nástroje}
 
-\subsubsection*{Python}
+\subsubsection{Python}
 
 \begin{itemize}
     \item \texttt{re} -- regulární výrazy;
@@ -1143,7 +1143,7 @@ U generativních modelů je však často nutné lidské hodnocení:
     \item \texttt{Haystack}, \texttt{LangChain}, \texttt{LlamaIndex} -- RAG aplikace.
 \end{itemize}
 
-\subsubsection*{R}
+\subsubsection{R}
 
 \begin{itemize}
     \item \texttt{tidytext},
@@ -1154,7 +1154,7 @@ U generativních modelů je však často nutné lidské hodnocení:
     \item \texttt{stm}.
 \end{itemize}
 
-\subsubsection*{Vyhledávání a indexace}
+\subsubsection{Vyhledávání a indexace}
 
 \begin{itemize}
     \item Apache Lucene,
@@ -1171,7 +1171,7 @@ U generativních modelů je však často nutné lidské hodnocení:
 Lucene/Elasticsearch jsou typické pro sparse retrieval a fulltextové vyhledávání. FAISS a vektorové
 databáze jsou typické pro dense retrieval nad embeddingy.
 
-\subsubsection*{Anotace dat}
+\subsubsection{Anotace dat}
 
 \begin{itemize}
     \item doccano,
@@ -1184,7 +1184,7 @@ databáze jsou typické pro dense retrieval nad embeddingy.
 
 Anotace je důležitá pro supervised úlohy jako sentiment, NER, relation extraction nebo klasifikace dokumentů.
 
-\subsection*{Typické problémy při zpracování textu}
+\subsection{Typické problémy při zpracování textu}
 
 \begin{itemize}
     \item mnoho jazykových variant,
@@ -1200,9 +1200,9 @@ Anotace je důležitá pro supervised úlohy jako sentiment, NER, relation extra
     \item ochrana osobních údajů.
 \end{itemize}
 
-\subsection*{Tradiční NLP vs. deep learning}
+\subsection{Tradiční NLP vs. deep learning}
 
-\subsubsection*{Tradiční přístup}
+\subsubsection{Tradiční přístup}
 
 Tradiční NLP často používá:
 \begin{itemize}
@@ -1229,7 +1229,7 @@ Nevýhody:
     \item často horší výkon u složitých úloh.
 \end{itemize}
 
-\subsubsection*{Deep learning přístup}
+\subsubsection{Deep learning přístup}
 
 Moderní modely, hlavně transformery, pracují více end-to-end:
 \[
@@ -1258,7 +1258,7 @@ Nevýhody:
     \item potřeba kontroly biasu a bezpečnosti.
 \end{itemize}
 
-\subsection*{Doporučený praktický postup}
+\subsection{Doporučený praktický postup}
 
 \begin{enumerate}
     \item definovat úlohu: klasifikace, vyhledávání, extrakce, sumarizace;
@@ -1273,7 +1273,7 @@ Nevýhody:
     \item připravit nasazení a monitoring.
 \end{enumerate}
 
-\subsection*{Shrnutí ke zkoušce}
+\subsection{Shrnutí ke zkoušce}
 
 Zpracování textových dat převádí přirozený jazyk do podoby vhodné pro vyhledávání, modelování a extrakci
 informací. Základní NLP pipeline zahrnuje tokenizaci, rozdělení vět, normalizaci, lemmatizaci, POS tagging,
@@ -1301,7 +1301,7 @@ nástroje jako Python knihovny scikit-learn, spaCy, Gensim, transformers a sente
 vyhledávací systémy Elasticsearch a FAISS, R balíčky tidytext a quanteda nebo anotovací nástroje doccano
 a Label Studio.
 
-\subsection*{Zdroje}
+\subsection{Zdroje}
 
 \begin{itemize}
     \item Jurafsky, Martin:

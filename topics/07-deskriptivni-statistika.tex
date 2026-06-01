@@ -1,6 +1,6 @@
 \section{Deskriptivní statistická analýza. Popis, agregace a komparace ekonomických dat}
 
-\subsection*{Smysl deskriptivní statistické analýzy}
+\subsection{Smysl deskriptivní statistické analýzy}
 \term{Deskriptivní statistická analýza} popisuje data tak, aby bylo zřejmé, co se v nich stalo,
 v jaké velikosti, struktuře, čase a mezi jakými skupinami. Nejde o dokazování kauzality ani o predikci
 budoucnosti. Cílem je shrnout realitu zachycenou v datech a připravit podklad pro interpretaci,
@@ -26,7 +26,7 @@ jevu: musí mít jasný věcný obsah, jednotku, územní a časové vymezení a
 tržby za měsíc, míra nezaměstnanosti nebo průměrná mzda nejsou jen čísla, ale ukazatele s konkrétní
 definicí.
 
-\subsection*{Typy proměnných a volba statistiky}
+\subsection{Typy proměnných a volba statistiky}
 Volba statistiky závisí na typu proměnné. Jinak se popisuje kategorie produktu, spokojenost na škále
 1--5 a peněžní hodnota objednávky.
 
@@ -59,7 +59,7 @@ stav k určitému datu, například zásoby k poslednímu dni měsíce. \term{In
 tok za období, například měsíční tržby. \term{Primární} ukazatele jsou přímo zjištěné, zatímco
 \term{sekundární} vznikají výpočtem, například podílem, rozdílem nebo indexem.
 
-\subsection*{Četnostní analýza}
+\subsection{Četnostní analýza}
 \term{Četnostní analýza} shrnuje, jak často se v datech vyskytují jednotlivé hodnoty nebo kategorie.
 Používá se hlavně pro nominální a ordinální proměnné, ale také pro kvantitativní hodnoty rozdělené
 do intervalů.
@@ -76,7 +76,7 @@ Příklad: u objednávek lze spočítat počet objednávek podle stavu \texttt{n
 \texttt{stornovana}. U ratingu spokojenosti lze navíc sledovat kumulativní podíl zákazníků, kteří
 hodnotili nejvýše určitou známkou.
 
-\subsection*{Míry polohy}
+\subsection{Míry polohy}
 \term{Míry polohy} popisují typickou nebo centrální hodnotu proměnné.
 
 \term{Aritmetický průměr}:
@@ -125,7 +125,7 @@ pásem nebo zákaznických segmentů.
   \label{fig:mean-median-skewness}
 \end{figure}
 
-\subsection*{Míry variability}
+\subsection{Míry variability}
 \term{Variabilita} popisuje, jak moc se hodnoty liší. Dvě skupiny mohou mít stejný průměr, ale úplně
 jinou stabilitu. Pro řízení firmy je často rozdíl mezi průměrem a variabilitou zásadní: stabilní
 proces s menším rozptylem může být hodnotnější než proces se stejným průměrem, ale velkými výkyvy.
@@ -159,7 +159,7 @@ Vyjadřuje relativní variabilitu vůči průměru. Hodí se pro porovnání var
 jednotkách nebo s různou úrovní, například tržeb dvou produktů. Smysl má hlavně pro kladná poměrová
 data a nenulový průměr.
 
-\subsection*{Boxplot a odlehlé hodnoty}
+\subsection{Boxplot a odlehlé hodnoty}
 \term{Boxplot} neboli krabicový graf shrnuje rozdělení pomocí mediánu, kvartilů, IQR, vousů a
 potenciálních odlehlých hodnot. Je vhodný hlavně pro porovnání kvantitativní proměnné mezi skupinami,
 například hodnoty objednávky podle kanálu nebo mzdy podle regionu.
@@ -183,7 +183,7 @@ procesu.
   \label{fig:boxplot-iqr-outliers}
 \end{figure}
 
-\subsection*{Tvar rozdělení}
+\subsection{Tvar rozdělení}
 Kromě polohy a variability se sleduje \term{tvar rozdělení}. Ten je důležitý pro interpretaci statistik
 i pro výběr dalších metod.
 
@@ -199,7 +199,7 @@ rozdělení hodnotu 0.
 Graficky se tvar rozdělení kontroluje histogramem, boxplotem, hustotou, případně Q-Q grafem. Samotná
 tabulka průměru a směrodatné odchylky může podstatnou strukturu skrýt.
 
-\subsection*{Agregace dat}
+\subsection{Agregace dat}
 \term{Agregace} je shrnutí detailních dat na vyšší úroveň. Z transakcí na úrovni položky objednávky
 lze například vytvořit denní tržby, měsíční počet zákazníků, tržby podle regionu nebo průměrnou
 hodnotu objednávky podle kanálu.
@@ -224,7 +224,7 @@ Příklad špatné a správné agregace:
   \item správně: celková konverze \(= \text{počet konverzí} / \text{počet návštěv}\).
 \end{itemize}
 
-\subsection*{Odvozené ukazatele a KPI}
+\subsection{Odvozené ukazatele a KPI}
 \term{Odvozený ukazatel} vzniká výpočtem z jiných proměnných. V ekonomických datech jde například o:
 \begin{itemize}
   \item marži \(= \text{tržby} - \text{náklady}\);
@@ -239,7 +239,7 @@ Příklad špatné a správné agregace:
 periodicitu, zdroj dat a interpretační pravidla. Nestačí zobrazit mnoho metrik. Užitečné KPI odpovídá
 na otázku, zda se organizace přibližuje ke konkrétnímu cíli.
 
-\subsection*{Komparace ekonomických dat}
+\subsection{Komparace ekonomických dat}
 \term{Komparace} znamená porovnávání hodnot mezi obdobími, skupinami, plánem a skutečností nebo vůči
 benchmarku. Ekonomická data se často porovnávají relativně, protože absolutní rozdíl bez kontextu
 může být zavádějící.
@@ -295,7 +295,7 @@ V reportingu se často používá i časová komparace typu \term{YTD} -- kumula
 aktuálního období -- a \term{YoY}, tedy meziroční srovnání stejného období. U sezonných dat je YoY
 často smysluplnější než prosté porovnání s bezprostředně předchozím měsícem.
 
-\subsection*{Kontingenční analýza a vztahy mezi proměnnými}
+\subsection{Kontingenční analýza a vztahy mezi proměnnými}
 Deskriptivní analýza nemusí popisovat jen jednu proměnnou. Často sleduje vztah dvou proměnných.
 
 \term{Kontingenční tabulka} zobrazuje četnosti kombinací dvou kategoriálních proměnných, například
@@ -311,7 +311,7 @@ U kombinace kvantitativní a kategoriální proměnné se porovnávají skupinov
 IQR, směrodatná odchylka a počet pozorování v každé skupině. Graficky se hodí boxplot nebo sloupcový
 graf s intervaly nejistoty, pokud chceme ukázat i spolehlivost odhadu.
 
-\subsection*{Základy statistické inference a testování hypotéz}
+\subsection{Základy statistické inference a testování hypotéz}
 Deskriptivní statistika popisuje pozorovaná data. Často ale chceme udělat krok dál: z výběru usuzovat
 na širší populaci nebo rozhodnout, zda pozorovaný rozdíl může být jen náhodná výběrová chyba. K tomu
 slouží \term{statistická inference}.
@@ -331,7 +331,7 @@ Výběrová statistika je zatížená nejistotou. Proto se kromě bodového odha
 \]
 Čím větší je výběr a čím menší je variabilita dat, tím menší je standardní chyba.
 
-\subsubsection*{Interval spolehlivosti}
+\subsubsection{Interval spolehlivosti}
 Interval spolehlivosti ukazuje rozumný rozsah hodnot populačního parametru. Pro průměr se často zapisuje:
 \[
   \bar{x}\pm t_{1-\alpha/2,n-1}\frac{s}{\sqrt{n}}.
@@ -341,7 +341,7 @@ U 95\% intervalu volíme \(\alpha=0{,}05\). Širší interval znamená větší 
 by při opakovaném stejném postupu dlouhodobě přibližně 95\% takto vytvořených intervalů obsahovalo
 skutečný parametr.
 
-\subsubsection*{Postup testování hypotéz}
+\subsubsection{Postup testování hypotéz}
 Testování hypotéz převádí věcnou otázku na statistické rozhodnutí.
 
 Typický postup:
@@ -366,7 +366,7 @@ Pozor: \(p\)-value není pravděpodobnost, že je nulová hypotéza pravdivá. T
 prakticky důležitý je efekt. Malé \(p\)-value může vzniknout u velmi malého, ale přesně odhadnutého
 rozdílu ve velkém vzorku.
 
-\subsubsection*{Chyby prvního a druhého druhu}
+\subsubsection{Chyby prvního a druhého druhu}
 Při testování můžeme udělat dva základní typy chyb:
 \begin{itemize}
   \item \term{chyba I. druhu} - zamítneme pravdivou \(H_0\); její pravděpodobnost kontroluje
@@ -378,7 +378,7 @@ Při testování můžeme udělat dva základní typy chyb:
 Snížení \(\alpha\) zmenšuje riziko falešně pozitivního závěru, ale při stejném rozsahu dat obvykle
 zvyšuje riziko, že skutečný efekt neodhalíme.
 
-\subsubsection*{t-test}
+\subsubsection{t-test}
 \term{t-test} se používá hlavně pro testování průměrů, když neznáme populační rozptyl a pracujeme s
 výběrovou směrodatnou odchylkou.
 
@@ -411,7 +411,7 @@ ceny. Potom testujeme průměr rozdílů:
 Před t-testem je potřeba vědět, co přesně jsou skupiny, zda jsou pozorování nezávislá, zda nejde o
 párová data a zda extrémy nebo silná šikmost nedělají průměr zavádějícím.
 
-\subsubsection*{F-test}
+\subsubsection{F-test}
 \term{F-test} používá testovou statistiku s F-rozdělením. Typicky vzniká jako poměr dvou odhadů
 rozptylu nebo jako porovnání vysvětlené a nevysvětlené variability.
 
@@ -439,7 +439,7 @@ V regresi se F-test používá také pro společnou významnost více koeficient
 vysvětlujících proměnných jako celek zlepšuje model. Zkouškově je důležité vědět, že t-test se často
 ptá na jeden parametr, zatímco F-test se často ptá na více omezení najednou.
 
-\subsection*{Chybějící hodnoty a kvalita dat}
+\subsection{Chybějící hodnoty a kvalita dat}
 Deskriptivní analýza má začít kontrolou kvality dat. Bez ní mohou být všechny statistiky formálně
 správné, ale věcně zavádějící.
 
@@ -458,7 +458,7 @@ Chybějící hodnoty nelze řešit mechanicky. Je rozdíl mezi \uv{neznámé}, \
 \uv{odmítnuto odpovědět} a \uv{chyba importu}. Před imputací nebo odstraněním je potřeba zjistit,
 zda chybění není systematické, například častější u určitého regionu nebo segmentu.
 
-\subsection*{Praktický postup deskriptivní analýzy}
+\subsection{Praktický postup deskriptivní analýzy}
 Typický postup:
 \begin{enumerate}
   \item vymezit analytickou otázku, jednotku pozorování a cílové publikum;
@@ -471,7 +471,7 @@ Typický postup:
   \item zdokumentovat zdroj, období, filtry, definice a omezení.
 \end{enumerate}
 
-\subsection*{Nástroje}
+\subsection{Nástroje}
 Deskriptivní statistiku lze dělat v tabulkových procesorech, databázích, programovacích jazycích
 i BI nástrojích.
 
@@ -507,7 +507,7 @@ hypotézy. Není. Je to pravděpodobnost tak extrémní testové statistiky za p
 Statistická významnost také není totéž co věcná významnost. U velkých dat může být i malý a prakticky
 nevýznamný rozdíl statisticky významný.
 
-\subsection*{Shrnutí ke zkoušce}
+\subsection{Shrnutí ke zkoušce}
 \begin{itemize}
   \item Deskriptivní analýza popisuje již pozorovaná data; neprokazuje kauzalitu a sama o sobě
   nepredikuje budoucnost.
@@ -532,7 +532,7 @@ nevýznamný rozdíl statisticky významný.
   testování více omezení.
 \end{itemize}
 
-\subsection*{Zdroje}
+\subsection{Zdroje}
 \begin{itemize}
   \item NIST/SEMATECH e-Handbook of Statistical Methods: \href{https://itl.nist.gov/div898/handbook/eda/eda.htm}{Exploratory Data Analysis}.
   \item NIST/SEMATECH e-Handbook of Statistical Methods: \href{https://www.itl.nist.gov/div898/handbook/eda/section3/eda351.htm}{Measures of Location}.

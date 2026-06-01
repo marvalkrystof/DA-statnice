@@ -15,7 +15,11 @@
 \DeclareMathOperator*{\plim}{plim}
 \usepackage{titlesec}
 \usepackage{tocloft}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
 \setlength{\cftsecnumwidth}{2.6em}
+\setlength{\cftsubsecnumwidth}{3.6em}
+\setlength{\cftsubsubsecnumwidth}{4.6em}
 \usepackage{fancyhdr}
 \hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
 \linespread{1.08}
@@ -42,5 +46,5 @@
 \cfoot{}
 \newcommand{\term}[1]{\textbf{#1}}
 \newcommand{\uv}[1]{„#1“}
-\newcommand{\todohead}{\subsection*{Co doplnit mimo dodané materiály}}
-\newcommand{\pozor}{\subsection*{Pozor u zkoušky}}
+\newcommand{\todohead}{\subsection{Co doplnit mimo dodané materiály}}
+\newcommand{\pozor}{\subsection{Pozor u zkoušky}}

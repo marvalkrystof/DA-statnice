@@ -1,6 +1,6 @@
 \section{Exploratorní analýza. Redukce rozměru dat, hlavní komponenty, faktorová, korespondenční a diskriminační analýza}
 
-\subsection*{Základní myšlenka exploratorní analýzy}
+\subsection{Základní myšlenka exploratorní analýzy}
 
 Exploratorní analýza dat, zkráceně EDA, slouží k tomu, abychom data nejdříve pochopili, než na ně
 začneme aplikovat formální modely. Cílem není hned dokazovat hypotézy, ale:
@@ -22,7 +22,7 @@ EDA typicky používá:
     \item metody pro detekci odlehlých hodnot.
 \end{itemize}
 
-\subsection*{Příprava dat před redukčními metodami}
+\subsection{Příprava dat před redukčními metodami}
 
 Před metodami jako PCA, faktorová analýza, korespondenční analýza nebo diskriminační analýza je potřeba
 data zkontrolovat.
@@ -53,12 +53,12 @@ z_{ij}
 Používá se hlavně tehdy, když jsou proměnné v různých jednotkách, například příjem v Kč,
 věk v letech a počet nákupů v kusech.
 
-\subsection*{Odlehlé hodnoty v EDA}
+\subsection{Odlehlé hodnoty v EDA}
 
 Odlehlé pozorování je hodnota, která se výrazně liší od většiny dat. Může jít o chybu měření,
 chybu zápisu, ale také o skutečně extrémní a informativní pozorování.
 
-\subsubsection*{Z-score metoda}
+\subsubsection{Z-score metoda}
 
 \[
 z_i = \frac{x_i-\bar{x}}{s}.
@@ -71,7 +71,7 @@ Za potenciální outlier se často považuje pozorování:
 
 Tato metoda je jednoduchá, ale předpokládá přibližně normální rozdělení a není robustní vůči extrémům.
 
-\subsubsection*{IQR metoda a Tukeyho hranice}
+\subsubsection{IQR metoda a Tukeyho hranice}
 
 Interkvartilové rozpětí:
 \[
@@ -94,7 +94,7 @@ x_i > Q_3 + 3IQR.
 
 Výhodou je větší robustnost než u z-score metody.
 
-\subsubsection*{Mahalanobisova vzdálenost}
+\subsubsection{Mahalanobisova vzdálenost}
 
 Pro vícerozměrná data:
 \[
@@ -115,7 +115,7 @@ Mahalanobisova vzdálenost bere v úvahu:
 
 Je proto vhodnější pro vícerozměrné outliery než posuzování každé proměnné zvlášť.
 
-\subsection*{Redukce rozměru dat}
+\subsection{Redukce rozměru dat}
 
 Redukční metody se používají, když je dataset příliš složitý:
 \begin{itemize}
@@ -134,12 +134,12 @@ Rozlišujeme:
     \item \textbf{redukci s ohledem na známé skupiny} -- diskriminační analýza.
 \end{itemize}
 
-\subsection*{Analýza hlavních komponent}
+\subsection{Analýza hlavních komponent}
 
 Analýza hlavních komponent, PCA, je metoda pro redukci počtu kvantitativních proměnných.
 Původní proměnné nahradí menším počtem nových proměnných, které se nazývají hlavní komponenty.
 
-\subsubsection*{Základní idea PCA}
+\subsubsection{Základní idea PCA}
 
 PCA hledá lineární kombinace původních proměnných:
 \[
@@ -157,7 +157,7 @@ Tyto nové proměnné mají dvě důležité vlastnosti:
     druhá komponenta co největší část zbývající variability atd.
 \end{itemize}
 
-\subsubsection*{Maticový zápis PCA}
+\subsubsection{Maticový zápis PCA}
 
 Mějme datovou matici:
 \[
@@ -210,7 +210,7 @@ kde $V$ je matice vlastních vektorů.
   \label{fig:pca-gaussian-scatter}
 \end{figure}
 
-\subsubsection*{Vysvětlená variabilita}
+\subsubsection{Vysvětlená variabilita}
 
 Celková variabilita:
 \[
@@ -228,7 +228,7 @@ Kumulativní vysvětlená variabilita prvních $m$ komponent:
 {\sum_{\ell=1}^p \lambda_\ell}.
 \]
 
-\subsubsection*{Volba počtu komponent}
+\subsubsection{Volba počtu komponent}
 
 Počet komponent lze volit podle:
 \begin{itemize}
@@ -246,7 +246,7 @@ Počet komponent lze volit podle:
     \item \textbf{interpretovatelnosti} -- komponenty musí dávat věcný smysl.
 \end{itemize}
 
-\subsubsection*{Interpretace komponent}
+\subsubsection{Interpretace komponent}
 
 Komponenty interpretujeme podle vah původních proměnných ve vlastních vektorech.
 Pokud má první komponenta velké kladné váhy u proměnných příjem, útrata a hodnota majetku,
@@ -261,7 +261,7 @@ můžeme ji interpretovat například jako \uv{ekonomickou sílu}.
 
 Velké absolutní hodnoty loadings říkají, že daná proměnná silně souvisí s danou komponentou.
 
-\subsubsection*{Rekonstrukce dat}
+\subsubsection{Rekonstrukce dat}
 
 Pokud ponecháme jen prvních $m<p$ komponent, dostaneme redukovanou aproximaci dat:
 \[
@@ -270,7 +270,7 @@ Pokud ponecháme jen prvních $m<p$ komponent, dostaneme redukovanou aproximaci 
 
 Čím větší je $m$, tím přesnější je rekonstrukce, ale tím menší je redukce.
 
-\subsubsection*{Výhody a nevýhody PCA}
+\subsubsection{Výhody a nevýhody PCA}
 
 Výhody:
 \begin{itemize}
@@ -288,7 +288,7 @@ Nevýhody:
     \item PCA maximalizuje variabilitu, ne nutně vztah k cílové proměnné.
 \end{itemize}
 
-\subsection*{Regrese hlavních komponent}
+\subsection{Regrese hlavních komponent}
 
 Regrese hlavních komponent, PCR, kombinuje PCA a lineární regresi.
 
@@ -312,13 +312,13 @@ PCR se používá hlavně při:
 Nevýhoda je, že PCA vybírá komponenty podle variability v $X$, nikoli podle toho, jak dobře vysvětlují $y$.
 Komponenta s malou variabilitou může být pro predikci $y$ důležitá, ale PCA ji může odstranit.
 
-\subsection*{Faktorová analýza}
+\subsection{Faktorová analýza}
 
 Faktorová analýza se podobá PCA, ale její cíl je jiný. PCA hledá nové proměnné, které vysvětlují
 variabilitu dat. Faktorová analýza předpokládá, že za pozorovanými proměnnými stojí menší počet
 nepozorovaných latentních faktorů.
 
-\subsubsection*{Základní idea}
+\subsubsection{Základní idea}
 
 Příklad:
 \begin{itemize}
@@ -336,7 +336,7 @@ Mnoho pozorovaných proměnných může být projevem několika latentních fakt
     \item finanční stabilita.
 \end{itemize}
 
-\subsubsection*{Faktorový model}
+\subsubsection{Faktorový model}
 
 Standardní faktorový model:
 \[
@@ -377,7 +377,7 @@ Kovarianční matice pozorovaných proměnných:
 \]
 kde $\Psi$ je diagonální matice unikátních rozptylů.
 
-\subsubsection*{Faktorové zátěže}
+\subsubsection{Faktorové zátěže}
 
 Prvek $\lambda_{jk}$ v matici $\Lambda$ říká, jak silně je proměnná $x_j$ spojena s faktorem $f_k$.
 
@@ -398,7 +398,7 @@ znamená, že proměnná silně souvisí s daným faktorem.
   \label{fig:factor-analysis-loadings}
 \end{figure}
 
-\subsubsection*{Komunalita a unikátnost}
+\subsubsection{Komunalita a unikátnost}
 
 Komunalita proměnné $x_j$:
 \[
@@ -417,7 +417,7 @@ u standardizovaných proměnných.
 
 Unikátnost vyjadřuje část variability, kterou společné faktory nevysvětlují.
 
-\subsubsection*{Postup faktorové analýzy}
+\subsubsection{Postup faktorové analýzy}
 
 \begin{enumerate}
     \item \textbf{Příprava dat:}
@@ -440,7 +440,7 @@ Unikátnost vyjadřuje část variability, kterou společné faktory nevysvětlu
     faktory pojmenujeme podle proměnných s nejvyššími zátěžemi.
 \end{enumerate}
 
-\subsubsection*{Rotace faktorů}
+\subsubsection{Rotace faktorů}
 
 Rotace nemění základní kvalitu vysvětlení, ale snaží se dosáhnout jednodušší interpretace.
 
@@ -459,7 +459,7 @@ Faktory mohou být korelované.
     \item \textbf{Direct oblimin} -- může vést k jednodušší faktorové struktuře.
 \end{itemize}
 
-\subsubsection*{PCA vs. faktorová analýza}
+\subsubsection{PCA vs. faktorová analýza}
 
 \begin{itemize}
     \item \textbf{PCA} vytváří komponenty jako lineární kombinace pozorovaných proměnných.
@@ -471,12 +471,12 @@ Faktory mohou být korelované.
     \item Faktorová analýza rozlišuje společnou a unikátní část variability.
 \end{itemize}
 
-\subsection*{Korespondenční analýza}
+\subsection{Korespondenční analýza}
 
 Korespondenční analýza je metoda pro exploraci vztahů v kontingenční tabulce. Používá se hlavně
 pro kategoriální data.
 
-\subsubsection*{Vstupní data}
+\subsubsection{Vstupní data}
 
 Máme kontingenční tabulku:
 \[
@@ -504,7 +504,7 @@ Sloupcové marginální četnosti:
 c_j = \sum_i p_{ij}.
 \]
 
-\subsubsection*{Princip}
+\subsubsection{Princip}
 
 Korespondenční analýza zkoumá, jak moc se skutečné četnosti liší od četností očekávaných při nezávislosti
 řádkové a sloupcové proměnné.
@@ -536,7 +536,7 @@ I
 
 Inertia je analogie vysvětlené variability v PCA. Říká, jak silná je celková asociace mezi řádky a sloupci.
 
-\subsubsection*{Standardizovaná reziduální matice}
+\subsubsection{Standardizovaná reziduální matice}
 
 Definujeme diagonální matice:
 \[
@@ -581,7 +581,7 @@ Maximální počet dimenzí:
 \min(I-1,J-1).
 \]
 
-\subsubsection*{Korespondenční mapa}
+\subsubsection{Korespondenční mapa}
 
 Řádkové souřadnice:
 \[
@@ -610,7 +610,7 @@ V praxi se většinou zobrazují první dvě dimenze.
   \label{fig:correspondence-analysis-biplot}
 \end{figure}
 
-\subsubsection*{Interpretace}
+\subsubsection{Interpretace}
 
 \begin{itemize}
     \item Body řádků blízko sebe mají podobné profily přes sloupce.
@@ -621,7 +621,7 @@ V praxi se většinou zobrazují první dvě dimenze.
     uvnitř stejného typu bodů, tedy řádek--řádek a sloupec--sloupec.
 \end{itemize}
 
-\subsubsection*{Použití}
+\subsubsection{Použití}
 
 Korespondenční analýza se hodí například pro:
 \begin{itemize}
@@ -631,7 +631,7 @@ Korespondenční analýza se hodí například pro:
     \item vizualizaci kontingenčních tabulek.
 \end{itemize}
 
-\subsection*{Diskriminační analýza}
+\subsection{Diskriminační analýza}
 
 Diskriminační analýza je metoda, která se používá, když známe skupiny pozorování a chceme najít kombinace
 proměnných, které tyto skupiny co nejlépe oddělují.
@@ -639,7 +639,7 @@ proměnných, které tyto skupiny co nejlépe oddělují.
 Na rozdíl od PCA a faktorové analýzy je diskriminační analýza \textbf{supervised} metoda, protože používá
 informaci o známé skupinové příslušnosti.
 
-\subsubsection*{Základní situace}
+\subsubsection{Základní situace}
 
 Máme:
 \begin{itemize}
@@ -655,7 +655,7 @@ Cíl:
     \item zjistit, které proměnné nejvíce přispívají k rozlišení skupin.
 \end{itemize}
 
-\subsubsection*{Fisherova diskriminační analýza}
+\subsubsection{Fisherova diskriminační analýza}
 
 Pro dvě skupiny hledáme lineární kombinaci:
 \[
@@ -698,7 +698,7 @@ kovarianci.
   \label{fig:lda-projection}
 \end{figure}
 
-\subsubsection*{Více skupin}
+\subsubsection{Více skupin}
 
 Pro více skupin definujeme:
 \[
@@ -731,7 +731,7 @@ Maximální počet diskriminačních funkcí je:
 \min(p,K-1).
 \]
 
-\subsubsection*{Lineární diskriminační analýza}
+\subsubsection{Lineární diskriminační analýza}
 
 Lineární diskriminační analýza, LDA, předpokládá, že skupiny mají stejnou kovarianční matici:
 \[
@@ -765,7 +765,7 @@ Pozorování přiřadíme do skupiny s největším skóre:
 \arg\max_k \delta_k(\mathbf{x}).
 \]
 
-\subsubsection*{Kvadratická diskriminační analýza}
+\subsubsection{Kvadratická diskriminační analýza}
 
 Pokud skupiny nemají stejnou kovarianční matici, lze použít QDA:
 \[
@@ -777,7 +777,7 @@ Klasifikační hranice pak nejsou lineární, ale kvadratické.
 QDA je flexibilnější než LDA, ale potřebuje více dat, protože odhaduje samostatnou kovarianční matici pro
 každou skupinu.
 
-\subsubsection*{Předpoklady diskriminační analýzy}
+\subsubsection{Předpoklady diskriminační analýzy}
 
 \begin{itemize}
     \item kvantitativní vysvětlující proměnné,
@@ -788,7 +788,7 @@ každou skupinu.
     \item bez silné multikolinearity mezi proměnnými.
 \end{itemize}
 
-\subsubsection*{Hodnocení klasifikace}
+\subsubsection{Hodnocení klasifikace}
 
 Výsledek diskriminační analýzy hodnotíme pomocí:
 \begin{itemize}
@@ -809,7 +809,7 @@ g=2 & \text{chyba} & \text{správně}
 \end{array}
 \]
 
-\subsection*{Multidimenzionální škálování}
+\subsection{Multidimenzionální škálování}
 
 Multidimenzionální škálování, MDS, převádí objekty do nízkorozměrného prostoru tak, aby byly co nejlépe
 zachovány původní vzdálenosti mezi objekty.
@@ -843,7 +843,7 @@ Stress
 
 Nižší stress znamená lepší zachování původních vzdáleností.
 
-\subsection*{Shluková analýza jako redukce pozorování}
+\subsection{Shluková analýza jako redukce pozorování}
 
 Shluková analýza redukuje složitost dat tím, že seskupuje podobná pozorování do shluků.
 Shluky by měly být:
@@ -892,7 +892,7 @@ Algoritmus iterativně:
     \item opakuje postup do stabilizace.
 \end{enumerate}
 
-\subsection*{Srovnání hlavních metod}
+\subsection{Srovnání hlavních metod}
 
 \begin{itemize}
     \item \textbf{PCA:}
@@ -915,7 +915,7 @@ Algoritmus iterativně:
     redukuje počet objektů tím, že je seskupuje do podobných skupin.
 \end{itemize}
 
-\subsection*{Typická interpretace výstupů}
+\subsection{Typická interpretace výstupů}
 
 \begin{itemize}
     \item U PCA sledujeme vlastní čísla, vysvětlenou variabilitu, loadings a skóre komponent.
@@ -925,7 +925,7 @@ Algoritmus iterativně:
     \item U shlukování sledujeme vzdálenosti, dendrogram, počet shluků a interpretaci shluků.
 \end{itemize}
 
-\subsection*{Časté chyby v interpretaci}
+\subsection{Časté chyby v interpretaci}
 
 \begin{itemize}
     \item Použití PCA bez standardizace, i když jsou proměnné v různých jednotkách.
@@ -945,7 +945,7 @@ kontingenční tabulky a vzdálenosti mezi řádkovými a sloupcovými body se n
 vzdálenosti uvnitř jednoho typu bodů. Diskriminační analýza je supervised metoda, a proto vyžaduje
 známé skupiny a validaci klasifikační úspěšnosti.
 
-\subsection*{Shrnutí ke zkoušce}
+\subsection{Shrnutí ke zkoušce}
 
 Exploratorní analýza slouží k pochopení dat, nalezení vzorů, odhalení problémů a přípravě dat pro další
 modelování. Redukční metody pomáhají zjednodušit složitá data.
@@ -985,7 +985,7 @@ J(\mathbf{a})
 
 Všechny tyto metody jsou citlivé na kvalitu dat, chybějící hodnoty, outliery a škálování proměnných.
 
-\subsection*{Zdroje}
+\subsection{Zdroje}
 \begin{itemize}
     \item NIST/SEMATECH e-Handbook of Statistical Methods:
     \href{https://itl.nist.gov/div898/handbook/eda/eda.htm}{Exploratory Data Analysis}.

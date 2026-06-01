@@ -1,7 +1,7 @@
 \section{Shlukové a klasifikační úlohy strojového učení. Rozhodovací stromy, shlukovací algoritmy, asociační pravidla}
 
 
-\subsection*{Klasifikační úloha}
+\subsection{Klasifikační úloha}
 
 Klasifikace je úloha učení s učitelem. Každý objekt je popsán vstupními atributy:
 \[
@@ -31,7 +31,7 @@ Klasifikace je vhodná tehdy, když máme historická data s už známou třído
 případu. U zkoušky je důležité odlišit ji od shlukování: u klasifikace jsou třídy předem dané, u shlukování
 se skupiny teprve hledají.
 
-\subsection*{Základní postup klasifikace}
+\subsection{Základní postup klasifikace}
 
 \begin{enumerate}
     \item připravit data s cílovou třídou,
@@ -43,7 +43,7 @@ se skupiny teprve hledají.
     \item použít model na nové objekty.
 \end{enumerate}
 
-\subsection*{Hodnocení klasifikace}
+\subsection{Hodnocení klasifikace}
 
 Klasifikační model se nehodnotí jen podle chyby na trénovacích datech. Důležitá je chyba na validační nebo
 testovací množině, protože ta lépe ukazuje generalizaci na nová data.
@@ -76,7 +76,7 @@ F_1=
 U nevyvážených tříd může být accuracy zavádějící. Například u 1 \% podvodů bude model, který vždy predikuje
 ``nepodvod'', mít accuracy 99 \%, ale prakticky žádnou hodnotu pro detekci podvodů.
 
-\subsection*{Rozhodovací stromy}
+\subsection{Rozhodovací stromy}
 
 Rozhodovací strom je klasifikační nebo regresní model složený z:
 \begin{itemize}
@@ -121,7 +121,7 @@ pozorování dané třídy v listu:
 \frac{n_{Lk}}{n_L}.
 \]
 
-\subsection*{TDIDT}
+\subsection{TDIDT}
 
 Do rodiny algoritmů \term{TDIDT} patří postupy založené na indukci stromu shora dolů:
 \[
@@ -148,14 +148,14 @@ Příklady algoritmů:
     \item CART.
 \end{itemize}
 
-\subsection*{Čistota uzlu}
+\subsection{Čistota uzlu}
 
 Čistota uzlu vyjadřuje, zda v uzlu převažuje jedna třída. Uzel je čistý, pokud všechna pozorování v uzlu
 patří do stejné třídy.
 
 Pokud je v uzlu směs tříd, je uzel nečistý. Algoritmus hledá takové dělení, které co nejvíce sníží nečistotu.
 
-\subsection*{Entropie}
+\subsection{Entropie}
 
 Entropie měří neurčitost nebo nečistotu množiny $S$.
 
@@ -181,7 +181,7 @@ H(S)=
 -p_+\log_2(p_+)-p_-\log_2(p_-).
 \]
 
-\subsection*{Information gain}
+\subsection{Information gain}
 
 Information gain říká, o kolik se sníží entropie po rozdělení podle atributu $A$.
 
@@ -215,13 +215,13 @@ Gain(S,A).
 \paragraph{Intuice.}
 Nejlepší atribut je takový, který po rozdělení vytvoří co nejčistší podskupiny.
 
-\subsection*{Problém informačního zisku}
+\subsection{Problém informačního zisku}
 
 Information gain preferuje atributy s velkým počtem hodnot. Extrémní příklad je identifikátor klienta:
 každý klient má unikátní ID, takže rozdělení podle ID vytvoří list pro každý záznam a trénovací data mohou být
 klasifikována dokonale. Takový strom ale nebude generalizovat.
 
-\subsection*{Gain ratio}
+\subsection{Gain ratio}
 
 C4.5 proto používá normalizovanou variantu:
 \[
@@ -245,7 +245,7 @@ SplitInfo(S,A)
 
 Gain ratio penalizuje atributy, které pouze mechanicky rozbijí data na mnoho malých skupin.
 
-\subsection*{Gini index}
+\subsection{Gini index}
 
 CART často používá Gini nečistotu:
 \[
@@ -272,7 +272,7 @@ A^*
 Gini(S,A).
 \]
 
-\subsection*{Práce se spojitými atributy}
+\subsection{Práce se spojitými atributy}
 
 U spojitých atributů se hledá práh:
 \[
@@ -304,7 +304,7 @@ a později:
 Temperature \leq 25.
 \]
 
-\subsection*{C4.5}
+\subsection{C4.5}
 
 C4.5 rozšiřuje ID3. Hlavní vlastnosti:
 \begin{itemize}
@@ -327,7 +327,7 @@ Seskupování hodnot pomáhá například u atributů s mnoha kategoriemi:
 \text{weekend}.
 \]
 
-\subsection*{Overfitting rozhodovacích stromů}
+\subsection{Overfitting rozhodovacích stromů}
 
 Stromy mají silný sklon k přeučení. Pokud strom roste příliš hluboko, může se naučit šum nebo náhodné
 zvláštnosti v trénovacích datech.
@@ -347,11 +347,11 @@ Accuracy_{\text{train}} \uparrow
 Accuracy_{\text{test}} \downarrow.
 \]
 
-\subsection*{Pruning}
+\subsection{Pruning}
 
 Pruning omezuje složitost stromu.
 
-\subsubsection*{Pre-pruning}
+\subsubsection{Pre-pruning}
 
 Strom se zastaví dříve, například pokud:
 \begin{itemize}
@@ -361,7 +361,7 @@ Strom se zastaví dříve, například pokud:
     \item byla dosažena maximální hloubka.
 \end{itemize}
 
-\subsubsection*{Post-pruning}
+\subsubsection{Post-pruning}
 
 Nejprve se vytvoří větší strom, poté se zjednodušuje. Přespecializované podstromy se nahrazují listy.
 
@@ -381,7 +381,7 @@ Err_{\text{val}}(T)
 C4.5 nepoužívá Reduced Error Pruning, ale statistické prořezávání pomocí intervalů spolehlivosti, takže
 nepotřebuje samostatná validační data pro pruning.
 
-\subsection*{Převod stromu na pravidla a tabulky}
+\subsection{Převod stromu na pravidla a tabulky}
 
 Každá cesta od kořene k listu odpovídá jednomu pravidlu:
 \[
@@ -397,7 +397,7 @@ Výhody:
     \item rozhodovací tabulky mohou být nejpřehlednější pro business uživatele.
 \end{itemize}
 
-\subsection*{Výhody a nevýhody rozhodovacích stromů}
+\subsection{Výhody a nevýhody rozhodovacích stromů}
 
 Výhody:
 \begin{itemize}
@@ -416,7 +416,7 @@ Nevýhody:
     nebo boostingu.
 \end{itemize}
 
-\subsection*{Shlukování}
+\subsection{Shlukování}
 
 Shlukování je úloha učení bez učitele. Nemáme cílovou proměnnou, ale chceme najít skupiny podobných objektů.
 
@@ -436,7 +436,7 @@ Shluk by měl být:
     \item pokud možno izolovaný.
 \end{itemize}
 
-\subsection*{Typy shlukovacích metod}
+\subsection{Typy shlukovacích metod}
 
 Shlukovací algoritmy lze dělit podle toho, jakou strukturu shluků předpokládají:
 
@@ -452,7 +452,7 @@ Shlukovací algoritmy lze dělit podle toho, jakou strukturu shluků předpoklá
 Volba metody závisí na tvaru shluků, měřítku dat, počtu pozorování, šumu, outlierech a na tom, zda potřebujeme
 předem zadat počet shluků.
 
-\subsection*{Míry vzdálenosti a podobnosti}
+\subsection{Míry vzdálenosti a podobnosti}
 
 Pro numerická data se často používá eukleidovská vzdálenost:
 \[
@@ -492,7 +492,7 @@ z_{ij}=
 \frac{x_{ij}-\bar{x}_j}{s_j}.
 \]
 
-\subsection*{Centroid}
+\subsection{Centroid}
 
 Centroid je střed shluku:
 \[
@@ -505,7 +505,7 @@ x_i.
 
 Nemusí odpovídat skutečnému pozorování. Slouží jako reprezentant shluku.
 
-\subsection*{K-means}
+\subsection{K-means}
 
 K-means je nehierarchická shlukovací metoda. Vstupem je počet shluků $k$.
 
@@ -536,7 +536,7 @@ Postup:
   \label{fig:k-means-iterations}
 \end{figure}
 
-\subsubsection*{Parametry k-means}
+\subsubsection{Parametry k-means}
 
 \begin{itemize}
     \item počet shluků $k$,
@@ -547,7 +547,7 @@ Postup:
     \item zastavovací kritérium.
 \end{itemize}
 
-\subsubsection*{Výhody a nevýhody k-means}
+\subsubsection{Výhody a nevýhody k-means}
 
 Výhody:
 \begin{itemize}
@@ -565,9 +565,9 @@ Nevýhody:
     \item typicky vyžaduje numerická data.
 \end{itemize}
 
-\subsection*{Volba počtu shluků}
+\subsection{Volba počtu shluků}
 
-\subsubsection*{Elbow method}
+\subsubsection{Elbow method}
 
 Sledujeme vnitroshlukový součet čtverců:
 \[
@@ -581,7 +581,7 @@ WCSS(k)
 S rostoucím $k$ hodnota klesá. Hledáme bod zlomu, po kterém přidání dalšího shluku už příliš nezlepší
 výsledek.
 
-\subsubsection*{Silhouette score}
+\subsubsection{Silhouette score}
 
 Pro pozorování $i$:
 \[
@@ -602,7 +602,7 @@ Platí:
 
 Vyšší hodnota znamená lepší přiřazení objektu ke shluku.
 
-\subsection*{Hierarchické shlukování}
+\subsection{Hierarchické shlukování}
 
 Hierarchické shlukování vytváří hierarchii shluků. Výsledkem je dendrogram.
 
@@ -618,7 +618,7 @@ Hierarchické shlukování vytváří hierarchii shluků. Výsledkem je dendrogr
   \label{fig:hierarchical-dendrogram}
 \end{figure}
 
-\subsubsection*{Aglomerativní shlukování}
+\subsubsection{Aglomerativní shlukování}
 
 Postup zdola nahoru:
 \begin{enumerate}
@@ -629,7 +629,7 @@ Postup zdola nahoru:
     \item opakujeme až do jednoho shluku nebo požadovaného počtu shluků.
 \end{enumerate}
 
-\subsubsection*{Divizní shlukování}
+\subsubsection{Divizní shlukování}
 
 Postup shora dolů:
 \begin{enumerate}
@@ -638,7 +638,7 @@ Postup shora dolů:
     \item končíme při požadovaném počtu shluků.
 \end{enumerate}
 
-\subsection*{Vzdálenosti mezi shluky}
+\subsection{Vzdálenosti mezi shluky}
 
 Single linkage:
 \[
@@ -673,7 +673,7 @@ D(C_g,C_h)=d(\mu_g,\mu_h).
 
 Wardova metoda minimalizuje nárůst vnitroshlukového součtu čtverců při sloučení shluků.
 
-\subsection*{DBSCAN}
+\subsection{DBSCAN}
 
 DBSCAN je hustotní shlukovací algoritmus. Nevyžaduje předem zadat počet shluků a umí označit izolované body
 jako šum.
@@ -694,7 +694,7 @@ Typy bodů:
 Výhodou DBSCAN je schopnost najít i nekulovité shluky a odlišit šum. Nevýhodou je citlivost na volbu
 $\varepsilon$ a horší chování při shlucích s velmi rozdílnou hustotou.
 
-\subsection*{Asociační pravidla}
+\subsection{Asociační pravidla}
 
 Asociační pravidla hledají vztahy mezi položkami nebo hodnotami atributů. Typické použití je analýza
 nákupního košíku.
@@ -714,7 +714,7 @@ Antecedent je levá strana pravidla, sukcedent je pravá strana.
 Na rozdíl od klasifikace nemusí být předem určena cílová proměnná. Pravidla se typicky hledají proto, aby
 odhalila zajímavé souvýskyty, například pro cross-selling, doporučování, kontrolu kvality nebo popis segmentů.
 
-\subsection*{Transakční data}
+\subsection{Transakční data}
 
 Transakce je množina položek:
 \[
@@ -731,7 +731,7 @@ Itemset je množina položek:
 X=\{bread,butter\}.
 \]
 
-\subsection*{Kontingenční tabulka pravidla}
+\subsection{Kontingenční tabulka pravidla}
 
 Pro pravidlo:
 \[
@@ -768,7 +768,7 @@ Kde:
   \label{fig:association-rule-venn}
 \end{figure}
 
-\subsection*{Základní charakteristiky pravidel}
+\subsection{Základní charakteristiky pravidel}
 
 Podpora:
 \[
@@ -826,7 +826,7 @@ Interpretace liftu:
 Vysoká confidence sama o sobě nestačí. Pokud je sukcedent velmi častý, může mít pravidlo vysokou confidence
 i bez skutečné asociace. Proto se sleduje i support a lift.
 
-\subsection*{Apriori algoritmus}
+\subsection{Apriori algoritmus}
 
 Apriori hledá časté množiny položek a z nich generuje pravidla.
 
@@ -842,7 +842,7 @@ Ekvivalentně:
 
 To umožňuje výrazně omezit počet kandidátů.
 
-\subsubsection*{Postup Apriori}
+\subsubsection{Postup Apriori}
 
 \begin{enumerate}
     \item najdi časté jedno-položkové množiny $F_1$,
@@ -884,13 +884,13 @@ slabá pravidla; příliš vysoký může potlačit pravidla s dobrým liftem.
 Známou alternativou je FP-Growth, který komprimuje transakční databázi do FP-tree a generuje časté itemsety
 bez opakovaného vytváření velkého množství kandidátů.
 
-\subsection*{GUHA a LISp-Miner}
+\subsection{GUHA a LISp-Miner}
 
 GUHA je česká tradice dobývání znalostí z databází. Kombinuje generování hypotéz s jejich ověřováním.
 LISp-Miner je systém navazující na GUHA. Procedura 4FT-Miner hledá asociační vztahy v datech pomocí
 kontingenčních tabulek a zadaných kritérií zajímavosti.
 
-\subsection*{CBA}
+\subsection{CBA}
 
 CBA, Classification Based on Associations, používá asociační pravidla pro klasifikaci. Hledají se pravidla,
 kde pravá strana obsahuje třídu:
@@ -910,7 +910,7 @@ U CBA se často pracuje s uspořádaným seznamem pravidel:
 Výhodou CBA je interpretovatelnost. Nevýhodou je nutnost pracovat s nominálními položkami; numerické
 proměnné se proto často diskretizují do intervalů.
 
-\subsection*{Srovnání klasifikace, shlukování a asociačních pravidel}
+\subsection{Srovnání klasifikace, shlukování a asociačních pravidel}
 
 \begin{itemize}
     \item \textbf{Klasifikace:}
@@ -923,7 +923,7 @@ proměnné se proto často diskretizují do intervalů.
     nehledáme třídy ani shluky, ale vztahy mezi položkami nebo atributy.
 \end{itemize}
 
-\subsection*{Pozor u zkoušky}
+\subsection{Pozor u zkoušky}
 
 \begin{itemize}
     \item U klasifikace je cílová třída známá v trénovacích datech; u shlukování žádnou cílovou třídu nemáme.
@@ -935,7 +935,7 @@ proměnné se proto často diskretizují do intervalů.
     \item U asociačních pravidel nehodnotit jen confidence. Důležité jsou support a lift.
 \end{itemize}
 
-\subsection*{Shrnutí ke zkoušce}
+\subsection{Shrnutí ke zkoušce}
 
 Klasifikační úlohy přiřazují objekty do předem známých tříd. Rozhodovací stromy jsou interpretovatelné
 klasifikátory, které postupně dělí data podle atributů. ID3 používá entropii a information gain, C4.5 přidává
@@ -952,7 +952,7 @@ Ant \Rightarrow Suc.
 Hodnotí se pomocí podpory, confidence a liftu. Apriori používá vlastnost, že nadmnožina nečasté množiny
 nemůže být častá.
 
-\subsection*{Zdroje}
+\subsection{Zdroje}
 
 \begin{itemize}
     \item scikit-learn User Guide:

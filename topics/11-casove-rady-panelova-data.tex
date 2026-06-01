@@ -1,6 +1,6 @@
 \section{Ekonometrické modely pro časové řady a panelová data}
 
-\subsection*{Základní rámec}
+\subsection{Základní rámec}
 
 Ekonometrické modely pro \textbf{časové řady} a \textbf{panelová data} rozšiřují klasickou regresi o situace,
 kdy pozorování nejsou jednoduše nezávislá. U časových řad záleží na pořadí pozorování v čase,
@@ -21,9 +21,9 @@ v čase, a proto můžeme kontrolovat nepozorované vlastnosti jednotek, které 
     Typicky řešíme nepozorovanou heterogenitu jednotek, fixed effects, random effects a dynamické panely.
 \end{itemize}
 
-\subsection*{1. Časové řady}
+\subsection{Časové řady}
 
-\subsubsection*{1.1 Co je časová řada}
+\subsubsection{Co je časová řada}
 
 Časová řada je posloupnost hodnot pozorovaných v pravidelných časových intervalech, například denně,
 měsíčně, kvartálně nebo ročně. Důležité je, že pozorování nelze libovolně přeházet. Hodnota HDP v roce
@@ -47,7 +47,7 @@ Oproti průřezovým datům je problém v tom, že pozorování v čase často n
     y_t \text{ může záviset na } y_{t-1}, y_{t-2}, \dots
 \]
 
-\subsubsection*{1.2 Komponenty časové řady}
+\subsubsection{Komponenty časové řady}
 
 Časovou řadu si často představujeme jako kombinaci několika složek:
 \[
@@ -136,7 +136,7 @@ Pokud máme například měsíční data, používáme typicky 11 dummy proměnn
 slouží jako referenční kategorie. Použití všech 12 dummy proměnných spolu s konstantou by vedlo
 k perfektní multikolinearitě.
 
-\subsubsection*{1.3 Stacionarita}
+\subsubsection{Stacionarita}
 
 Stacionarita je jedna z nejdůležitějších vlastností časových řad. Obecně znamená, že základní
 pravděpodobnostní vlastnosti procesu se v čase nemění. Pro ekonometrické modelování je důležitá
@@ -185,7 +185,7 @@ Platí:
 
 Bílý šum je tedy posloupnost náhodných chyb bez autokorelace.
 
-\subsubsection*{1.4 Autokorelace, ACF a PACF}
+\subsubsection{Autokorelace, ACF a PACF}
 
 Autokorelace znamená korelaci časové řady se svou vlastní minulostí.
 
@@ -243,7 +243,7 @@ V praxi se ACF/PACF používají společně s informačními kritérii, jako jso
   \label{fig:acf-pacf}
 \end{figure}
 
-\subsubsection*{1.5 Základní lineární modely časových řad}
+\subsubsection{Základní lineární modely časových řad}
 
 \paragraph{MA(q) model}
 
@@ -356,7 +356,7 @@ Například pro měsíční data bývá:
     s=12.
 \]
 
-\subsubsection*{1.6 Jednotkový kořen a ADF test}
+\subsubsection{Jednotkový kořen a ADF test}
 
 Jednotkový kořen znamená, že časová řada je nestacionární a šoky mají trvalý efekt. Typickým příkladem
 je random walk:
@@ -414,7 +414,7 @@ Varianty testu:
 Volba varianty závisí na povaze dat. Pokud řada viditelně roste v čase, je vhodné uvažovat variantu
 s trendem.
 
-\subsubsection*{1.7 Regrese s časovými řadami a autokorelace chyb}
+\subsubsection{Regrese s časovými řadami a autokorelace chyb}
 
 Základní regresní model pro časové řady:
 \[
@@ -501,7 +501,7 @@ Pomocná regrese typicky vysvětluje rezidua $\hat u_t$ pomocí původních regr
     \]
 \end{itemize}
 
-\subsubsection*{1.8 Regresní modely se zpožděnými proměnnými}
+\subsubsection{Regresní modely se zpožděnými proměnnými}
 
 V ekonomii často účinky nevznikají okamžitě. Například změna úrokové sazby může ovlivnit investice
 až s několikaměsíčním zpožděním. Proto používáme modely se zpožděnými proměnnými.
@@ -584,7 +584,7 @@ Dlouhodobý multiplikátor v ADL modelu je:
 \]
 pokud je model stabilní.
 
-\subsubsection*{1.9 Predikce a volba modelu}
+\subsubsection{Predikce a volba modelu}
 
 U časových řad je predikce velmi častým cílem. Predikce může být:
 \begin{itemize}
@@ -624,9 +624,9 @@ Důležité je rozlišovat:
     \item \textbf{out-of-sample predikci}: jak model predikuje nová data.
 \end{itemize}
 
-\subsection*{2. Vícerozměrné časové řady, VAR a kointegrace}
+\subsection{Vícerozměrné časové řady, VAR a kointegrace}
 
-\subsubsection*{2.1 Vícerozměrné časové řady}
+\subsubsection{Vícerozměrné časové řady}
 
 Pokud sledujeme více časových řad současně, používáme vektor:
 \[
@@ -646,7 +646,7 @@ Například:
 Vícerozměrné modely jsou důležité, protože ekonomické veličiny se často ovlivňují navzájem.
 Například úrokové sazby ovlivňují inflaci, ale zároveň centrální banka reaguje na inflaci úrokovými sazbami.
 
-\subsubsection*{2.2 VAR model}
+\subsubsection{VAR model}
 
 VAR model, tedy vector autoregression, modeluje více endogenních proměnných najednou.
 Každá proměnná je vysvětlována vlastními zpožděními i zpožděními ostatních proměnných.
@@ -712,7 +712,7 @@ nelze odhadnout automaticky bez dodatečných předpokladů.
 Impulse response function popisuje, jak celý systém reaguje na jednorázový šok v jedné proměnné.
 Například můžeme zkoumat, jak šok v úrokové sazbě ovlivní inflaci v dalších obdobích.
 
-\subsubsection*{2.3 Grangerova kauzalita}
+\subsubsection{Grangerova kauzalita}
 
 Proměnná $x$ Grangerovsky způsobuje proměnnou $y$, pokud minulost $x$ pomáhá predikovat $y$
 nad rámec minulosti samotné proměnné $y$.
@@ -727,7 +727,7 @@ Pokud $H_0$ zamítneme, minulost $x$ zlepšuje predikci $y$.
 Důležité: Grangerova kauzalita není kauzalita v experimentálním smyslu. Znamená predikční vztah,
 nikoliv nutně skutečný příčinný efekt.
 
-\subsubsection*{2.4 Integrace a kointegrace}
+\subsubsection{Integrace a kointegrace}
 
 Řada je integrována řádu $d$, značíme:
 \[
@@ -765,7 +765,7 @@ je stacionární, tedy $I(0)$, potom jsou $y_t$ a $x_t$ kointegrované.
 Intuice: jednotlivé řady mohou dlouhodobě růst nebo bloudit, ale existuje mezi nimi dlouhodobý
 rovnovážný vztah, od kterého se neodchylují trvale.
 
-\subsubsection*{2.5 Error Correction Model}
+\subsubsection{Error Correction Model}
 
 Pokud jsou dvě řady kointegrované, lze použít ECM:
 \[
@@ -790,7 +790,7 @@ Obvykle očekáváme:
 
 Pokud je $y_{t-1}$ nad dlouhodobou rovnováhou, záporné $\delta$ tlačí $\Delta y_t$ dolů.
 
-\subsubsection*{2.6 VECM}
+\subsubsection{VECM}
 
 VECM je vícerozměrná verze ECM pro kointegrované proměnné:
 \[
@@ -838,9 +838,9 @@ Jedna závislá proměnná a vysvětlující proměnné se zpožděními & FDL, 
 \end{tabular}
 \end{center}
 
-\subsection*{3. Panelová data}
+\subsection{Panelová data}
 
-\subsubsection*{3.1 Co jsou panelová data}
+\subsubsection{Co jsou panelová data}
 
 Panelová data kombinují průřezovou a časovou dimenzi. Sledujeme stejné jednotky v čase:
 \[
@@ -861,7 +861,7 @@ Rozdíl mezi pooled daty a panelem:
     \item \textbf{Panelová data:} v různých letech sledujeme stejné jednotky.
 \end{itemize}
 
-\subsubsection*{3.2 Typy panelů}
+\subsubsection{Typy panelů}
 
 \begin{itemize}
     \item \textbf{Vyvážený panel:} každá jednotka má pozorování ve všech obdobích.
@@ -874,7 +874,7 @@ Rozdíl mezi pooled daty a panelem:
 U krátkých panelů se často používají FE, RE, FD a související metody. U dlouhých panelů se více
 objevují problémy podobné časovým řadám, například stacionarita a autokorelace.
 
-\subsubsection*{3.3 Základní panelový model}
+\subsubsection{Základní panelový model}
 
 Základní panelová regrese:
 \[
@@ -925,7 +925,7 @@ Příklady $c_i$:
 
 Hlavní výhoda panelových dat je, že dokážou kontrolovat časově neměnné nepozorované faktory.
 
-\subsubsection*{3.4 Pooled OLS}
+\subsubsection{Pooled OLS}
 
 Pooled OLS ignoruje panelovou strukturu a odhaduje obyčejnou regresi:
 \[
@@ -949,7 +949,7 @@ Pooled OLS může být použitelný, pokud:
 \]
 ale v praxi je to často silný předpoklad.
 
-\subsubsection*{3.5 LSDV}
+\subsubsection{LSDV}
 
 LSDV, tedy least squares dummy variables, přidává dummy proměnné pro jednotky:
 \[
@@ -984,7 +984,7 @@ Nevýhoda:
 
 LSDV a FE dávají stejné odhady koeficientů $\beta$.
 
-\subsubsection*{3.6 First Difference estimator}
+\subsubsection{First Difference estimator}
 
 Model:
 \[
@@ -1045,7 +1045,7 @@ Nevýhody:
 
 FD je přirozený zejména pro panel s $T=2$.
 
-\subsubsection*{3.7 Fixed Effects estimator}
+\subsubsection{Fixed Effects estimator}
 
 FE používá tzv. within transformaci. Nejprve vezmeme průměr přes čas pro jednotku $i$:
 \[
@@ -1091,7 +1091,7 @@ Nevýhody FE:
     \item pokud se proměnná v čase téměř nemění, její efekt se odhaduje nepřesně.
 \end{itemize}
 
-\subsubsection*{3.8 Between estimator}
+\subsubsection{Between estimator}
 
 Between estimator používá pouze rozdíly mezi jednotkami. Odhaduje regresi časových průměrů:
 \[
@@ -1113,7 +1113,7 @@ Obecně je méně důležitý než FE a RE, ale pomáhá pochopit rozdíl mezi:
     \item between variabilitou.
 \end{itemize}
 
-\subsubsection*{3.9 Random Effects estimator}
+\subsubsection{Random Effects estimator}
 
 Random effects model opět vychází z:
 \[
@@ -1182,7 +1182,7 @@ Pokud:
 \]
 RE se blíží FE transformaci.
 
-\subsubsection*{3.10 Hausmanův test}
+\subsubsection{Hausmanův test}
 
 Hausmanův test porovnává FE a RE.
 
@@ -1229,7 +1229,7 @@ Praktická intuice:
   \label{fig:fe-re}
 \end{figure}
 
-\subsubsection*{3.11 Correlated Random Effects}
+\subsubsection{Correlated Random Effects}
 
 CRE, tedy correlated random effects nebo Mundlakův přístup, dovoluje, aby nepozorovaná heterogenita
 souvisela s průměry regresorů.
@@ -1263,7 +1263,7 @@ CRE je užitečný kompromis, protože umožňuje:
     \item někdy zachovat možnost odhadnout časově neměnné proměnné.
 \end{itemize}
 
-\subsubsection*{3.12 Časové efekty a two-way fixed effects}
+\subsubsection{Časové efekty a two-way fixed effects}
 
 Někdy existují šoky společné pro všechny jednotky v určitém čase. Například:
 \begin{itemize}
@@ -1305,7 +1305,7 @@ Tento model kontroluje:
     \item všechny šoky společné pro jednotky v daném čase.
 \end{itemize}
 
-\subsubsection*{3.13 Robustní inference v panelech}
+\subsubsection{Robustní inference v panelech}
 
 V panelových modelech často vzniká:
 \begin{itemize}
@@ -1351,7 +1351,7 @@ Pokud existuje korelace chyb, lze použít:
     \item vhodnější specifikaci modelu.
 \end{itemize}
 
-\subsubsection*{3.14 Dynamické panelové modely}
+\subsubsection{Dynamické panelové modely}
 
 Dynamický panel obsahuje zpožděnou závisle proměnnou:
 \[
@@ -1430,7 +1430,7 @@ Důležité diagnostiky:
     \item používá se také Sarganův nebo Hansenův test instrumentů.
 \end{itemize}
 
-\subsection*{4. Shrnutí rozdílů mezi hlavními modely}
+\subsection{Shrnutí rozdílů mezi hlavními modely}
 
 \begin{center}
 \begin{tabular}{|p{0.36\textwidth}|p{0.54\textwidth}|}
@@ -1464,7 +1464,7 @@ Dynamický panel se zpožděným $y$ & Arellano--Bond / GMM \\
 \end{tabular}
 \end{center}
 
-\subsection*{5. Nejdůležitější rovnice k zapamatování}
+\subsection{Nejdůležitější rovnice k zapamatování}
 
 \[
     \text{AR(p):}\qquad
@@ -1579,7 +1579,7 @@ Dynamický panel se zpožděným $y$ & Arellano--Bond / GMM \\
     u_{it}.
 \]
 
-\subsection*{6. Pozor u zkoušky}
+\subsection{Pozor u zkoušky}
 
 U časových řad je první otázka vždy stacionarita. Pokud jsou dvě řady trendové nebo $I(1)$, obyčejná
 regrese v úrovních může být zdánlivá. Nejdřív je potřeba řešit trend, jednotkový kořen a případně
@@ -1599,7 +1599,7 @@ V panelech se standardní chyby často musí clusterovat, typicky podle jednotek
 navíc potřeba myslet na Nickell bias a kontrolovat Arellano--Bond diagnostiky, hlavně absenci AR(2) v
 diferencovaných reziduích a přiměřenost instrumentů.
 
-\subsection*{7. Shrnutí ke zkoušce}
+\subsection{Shrnutí ke zkoušce}
 
 Časové řady řeší závislost pozorování v čase. Základní postup je řadu vykreslit, zkontrolovat trend,
 sezónnost, stacionaritu a autokorelaci, potom volit mezi AR, MA, ARMA, ARIMA, SARIMA, ADL/ARDL,
@@ -1611,7 +1611,7 @@ nepozorované heterogenity. Pooled OLS je jednoduchý, ale často riskuje omitte
 odstraňují $c_i$, RE stojí na silnějším předpokladu nekorelovanosti $c_i$ s regresory, CRE/Mundlak
 pomáhá tento předpoklad uvolnit a two-way FE přidává společné časové šoky.
 
-\subsection*{Zdroje}
+\subsection{Zdroje}
 \begin{itemize}
     \item statsmodels User Guide:
     \href{https://www.statsmodels.org/stable/tsa.html}{Time Series analysis}.
