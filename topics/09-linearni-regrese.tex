@@ -470,9 +470,27 @@ Nižší hodnota znamená lepší kompromis mezi shodou s daty a složitostí. A
 složitost mírněji, BIC přísněji, protože penalizace roste s velikostí vzorku. U lineární regrese se
 často sleduje také adjustované \(R^2\), které na rozdíl od běžného \(R^2\) trestá zbytečné proměnné.
 
-\term{Ridge} regrese používá \(L_2\) penalizaci a stabilizuje odhady při multikolinearitě. \term{LASSO}
-používá \(L_1\) penalizaci a může některé koeficienty nastavit přesně na nulu, takže funguje i jako
-výběr proměnných. \term{Elastic net} obě penalizace kombinuje.
+\term{Ridge} regrese používá \(L_2\) penalizaci:
+\[
+  \min_\beta \sum_{i=1}^n (y_i-x_i^\top\beta)^2 + \lambda \sum_{j=1}^p \beta_j^2.
+\]
+Koeficienty zmenšuje směrem k nule, ale obvykle je nenastaví přesně na nulu. Hodí se při multikolinearitě
+a v situacích, kdy mnoho proměnných nese malou část signálu.
+
+\term{LASSO} používá \(L_1\) penalizaci:
+\[
+  \min_\beta \sum_{i=1}^n (y_i-x_i^\top\beta)^2 + \lambda \sum_{j=1}^p |\beta_j|.
+\]
+Může některé koeficienty nastavit přesně na nulu, takže funguje jako výběr proměnných. Pokud jsou ale
+prediktory silně korelované, může vybrat jen jeden z několika podobných prediktorů.
+
+\term{Elastic net} kombinuje \(L_1\) a \(L_2\) penalizaci. Prakticky je užitečný, když chceme zároveň
+stabilizovat odhady a provádět výběr proměnných.
+
+U všech penalizovaných regresí je zásadní \term{škálování prediktorů}. Penalizace působí na velikost
+koeficientů, takže proměnná měřená v korunách, tisících korun nebo procentech by bez standardizace
+dostala jiný trest. Proto se numerické prediktory typicky standardizují a parametr \(\lambda\) se volí
+pomocí validačních dat nebo křížové validace. Intercept se obvykle nepenalizuje.
 
 \subsubsection{Dummy proměnné}
 
@@ -524,6 +542,12 @@ Zde je $\beta_1$ elasticita:
 \quad \Rightarrow \quad
 \beta_1\% \text{ změna } y.
 \]
+
+\paragraph{Logaritmus a kvantilové kódování.}
+Logaritmus je pro kladné hodnoty monotónní transformace. Nemění pořadí pozorování, takže pokud se
+kategorie tvoří jen podle kvantilů téže proměnné, stejné jednotky zůstanou ve stejných kvantilových
+skupinách. Změní se ale vzdálenosti mezi hodnotami a interpretace rozdílů, což může být důležité pro
+regresi nebo metody citlivé na měřítko.
 
 \subsubsection{Kvadratický člen}
 

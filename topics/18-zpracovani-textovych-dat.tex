@@ -682,6 +682,15 @@ Každý token se \uv{dívá} na jiné tokeny ve větě a určuje, které jsou pr
     a clustering dokumentů.
 \end{itemize}
 
+\paragraph{BERT a DistilBERT.}
+BERT je encoder-only transformer. Trénuje se zejména pomocí masked language modeling, tedy doplňování
+maskovaných tokenů z oboustranného kontextu. Proto se hodí pro úlohy porozumění textu, například
+klasifikaci, NER, extrakci odpovědi z textu nebo tvorbu kontextových embeddingů.
+
+DistilBERT je menší a rychlejší varianta BERTu vytvořená znalostní destilací. Student model se učí
+napodobovat výstupy většího učitele. Prakticky má méně parametrů, bývá levnější na inferenci a často si
+zachová velkou část výkonu původního BERTu, ale může být slabší u náročnějších nebo úzce doménových úloh.
+
 \subsection{Analytické metody nad textem}
 
 \subsubsection{Textová klasifikace}
@@ -867,6 +876,20 @@ Sentiment lze analyzovat na různých úrovních:
     \item \textbf{aspect-based} -- sentiment ke konkrétnímu aspektu entity.
 \end{itemize}
 
+\paragraph{Zapojení sentimentu do modelu.}
+Sentiment může být cílová proměnná, například klasifikace recenze jako pozitivní nebo negativní, nebo
+vstupní příznak pro jiný model. Při predikci poptávky, reputačního rizika nebo interakcí na sociálních
+sítích lze sentiment agregovat podle času, produktu, značky, regionu nebo autora. Typické příznaky jsou:
+\begin{itemize}
+    \item podíl negativních zmínek za týden,
+    \item průměrný sentiment produktu,
+    \item počet stížností na konkrétní aspekt.
+\end{itemize}
+
+Je nutné hlídat časové pořadí. Pokud model predikuje budoucí výsledek, sentimentové příznaky musí být
+dostupné před okamžikem predikce. Jinak vzniká data leakage. Kromě skóre sentimentu je vhodné ukládat
+i nejistotu klasifikace, zdroj textu a počet textů, ze kterých byla agregace spočtena.
+
 \subsubsection{Opinion quintuple}
 
 Formální reprezentace názoru:
@@ -974,6 +997,23 @@ Předtrénované jazykové modely mají omezení:
     \item neumí vždy spolehlivě uvést zdroje,
     \item výstup může být příliš obecný.
 \end{itemize}
+
+\subsubsection{Rizika výstupů LLM při dalším zpracování}
+Výstup jazykového modelu je nutné brát jako nespolehlivý mezivýsledek, dokud není validován. Typická
+rizika:
+\begin{itemize}
+    \item \term{halucinace} -- model doplní neexistující fakt, zdroj, citaci nebo číslo;
+    \item \term{nestabilní formát} -- výstup poruší očekávané JSON schéma, tabulku nebo názvy polí;
+    \item \term{bias a nevhodný obsah} -- model přebírá zkreslení z dat nebo promptu;
+    \item \term{prompt injection} -- text ve vstupních dokumentech může model navést k ignorování instrukcí;
+    \item \term{únik citlivých dat} -- při práci s osobními nebo interními daty je nutné řešit oprávnění
+    a minimalizaci vstupu;
+    \item \term{falešná jistota} -- plynulá formulace neznamená správnost.
+\end{itemize}
+
+Při produkčním použití se proto nastavuje validační vrstva: kontrola schématu, parsování strukturovaného
+výstupu, ověření proti zdrojům, citace na konkrétní dokumenty, pravidla pro odmítnutí odpovědi, testovací
+sada a monitoring chyb. U rozhodování s dopadem na lidi má být člověk nebo auditovatelný proces v kontrole.
 
 Retrieval-Augmented Generation, RAG, kombinuje jazykový model s vyhledáváním.
 

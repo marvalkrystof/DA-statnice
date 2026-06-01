@@ -339,6 +339,17 @@ je random walk, tedy ARIMA$(0,1,0)$.
   \label{fig:random-walk}
 \end{figure}
 
+\paragraph{Ceny akcií a lineární regrese.}
+U cen akcií je potřeba být opatrný. Samotná cena často bývá nestacionární a může se chovat podobně jako
+random walk, takže regrese cen v úrovních snadno vytvoří zdánlivý vztah a vysoké \(R^2\). V praxi se
+častěji modelují výnosy nebo log-výnosy:
+\[
+  r_t=\Delta \log(P_t),
+\]
+testuje se stacionarita, autokorelace a volatilita. Lineární regrese může být užitečná pro jednoduchý
+benchmark nebo vysvětlení vztahu k faktorům, ale predikce cen akcií je obtížná kvůli šumu, změnám režimu,
+efektivnosti trhu a riziku overfittingu.
+
 \paragraph{SARIMA}
 
 Pokud má řada sezónnost, používá se SARIMA:
@@ -623,6 +634,25 @@ Důležité je rozlišovat:
     \item \textbf{in-sample fit}: jak model sedí na datech, na kterých byl odhadnut,
     \item \textbf{out-of-sample predikci}: jak model predikuje nová data.
 \end{itemize}
+
+\subsubsection{Čas do události a odhad doby do prolomení}
+Některé otázky nejsou klasická predikce hodnoty \(y_t\), ale predikce času do události: kdy zákazník
+odejde, kdy zařízení selže nebo kdy se podaří prolomit algoritmus. Pokud pozorujeme délku čekání do
+události, je vhodné uvažovat \term{survival analýzu}.
+
+Základní pojmy:
+\begin{itemize}
+    \item \term{survival funkce} \(S(t)=P(T>t)\) říká pravděpodobnost, že událost nenastane do času \(t\);
+    \item \term{hazard} popisuje okamžité riziko události v čase \(t\), podmíněně tím, že do té doby
+    nenastala;
+    \item \term{cenzorování} znamená, že u části jednotek událost během pozorování nenastala, takže
+    známe jen dolní mez času do události.
+\end{itemize}
+
+U odhadu času prolomení algoritmu je potřeba zohlednit velikost instance, parametry algoritmu, hardware,
+počet pokusů, případné cenzorování a nejistotu. Pokud pozorujeme opakované počty pokusů v čase, mohou
+být vhodné i modely počtů nebo časové řady; pokud pozorujeme přímo dobu do úspěchu, dává větší smysl
+survival model nebo regrese času do události.
 
 \subsection{Vícerozměrné časové řady, VAR a kointegrace}
 

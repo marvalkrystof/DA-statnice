@@ -637,6 +637,28 @@ Používají se:
     \item LIME.
 \end{itemize}
 
+\subsubsection{SHAP hodnoty}
+\term{SHAP} hodnoty vysvětlují predikci jako součet příspěvků jednotlivých proměnných vůči základní
+hodnotě modelu:
+\[
+  \hat y_i = \phi_0 + \phi_{i1}+\cdots+\phi_{ip}.
+\]
+\(\phi_0\) je typicky průměrná predikce modelu a \(\phi_{ij}\) říká, jak hodnota proměnné \(j\) u
+pozorování \(i\) posunula predikci nahoru nebo dolů. Kladná SHAP hodnota predikci zvyšuje, záporná ji
+snižuje. U klasifikace se interpretace může vztahovat ke skóre, log-odds nebo pravděpodobnosti podle
+implementace, proto je nutné vědět, na jaké škále graf hodnoty ukazuje.
+
+SHAP lze použít lokálně i globálně:
+\begin{itemize}
+    \item lokálně vysvětluje jednu konkrétní predikci;
+    \item globálně shrnuje důležitost proměnných například průměrnou absolutní SHAP hodnotou;
+    \item dependence plot ukazuje, jak příspěvek proměnné souvisí s její hodnotou.
+\end{itemize}
+
+Pozor: SHAP je vysvětlení chování modelu, ne důkaz kauzálního efektu. Při silně korelovaných proměnných
+může být rozdělení příspěvků mezi proměnné citlivé na zvolenou metodu a interpretaci je potřeba opřít
+o doménovou znalost.
+
 \paragraph{Praktický kompromis.}
 Pokud je cílem auditovatelnost a vysvětlitelnost, může být vhodnější menší strom nebo pravidlový model. Pokud
 je cílem predikční výkon, často vítězí random forest nebo gradient boosting.

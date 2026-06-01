@@ -65,6 +65,29 @@ Vlastnosti JSON:
 Dokumentové databáze, například MongoDB nebo CouchDB, ukládají záznamy právě jako dokumenty podobné JSONu.
 Výhodou je flexibilita schématu, nevýhodou slabší kontrola integrity než u dobře navrženého relačního modelu.
 
+\subsubsection{CSV}
+
+\term{CSV} je jednoduchý textový formát pro tabulková data. Jeden řádek obvykle odpovídá jednomu
+záznamu a sloupce jsou oddělené oddělovačem, například čárkou nebo středníkem.
+
+Příklad:
+\[
+\texttt{id;title;price}
+\]
+\[
+\texttt{1;Data Mining;39.90}
+\]
+
+Výhody CSV jsou jednoduchost, čitelnost a široká podpora v nástrojích. Nevýhody:
+\begin{itemize}
+    \item samo o sobě nenese silné schéma ani datové typy;
+    \item je nutné hlídat oddělovač, kódování, desetinnou čárku, uvozovky a únik speciálních znaků;
+    \item nehodí se dobře pro hierarchická nebo vnořená data.
+\end{itemize}
+
+U zkoušky je dobré rozlišit: CSV je typicky tabulkový formát, JSON je vhodný pro objekty a pole,
+XML pro značkovaný strom s možností validace.
+
 \subsubsection{HTML a DOM}
 
 HTML je značkovací jazyk webových stránek. Pro web scraping je důležitý model DOM:
@@ -94,6 +117,21 @@ vybere cenu uvnitř elementu \texttt{span} s třídou \texttt{price}, který je 
   \href{https://commons.wikimedia.org/wiki/File:DOM\_Beispielbaum.svg}{Wikimedia Commons}, public domain.}
   \label{fig:q17-dom-tree}
 \end{figure}
+
+\subsection{Základní programové datové struktury}
+Při zpracování JSONu, XML, CSV nebo výsledků scrapingu se data v programu převádějí do běžných datových
+struktur. Například v Pythonu:
+\begin{itemize}
+    \item \term{list} je uspořádaná měnitelná sekvence hodnot, vhodná pro seznam záznamů;
+    \item \term{tuple} je uspořádaná neměnitelná sekvence, vhodná pro pevné dvojice nebo souřadnice;
+    \item \term{dict} mapuje klíče na hodnoty a přirozeně odpovídá JSON objektu;
+    \item \term{set} je množina unikátních hodnot, vhodná pro deduplikaci nebo test členství;
+    \item \term{string} je textový řetězec;
+    \item \term{DataFrame} je tabulková struktura používaná v analytice, například v pandas.
+\end{itemize}
+
+Typický převod je: JSON objekt \(\rightarrow\) slovník, JSON pole \(\rightarrow\) seznam, CSV
+\(\rightarrow\) tabulka/DataFrame, XML nebo HTML \(\rightarrow\) strom uzlů.
 
 \subsection{Porovnávání vzorů}
 

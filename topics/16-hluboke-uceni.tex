@@ -1270,6 +1270,14 @@ Tím se učí robustnější reprezentace.
     \item autonomní řízení.
 \end{itemize}
 
+\paragraph{Unsupervised a self-supervised použití.}
+U obrazových dat lze použít i metody bez ručních tříd. Častý postup je nejprve převést obrázek na
+embedding pomocí CNN nebo vision transformeru a teprve nad embeddingy dělat shlukování, vyhledávání
+podobných obrázků nebo detekci anomálií. Další možnosti jsou PCA nad příznaky, autoenkodéry pro redukci
+dimenze a rekonstrukční chybu, self-supervised učení reprezentací a segmentace obrazu bez detailních
+popisků. U zkoušky je důležité říct, že přímo shlukovat syrové pixely bývá slabé; lepší je pracovat
+s vhodnou reprezentací obrazu.
+
 \subsubsection{Text a jazyk}
 
 \begin{itemize}
@@ -1349,6 +1357,34 @@ XW,
 \qquad
 \text{backpropagation}.
 \]
+
+\subsubsection{Paralelizace ML a DL}
+Klasické ML se často paralelizuje přes nezávislé části práce: trénování stromů v random forestu,
+cross-validation foldy, grid search, bootstrap vzorky nebo predikce pro různé dávky dat. U hlubokého
+učení je hlavní výhoda v tom, že výpočet tvoří velké maticové a tensorové operace, které dobře běží
+na GPU/TPU.
+
+U velkých neuronových sítí se používá:
+\begin{itemize}
+    \item \term{datová paralelizace} -- kopie modelu běží na více zařízeních a každá zpracuje jiný
+    mini-batch;
+    \item \term{modelová paralelizace} -- různé části jednoho velkého modelu jsou na různých zařízeních;
+    \item \term{pipeline paralelizace} -- vrstvy modelu tvoří výpočetní pipeline.
+\end{itemize}
+
+Limitem paralelizace není jen počet procesorů, ale i paměť, přenos gradientů, synchronizace a režie
+komunikace.
+
+\subsubsection{Kvantové ML vs. klasické deep learning}
+Klasické hluboké učení používá klasické výpočty nad tensory a optimalizuje parametry gradientními
+metodami. \term{Kvantové strojové učení} využívá kvantové stavy, superpozici, interference a kvantové
+obvody; často se uvažují hybridní modely, kde část výpočtu běží na kvantovém zařízení a část na klasickém
+počítači.
+
+Pro zkoušku je bezpečná formulace: kvantové ML není jen \uv{rychlejší deep learning}. Může být užitečné
+pro některé speciální výpočty, optimalizaci nebo práci s kvantovými daty, ale praktické použití je zatím
+omezené šumem, malým počtem qubitů, obtížnou škálovatelností a nejasnou výhodou pro běžné tabulkové,
+textové nebo obrazové úlohy.
 
 \subsubsection{Datové pipeline}
 

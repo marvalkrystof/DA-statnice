@@ -446,6 +446,17 @@ x_{ij}^{*}=
 {\max(x_j)-\min(x_j)}.
 \]
 
+\paragraph{One-hot encoding.}
+One-hot encoding převádí kategoriální proměnnou na sadu binárních sloupců. Například barva
+\(\{\text{červená},\text{modrá},\text{zelená}\}\) se převede na tři indikátory, z nichž je pro jedno
+pozorování právě jeden roven jedné. U lineární nebo logistické regrese se obvykle jedna kategorie
+vynechá jako referenční, aby nevznikla perfektní multikolinearita. U stromů nebo neuronových sítí lze
+často použít všechny indikátory, záleží na implementaci a regularizaci.
+
+One-hot encoding nevnáší umělé pořadí kategorií. Nevýhodou je velký počet sloupců u proměnných s mnoha
+kategoriemi; tam se zvažuje spojení vzácných kategorií, target encoding, embeddingy nebo modely, které
+s kategoriemi umí pracovat přímo.
+
 \subsection{Rozdělení dat a validace}
 
 Dostupná označená data se obvykle rozdělí na:

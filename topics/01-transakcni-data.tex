@@ -103,6 +103,25 @@ monitoring, alarmy, prediktivní údržba, optimalizace provozu \\
 \end{tabular}
 \end{center}
 
+\subsection{Transakční data pro predikci odchodu zákazníka}
+Pro churn prediction jsou užitečná zejména časově uspořádaná data o vztahu zákazníka k firmě. Nejde jen
+o poslední nákup, ale o změnu chování v čase.
+
+Typické zdroje příznaků:
+\begin{itemize}
+  \item \term{RFM příznaky} -- recency, frequency, monetary value, tedy jak dávno zákazník nakoupil,
+  jak často nakupuje a jakou má hodnotu;
+  \item pokles frekvence používání služby, návštěv webu, přihlášení nebo objednávek;
+  \item reklamace, tikety, nespokojenost, zhoršení SLA nebo negativní komunikace;
+  \item změny tarifu, rušení doplňkových služeb, prodlení plateb, vratky nebo neúspěšné platby;
+  \item reakce na kampaně, otevření e-mailů, kliky, využití slev a kontakt obchodníka;
+  \item smluvní události, konec závazku, délka vztahu a typ produktu.
+\end{itemize}
+
+Při přípravě dat je kritické správně definovat okamžik predikce. Model nesmí používat informace, které
+vznikly až po tomto okamžiku, jinak vzniká data leakage. Cílová proměnná musí mít jasný horizont, například
+\uv{odejde během příštích 30 dnů}.
+
 \subsection{Datové pumpy a přesun do analytických úložišť}
 Datová pumpa je proces, který přesouvá data ze zdrojových systémů do analytického úložiště. Klasický
 přístup je ETL - \textit{Extraction, Transformation and Loading}.

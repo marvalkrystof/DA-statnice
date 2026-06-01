@@ -458,6 +458,25 @@ Chybějící hodnoty nelze řešit mechanicky. Je rozdíl mezi \uv{neznámé}, \
 \uv{odmítnuto odpovědět} a \uv{chyba importu}. Před imputací nebo odstraněním je potřeba zjistit,
 zda chybění není systematické, například častější u určitého regionu nebo segmentu.
 
+\subsubsection{Mechanismus chybění: MCAR, MAR a MNAR}
+U chybějících hodnot je klíčové rozlišit, proč chybí:
+\begin{itemize}
+  \item \term{MCAR} -- missing completely at random. Pravděpodobnost chybění nezávisí ani na pozorovaných,
+  ani na nepozorovaných hodnotách. Vyřazení neúplných řádků pak hlavně snižuje sílu analýzy, ale nemusí
+  systematicky zkreslit odhady.
+  \item \term{MAR} -- missing at random. Chybění závisí na pozorovaných proměnných, například mladší
+  respondenti častěji neuvádějí příjem. Pomáhá modelová imputace nebo multiple imputation s využitím
+  proměnných, které chybění vysvětlují.
+  \item \term{MNAR} -- missing not at random. Chybění závisí na samotné chybějící hodnotě nebo na
+  nepozorované příčině, například lidé s velmi vysokým příjmem ho nechtějí uvést. Prosté vyřazení
+  nebo běžná imputace mohou vést ke zkreslení a je potřeba citlivostní analýza nebo model mechanismu
+  chybění.
+\end{itemize}
+
+U regresních modelů může špatné zacházení s chybějícími hodnotami změnit složení vzorku a tím i
+interpretaci koeficientů. Proto je vhodné porovnat výsledky při různých způsobech imputace, uvést
+počet vyřazených pozorování a zkontrolovat, zda se chybění nekoncentruje v důležitých skupinách.
+
 \subsection{Praktický postup deskriptivní analýzy}
 Typický postup:
 \begin{enumerate}

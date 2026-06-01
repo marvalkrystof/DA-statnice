@@ -330,8 +330,10 @@ Hranice 0.5 nemusí být vždy vhodná. Pokud jsou náklady na falešně pozitiv
 odlišné, volíme jiný práh.
 
 ROC křivka ukazuje, jak se mění citlivost a falešně pozitivní míra při různých klasifikačních prazích.
-AUC shrnuje schopnost modelu odlišit jedničky od nul do jednoho čísla. Neříká ale, zda jsou predikované
-pravděpodobnosti dobře kalibrované.
+Jeden bod na ROC křivce odpovídá jednomu konkrétnímu prahu: na ose \(x\) je false positive rate a na
+ose \(y\) true positive rate. AUC shrnuje schopnost modelu odlišit jedničky od nul do jednoho čísla.
+Neříká ale, zda jsou predikované pravděpodobnosti dobře kalibrované ani jaký práh je nejlepší pro
+konkrétní business situaci.
 
 \begin{figure}[htbp]
   \centering
