@@ -224,6 +224,24 @@ Pokud rozptyl chyb závisí na $X$, jde o heteroskedasticitu:
 \mathrm{Var}(u|X)\neq\sigma^2.
 \]
 
+Graficky se často projeví tak, že se rozptyl reziduí systematicky mění s hodnotou vysvětlující proměnné
+nebo s predikovanou hodnotou. Typický je \uv{trychtýř}: pro malé hodnoty $x$ jsou rezidua blízko nule,
+pro velké hodnoty $x$ se jejich rozptyl zvětšuje.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\linewidth]{assets/images/linearni-regrese/homoscedastic-vs-heteroscedastic.png}
+  \caption[Homoskedasticita a heteroskedasticita]{Srovnání homoskedasticity a heteroskedasticity v
+  reziduálním grafu. Popis obrázku: vlevo mají rezidua přibližně stejný rozptyl pro všechny hodnoty
+  $x$, vpravo se rozptyl reziduí s rostoucím $x$ zvětšuje. Zdroj obrázku: vlastní zpracování.}
+  \label{fig:homoscedastic-vs-heteroscedastic}
+\end{figure}
+
+Heteroskedasticita sama o sobě nemusí při exogenitě způsobit vychýlení OLS koeficientů, ale kazí
+obvyklé standardní chyby, $t$-testy, intervaly spolehlivosti a vlastnost BLUE. Praktickou reakcí jsou
+heteroskedasticity-robustní standardní chyby, vhodná transformace proměnných, vážená metoda nejmenších
+čtverců nebo lepší specifikace modelu.
+
 \subsubsection{Normalita chyb}
 
 \[
@@ -312,6 +330,58 @@ t=
 
 Pokud je $|t|$ velké, zamítáme nulovou hypotézu.
 
+Intuice: t-test porovnává \term{velikost odhadu} s \term{nejistotou odhadu}. Koeficient může být věcně
+velký, ale pokud má ještě větší standardní chybu, nemáme dost důkazů, že se skutečný populační koeficient
+liší od testované hodnoty. Naopak i malý koeficient může být statisticky významný, pokud je odhadnutý
+velmi přesně.
+
+\(\beta_{j,0}\) je hodnota koeficientu pod nulovou hypotézou. Nejčastěji testujeme \(\beta_{j,0}=0\),
+tedy otázku:
+\[
+\text{Má proměnná } x_j \text{ při kontrole ostatních proměnných lineární vztah s } y?
+\]
+Přesněji: test říká, zda je odhadovaný parciální efekt statisticky odlišný od nuly, ne zda je efekt
+kauzální, důležitý nebo ekonomicky velký.
+
+Za klasických předpokladů lineárního regresního modelu má testová statistika při platnosti \(H_0\)
+t-rozdělení s
+\[
+n-k-1
+\]
+stupni volnosti, kde \(n\) je počet pozorování a \(k\) počet vysvětlujících proměnných bez konstanty.
+Ve velkých vzorcích se t-rozdělení blíží normálnímu rozdělení, proto se často používá hranice přibližně
+\(1.96\) pro oboustranný 5\% test.
+
+\paragraph{p-hodnota.}
+p-hodnota říká, jak extrémní t-statistiku bychom dostali, pokud by nulová hypotéza byla pravdivá. Pro
+oboustranný test zamítáme \(H_0\) na hladině významnosti \(\alpha\), pokud:
+\[
+p < \alpha.
+\]
+Například při \(\alpha=0.05\) zamítáme nulovou hypotézu, pokud je p-hodnota menší než 0.05.
+
+\paragraph{Příklad.}
+Odhadneme koeficient u proměnné \(educ\):
+\[
+\hat\beta_{educ}=1200,
+\qquad
+se(\hat\beta_{educ})=400.
+\]
+Test nulové hypotézy \(H_0:\beta_{educ}=0\):
+\[
+t=\frac{1200-0}{400}=3.
+\]
+Koeficient je tři standardní chyby od nuly. V běžném velkém vzorku by to znamenalo statisticky významný
+výsledek na 5\% hladině. Interpretace ale není \uv{vzdělání určitě kauzálně zvyšuje mzdu o 1200}.
+Správnější je: při dané specifikaci modelu je odhadovaný parciální vztah mezi vzděláním a mzdou
+statisticky odlišný od nuly.
+
+\paragraph{Pozor na předpoklady.}
+Pokud je v modelu heteroskedasticita nebo autokorelace, běžné standardní chyby mohou být špatně odhadnuté
+a t-test může zamítat příliš často nebo příliš málo. V takové situaci se obvykle používají robustní
+standardní chyby. Pokud je porušena exogenita, t-test může být formálně významný, ale koeficient nemá
+čistou kauzální interpretaci.
+
 \subsubsection{Interval spolehlivosti}
 
 \[
@@ -322,6 +392,15 @@ Přibližně pro 95\% interval ve velkém výběru:
 \[
 \hat\beta_j \pm 1.96 \cdot se(\hat\beta_j).
 \]
+
+Interval spolehlivosti ukazuje rozsah hodnot parametru, které jsou s daty a modelem rozumně slučitelné.
+U 95\% intervalu neříkáme, že konkrétní interval obsahuje skutečný parametr s pravděpodobností 95\%.
+Přesnější interpretace je: kdybychom opakovaně vybírali vzorky a pro každý spočítali interval stejným
+postupem, přibližně 95\% takových intervalů by obsahovalo skutečnou hodnotu \(\beta_j\).
+
+Souvislost s t-testem: pokud 95\% interval pro \(\beta_j\) neobsahuje nulu, oboustranný t-test
+\(H_0:\beta_j=0\) obvykle zamítne na 5\% hladině. Širší interval znamená větší nejistotu odhadu,
+užší interval přesnější odhad.
 
 \subsubsection{F-test více omezení}
 
@@ -343,6 +422,15 @@ Kde:
     \item $m$ je počet testovaných restrikcí.
 \end{itemize}
 
+Restriktivní model vynucuje nulovou hypotézu, například vynechá proměnné \(x_2,x_3,x_4\). Neresktriktivní
+model je plný model, kde tyto koeficienty odhadujeme volně. F-test tedy porovnává, jak moc se zhorší fit,
+když daná omezení vynutíme.
+
+Intuice: pokud vynechání testovaných proměnných výrazně zvýší reziduální součet čtverců, omezení jsou
+pro data nevěrohodná a \(H_0\) zamítáme. F-test je vhodný pro otázky typu \uv{mají tyto proměnné jako
+skupina nějaký význam?}. Jednotlivé t-testy by zde nestačily, protože neodpovídají přímo na společnou
+hypotézu a zvyšují riziko chyb při opakovaném testování.
+
 \subsection{Dobrota shody}
 
 Celková variabilita:
@@ -350,9 +438,36 @@ Celková variabilita:
 SST=\sum_{i=1}^n (y_i-\bar y)^2.
 \]
 
+\(SST\) měří, jak moc se skutečné hodnoty \(y_i\) celkově liší od svého průměru \(\bar y\). Je to
+variabilita, kterou se model snaží vysvětlit.
+
 Nevysvětlená variabilita:
 \[
 SSR=\sum_{i=1}^n \hat u_i^2.
+\]
+
+\(SSR\) zde znamená reziduální součet čtverců, tedy část variability, kterou model nevysvětlil:
+\[
+\hat u_i = y_i-\hat y_i.
+\]
+Čím jsou body blíže regresní přímce, tím menší je \(SSR\). V některých učebnicích se stejná veličina
+značí \(RSS\) nebo \(SSE\).
+
+U lineární regrese s konstantou platí rozklad:
+\[
+SST
+=
+\sum_{i=1}^n(\hat y_i-\bar y)^2
++
+\sum_{i=1}^n(y_i-\hat y_i)^2.
+\]
+Tedy:
+\[
+\text{celková variabilita}
+=
+\text{vysvětlená variabilita}
++
+\text{nevysvětlená variabilita}.
 \]
 
 Koeficient determinace:
@@ -360,17 +475,24 @@ Koeficient determinace:
 R^2=1-\frac{SSR}{SST}.
 \]
 
-$R^2$ říká, jakou část variability $y$ model vysvětluje.
+\(R^2\) říká, jakou část variability \(y\) model vysvětluje. Ekvivalentně:
+\[
+R^2=
+\frac{\text{vysvětlená variabilita}}{\text{celková variabilita}}.
+\]
+Například pokud \(SST=100\) a \(SSR=25\), potom:
+\[
+R^2=1-\frac{25}{100}=0.75.
+\]
+Model tedy vysvětluje 75\% variability \(y\) kolem průměru a 25\% zůstává v reziduích.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.82\linewidth]{assets/images/linearni-regrese/linear-regression-sums-of-squares.png}
+  \includegraphics[width=0.95\linewidth]{assets/images/linearni-regrese/r-squared-sst-ssr.png}
   \caption[Rozklad variability v regresi]{Rozklad variability závisle proměnné v lineární regresi.
-  Popis obrázku: tečkované úsečky ukazují rozdíl mezi skutečnými hodnotami, průměrem a regresní
-  přímkou; nevysvětlená část vstupuje do reziduálního součtu čtverců a vysvětlená část do výpočtu
-  koeficientu determinace. Zdroj obrázku: QuantuMechaniX8,
-  \href{https://commons.wikimedia.org/wiki/File:Linear\_Regression\_Plot.png}{Wikimedia Commons},
-  licence CC0 1.0.}
+  Popis obrázku: oranžová úsečka ukazuje celkovou odchylku pozorování od průměru, červená reziduální
+  odchylku od regresní přímky a zelená vysvětlenou část mezi průměrem a predikcí. Zdroj obrázku:
+  vlastní zpracování.}
   \label{fig:linear-regression-sums-of-squares}
 \end{figure}
 
