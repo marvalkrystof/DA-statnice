@@ -1,0 +1,820 @@
+\documentclass[12pt,a4paper]{article}
+\input{preamble}
+
+\newenvironment{terminy}
+  {\begin{itemize}[leftmargin=1.4em,itemsep=4pt]}
+  {\end{itemize}}
+\newcommand{\defterm}[2]{\item \term{#1}: #2}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{2.4cm}
+  {\Large\bfseries Bakalářské studium\par}
+  \vspace{1.2cm}
+  {\Huge\bfseries Shrnutí otázek a klíčové termíny\par}
+  \vspace{0.6cm}
+  {\LARGE\bfseries Data Analytics\par}
+  \vspace{0.8cm}
+  \rule{0.72\textwidth}{0.4pt}\par
+  \vspace{0.8cm}
+  {\large Rychlý opakovací přehled ke státní závěrečné zkoušce\par}
+  \vfill
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Transakční data}
+
+\subsection{Shrnutí}
+Transakční data zachycují konkrétní provozní události organizace ve vysoké granularitě, například
+objednávky, faktury, platby, skladové pohyby nebo servisní požadavky. Vznikají hlavně v OLTP
+systémech, které jsou optimalizované na rychlý a konzistentní zápis jednotlivých změn. Pro analytiku
+se tato data obvykle přesouvají datovými pumpami do DSA, ODS, DWH, datových tržišť nebo OLAP vrstev.
+Důležité je rozlišit ETL a ELT, dávkové a průběžné zpracování, CDC, streamy a fronty zpráv. Při
+návrhu pipeline se kromě samotného přesunu řeší kvalita dat, idempotence, auditovatelnost,
+bezpečnost, monitoring a latence.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Transakční data}{Záznamy o konkrétních provozních událostech, typicky na úrovni dokladu,
+  položky, platby, skladového pohybu nebo změny stavu.}
+  \defterm{Byznys transakce}{Událost v podniku, která mění stav byznysu, například vystavení faktury
+  nebo přijetí objednávky.}
+  \defterm{Databázová transakce}{Technická jednotka práce v databázi, která má proběhnout celá, nebo
+  vůbec.}
+  \defterm{ACID}{Soubor vlastností databázové transakce: atomicita, konzistence, izolovanost a
+  trvanlivost.}
+  \defterm{OLTP}{Provozní zpracování transakcí optimalizované na velké množství krátkých zápisů,
+  změn a čtení jednotlivých záznamů.}
+  \defterm{ETL}{Proces extract-transform-load, kdy se data nejprve načtou, potom transformují a až
+  poté uloží do cílového analytického úložiště.}
+  \defterm{ELT}{Proces extract-load-transform, kdy se data nejprve uloží do cílové platformy a
+  transformace probíhají až v ní.}
+  \defterm{DSA}{Data staging area; dočasná technická vrstva pro extrahovaná data před jejich
+  vyčištěním a konsolidací.}
+  \defterm{ODS}{Operational data store; konsolidované úložiště aktuálních provozních dat pro
+  operativní reporting a integraci.}
+  \defterm{DWH}{Datový sklad; integrované, historické, subjektově orientované a relativně neměnné
+  úložiště pro podporu rozhodování.}
+  \defterm{CDC}{Change data capture; zachytávání a přenos pouze změněných, vložených nebo smazaných
+  záznamů.}
+  \defterm{Idempotence pipeline}{Vlastnost, že opakovaný běh zpracování nevytvoří duplicity ani
+  nezmění správný výsledek.}
+\end{terminy}
+
+\section{Metodika výběrových šetření}
+
+\subsection{Shrnutí}
+Výběrové šetření zkoumá vzorek a výsledky zobecňuje na cílovou populaci. Kvalita výsledku závisí na
+jasném cíli, správném vymezení populace, opory výběru, výběrového designu, dotazníku, pilotáže,
+sběru, čištění, vážení a interpretace. Pravděpodobnostní výběry umožňují odhad výběrové chyby,
+nepravděpodobnostní výběry jsou spíše praktickým nebo explorativním kompromisem. Dotazník má být
+jednoznačný, nezaujatý a pilotovaný. Vedle výběrové chyby je nutné hlídat chybu pokrytí, neodpovědi,
+měření a zpracování. Vážení upravuje vzorek podle designu, neodpovědí a známé struktury populace.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Cílová populace}{Množina jednotek, o které chce šetření vypovídat.}
+  \defterm{Výběrová jednotka}{Jednotka, která může být vybrána do vzorku, například osoba, domácnost,
+  firma nebo prodejna.}
+  \defterm{Opora výběru}{Seznam nebo mechanismus, z něhož se vybírají jednotky do vzorku.}
+  \defterm{Vzorek}{Skutečně vybraná část populace, ze které se sbírají data.}
+  \defterm{Respondent}{Jednotka, od které se podařilo získat odpověď.}
+  \defterm{Pravděpodobnostní výběr}{Výběr, u kterého má každá jednotka známou nenulovou pravděpodobnost
+  zařazení do vzorku.}
+  \defterm{Stratifikovaný výběr}{Rozdělení populace do vrstev a výběr jednotek z každé vrstvy; často
+  zvyšuje přesnost a zajišťuje zastoupení důležitých skupin.}
+  \defterm{Shlukový výběr}{Výběr skupin jednotek, například škol nebo obcí; bývá levnější, ale může
+  zvýšit výběrovou chybu.}
+  \defterm{Pilotáž}{Ověření dotazníku a sběru dat před ostrým šetřením.}
+  \defterm{Neodpověď}{Situace, kdy vybraná jednotka neposkytne odpověď nebo chybí odpověď na konkrétní
+  otázku.}
+  \defterm{Designová váha}{Váha obvykle rovná převrácené pravděpodobnosti výběru jednotky.}
+  \defterm{Raking}{Iterativní úprava vah tak, aby vzorek odpovídal známým marginálním rozdělením
+  populace.}
+\end{terminy}
+
+\section{Externí datové a informační zdroje}
+
+\subsection{Shrnutí}
+Externí zdroje doplňují interní data o tržní, regulatorní, makroekonomický, regionální nebo
+konkurenční kontext. Patří sem oficiální statistiky, registry, otevřená data, komerční databáze,
+odborné publikace, webové zdroje, API nebo OSINT. Před použitím je nutné posoudit důvěryhodnost,
+metodiku, aktuálnost, granularitu, právní podmínky a technickou dostupnost zdroje. Competitive
+intelligence je legální a etická práce s informacemi o vnějším prostředí organizace. Externí data
+v pipeline vyžadují metadata, validace, verzování, monitoring, mapování na interní číselníky a
+kontrolu licencí.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Externí datový zdroj}{Zdroj dat mimo organizaci, který doplňuje interní pohled o širší
+  kontext.}
+  \defterm{Primární zdroj}{Původní zdroj dat nebo informací, například registr, měření nebo originální
+  dokument.}
+  \defterm{Sekundární zdroj}{Zdroj, který původní data shrnuje, interpretuje, katalogizuje nebo dále
+  zpracovává.}
+  \defterm{Otevřená data}{Data zveřejněná tak, aby byla strojově čitelná, licenčně použitelná a
+  dohledatelná.}
+  \defterm{OSINT}{Open-source intelligence; získávání a vyhodnocování informací z veřejně dostupných
+  zdrojů.}
+  \defterm{Competitive intelligence}{Systematický sběr, hodnocení a analýza informací o konkurenci,
+  trhu a vnějším prostředí pro podporu rozhodování.}
+  \defterm{API}{Programové rozhraní umožňující automatizovaný přístup k datům nebo službám.}
+  \defterm{Web scraping}{Automatizované získávání dat z webových stránek, obvykle přes HTML, DOM,
+  CSS selektory nebo XPath.}
+  \defterm{Metadata}{Data o datech, například původ, metodika, čas platnosti, licence, jednotky,
+  granularita a kvalita.}
+  \defterm{Granularita}{Úroveň detailu dat, například jednotlivá transakce, den, region nebo firma.}
+  \defterm{Licence dat}{Právní podmínky, které určují, zda a jak lze data používat, sdílet nebo
+  komerčně využít.}
+\end{terminy}
+
+\section{Etika a regulace při sběru a uchovávání dat}
+
+\subsection{Shrnutí}
+Etika řeší férovost, přiměřenost, dopady a odpovědnost při práci s daty, zatímco regulace stanoví
+závazná pravidla. V evropském prostředí je hlavním rámcem GDPR, které chrání osobní údaje fyzických
+osob a vyžaduje právní titul, transparentnost, účelové omezení, minimalizaci, přesnost, omezení
+uložení, integritu, důvěrnost a odpovědnost. Zásadní je rozlišit správce, zpracovatele, subjekt
+údajů, osobní údaje, zvláštní kategorie údajů, anonymizaci a pseudonymizaci. U datových a
+algoritmických systémů je nutné řešit bias, vysvětlitelnost, lidský dohled, auditovatelnost, bezpečnost
+a možnost nápravy.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Informační etika}{Oblast etiky zabývající se vznikem, šířením, ukládáním, používáním a
+  dopady informací.}
+  \defterm{PAPA}{Masonův rámec informační etiky: privacy, accuracy, property a accessibility.}
+  \defterm{GDPR}{Obecné nařízení EU o ochraně osobních údajů vztahující se na zpracování osobních
+  údajů fyzických osob.}
+  \defterm{Osobní údaj}{Jakákoli informace vztahující se k identifikované nebo identifikovatelné
+  fyzické osobě.}
+  \defterm{Zpracování}{Široký pojem zahrnující sběr, uložení, úpravu, vyhledání, použití, předání
+  i výmaz osobních údajů.}
+  \defterm{Správce}{Subjekt, který určuje účely a prostředky zpracování osobních údajů.}
+  \defterm{Zpracovatel}{Subjekt, který zpracovává osobní údaje pro správce a podle jeho pokynů.}
+  \defterm{Subjekt údajů}{Člověk, kterého se osobní údaje týkají.}
+  \defterm{Právní titul}{Důvod, který činí zpracování osobních údajů zákonným, například souhlas,
+  smlouva, právní povinnost nebo oprávněný zájem.}
+  \defterm{Pseudonymizace}{Nahrazení identifikátorů kódem nebo aliasem; identifikace je stále možná
+  s dodatečnými informacemi.}
+  \defterm{Anonymizace}{Úprava dat tak, že jednotlivce nelze rozumně pravděpodobnými prostředky
+  identifikovat.}
+  \defterm{DPIA}{Posouzení vlivu na ochranu osobních údajů u rizikového zpracování.}
+  \defterm{Fairness modelu}{Požadavek, aby model nepřiměřeně neznevýhodňoval určité skupiny.}
+\end{terminy}
+
+\section{Databáze a SQL}
+
+\subsection{Shrnutí}
+Databáze je organizovaná množina perzistentních dat spravovaná systémem řízení báze dat. Relační
+model ukládá data do tabulek a vztahy vyjadřuje pomocí klíčů. Návrh databáze probíhá na konceptuální,
+logické a fyzické úrovni a používá entity, atributy, vztahy, kardinality a integritní omezení.
+Normalizace omezuje redundanci a aktualizační anomálie, zatímco denormalizace se používá kontrolovaně
+kvůli výkonu nebo analytice. SQL zahrnuje definici struktur, manipulaci s daty, dotazování, řízení
+oprávnění a transakce. V praxi je důležité rozumět joinům, agregacím, poddotazům, pohledům, indexům,
+exekučním plánům, izolaci transakcí a rozdílu mezi OLTP a analytickým DWH/OLAP návrhem.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Databáze}{Integrovaná a organizovaná množina perzistentních dat.}
+  \defterm{SŘBD}{Systém řízení báze dat; software pro správu, dotazování, bezpečnost, transakce,
+  zálohování a obnovu databáze.}
+  \defterm{Relace}{Tabulka v relačním modelu, tvořená řádky a sloupci.}
+  \defterm{Primární klíč}{Vybraný kandidátní klíč, který jednoznačně identifikuje řádek tabulky.}
+  \defterm{Cizí klíč}{Atribut nebo skupina atributů odkazující na klíč v jiné nebo stejné tabulce.}
+  \defterm{Referenční integrita}{Pravidlo, že cizí klíč musí odkazovat na existující záznam, nebo
+  mít povolenou prázdnou hodnotu.}
+  \defterm{ER model}{Konceptuální model popisující entity, atributy, vztahy, kardinality a volitelnost.}
+  \defterm{Normalizace}{Postup návrhu schématu, který omezuje redundanci a anomálie vkládání,
+  aktualizace a mazání.}
+  \defterm{3NF}{Třetí normální forma; neklíčové atributy nemají tranzitivně záviset na klíči přes
+  jiné neklíčové atributy.}
+  \defterm{SQL}{Standardizovaný jazyk pro práci s relačními databázemi.}
+  \defterm{JOIN}{Operace spojující řádky z více tabulek podle zadané podmínky.}
+  \defterm{Index}{Pomocná datová struktura zrychlující vyhledávání, spojování a řazení, obvykle za
+  cenu pomalejších zápisů.}
+  \defterm{Exekuční plán}{Popis postupu, kterým databázový systém provede dotaz.}
+  \defterm{Deadlock}{Situace, kdy transakce čekají na zámky držené navzájem a nemohou pokračovat.}
+\end{terminy}
+
+\section{Vizualizace dat}
+
+\subsection{Shrnutí}
+Vizualizace převádí data do vizuální podoby pro analýzu, komunikaci a rozhodování. Explorační
+vizualizace pomáhá hledat vzory, chyby a odlehlé hodnoty, zatímco explanatorní vizualizace vysvětluje
+konkrétní sdělení publiku. Volba grafu vychází z analytické otázky: trend, porovnání, rozdělení,
+vztah, kompozice, geografie, tok nebo nejistota. Dobrá vizualizace má jasný název, popsané osy,
+jednotky, zdroj, vhodné měřítko, přiměřené barvy a minimum vizuálního šumu. Dashboard musí podporovat
+rozhodování, mít jasné metriky a respektovat roli uživatele. Etická vizualizace nezkresluje data,
+neskrývá nejistotu a bere v úvahu přístupnost.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Vizualizace dat}{Převod dat do vizuální podoby pro pochopení vztahů, trendů, rozdílů a
+  odchylek.}
+  \defterm{Explorační vizualizace}{Pracovní vizualizace používaná analytikem při hledání vzorů,
+  chyb a hypotéz.}
+  \defterm{Explanatorní vizualizace}{Vysvětlující graf nebo dashboard určený publiku k pochopení
+  hlavního sdělení.}
+  \defterm{Vizuální kanál}{Vizuální vlastnost použitá ke kódování dat, například poloha, délka,
+  barva, tvar nebo velikost.}
+  \defterm{Preatentivní vlastnost}{Vizuální znak, který člověk zachytí velmi rychle, například
+  výrazná barva nebo izolovaný bod.}
+  \defterm{Histogram}{Graf rozdělení metrické proměnné pomocí intervalů.}
+  \defterm{Paretův graf}{Kombinace sloupcového grafu seřazených kategorií a kumulativní křivky,
+  používaná pro hledání hlavních příčin.}
+  \defterm{Boxplot}{Graf shrnující rozdělení pomocí mediánu, kvartilů, IQR, vousů a odlehlých hodnot.}
+  \defterm{Sekvenční škála}{Barevná škála pro seřazené hodnoty od nízkých po vysoké.}
+  \defterm{Divergentní škála}{Barevná škála pro odchylky kolem významného středu, například kolem
+  nuly nebo plánu.}
+  \defterm{Dashboard}{Uspořádaná sada vizualizací, ukazatelů a ovládacích prvků pro sledování
+  určité oblasti.}
+  \defterm{Drill-down}{Přechod z agregovaného pohledu na detailnější úroveň dat.}
+\end{terminy}
+
+\section{Deskriptivní statistická analýza}
+
+\subsection{Shrnutí}
+Deskriptivní statistika popisuje již pozorovaná data a pomáhá porozumět jejich poloze, variabilitě,
+tvaru rozdělení, vztahům a ekonomickým souvislostem. Volba statistiky závisí na typu proměnné:
+nominální, ordinální, intervalové nebo poměrové. Základ tvoří četnosti, průměry, medián, kvantily,
+rozptyl, směrodatná odchylka, IQR, variační koeficient, histogramy a boxploty. U ekonomických dat je
+důležitá agregace podle správné granularity, komparace v čase, indexy, tempa růstu a srovnání s
+benchmarkem. Při interpretaci se hlídají chybějící hodnoty, outliery, sezonnost, inflace, změny
+metodiky a rozdíl mezi popisem, inferencí, predikcí a kauzalitou.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Deskriptivní analýza}{Popis dat tak, aby bylo zřejmé, co se v nich stalo, bez automatického
+  dokazování kauzality.}
+  \defterm{Hromadný jev}{Jev vyskytující se u mnoha jednotek nebo opakovaně v čase, takže má smysl
+  jej statisticky popisovat.}
+  \defterm{Četnost}{Počet nebo podíl výskytů hodnoty či kategorie v datech.}
+  \defterm{Průměr}{Míra polohy citlivá na extrémní hodnoty; aritmetický průměr je součet hodnot
+  dělený jejich počtem.}
+  \defterm{Medián}{Prostřední hodnota po seřazení dat; robustnější vůči extrémům než průměr.}
+  \defterm{Modus}{Nejčastější hodnota nebo kategorie.}
+  \defterm{Kvantily}{Hodnoty dělící seřazená data podle pořadí; medián je 50\% kvantil.}
+  \defterm{Rozptyl}{Průměrná kvadratická odchylka hodnot od průměru.}
+  \defterm{Směrodatná odchylka}{Druhá odmocnina rozptylu, vyjádřená ve stejné jednotce jako původní
+  proměnná.}
+  \defterm{IQR}{Interkvartilové rozpětí \(Q_3-Q_1\), robustní míra variability.}
+  \defterm{Variační koeficient}{Relativní míra variability, obvykle poměr směrodatné odchylky a
+  průměru.}
+  \defterm{Agregace}{Shrnutí detailních dat na vyšší úroveň pomocí funkcí jako součet, průměr,
+  počet nebo medián.}
+  \defterm{Bazický index}{Index porovnávající všechna období se stejným základním obdobím.}
+  \defterm{Řetězový index}{Index porovnávající každé období s obdobím bezprostředně předchozím.}
+  \defterm{\(p\)-value}{Pravděpodobnost výsledku alespoň tak extrémního, jako je pozorovaný, za
+  předpokladu platnosti nulové hypotézy.}
+\end{terminy}
+
+\section{Exploratorní analýza}
+
+\subsection{Shrnutí}
+Exploratorní analýza slouží k pochopení dat, odhalení problémů, nalezení vzorů a přípravě na další
+modelování. Redukce rozměru zjednodušuje mnohorozměrná data při snaze zachovat podstatnou informaci.
+PCA nahrazuje původní kvantitativní proměnné menším počtem nekorelovaných komponent seřazených podle
+vysvětlené variability. Faktorová analýza předpokládá latentní faktory vysvětlující korelační strukturu
+proměnných. Korespondenční analýza vizualizuje vztahy v kontingenčních tabulkách. Diskriminační
+analýza je supervised metoda hledající lineární kombinace proměnných, které oddělují známé skupiny.
+Všechny tyto metody jsou citlivé na škálování, chybějící hodnoty, outliery a interpretaci výstupů.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{EDA}{Exploratory data analysis; postupy pro počáteční pochopení struktury, kvality a
+  vzorů v datech.}
+  \defterm{Redukce dimenze}{Nahrazení původních proměnných menším počtem nových proměnných nebo
+  reprezentací.}
+  \defterm{PCA}{Analýza hlavních komponent; lineární transformace kvantitativních proměnných na
+  nekorelované komponenty s maximální vysvětlenou variabilitou.}
+  \defterm{Hlavní komponenta}{Lineární kombinace původních proměnných; první komponenta vysvětluje
+  největší možnou variabilitu.}
+  \defterm{Vlastní číslo}{U PCA vyjadřuje množství variability vysvětlené danou komponentou.}
+  \defterm{Faktorová analýza}{Metoda modelující korelační strukturu proměnných pomocí menšího počtu
+  latentních faktorů.}
+  \defterm{Faktorová zátěž}{Koeficient vztahu mezi původní proměnnou a latentním faktorem.}
+  \defterm{Komunalita}{Podíl variability proměnné vysvětlený společnými faktory.}
+  \defterm{Rotace faktorů}{Transformace faktorového řešení pro lepší interpretovatelnost, například
+  varimax.}
+  \defterm{Korespondenční analýza}{Metoda pro analýzu kontingenčních tabulek založená na odchylkách
+  od nezávislosti.}
+  \defterm{Inerce}{V korespondenční analýze míra variability nebo odchylky od nezávislosti.}
+  \defterm{Diskriminační analýza}{Supervised metoda hledající kombinace proměnných, které oddělují
+  předem známé skupiny.}
+  \defterm{Mahalanobisova vzdálenost}{Vzdálenost zohledňující kovarianční strukturu proměnných.}
+\end{terminy}
+
+\section{Lineární regrese}
+
+\subsection{Shrnutí}
+Lineární regrese modeluje podmíněnou střední hodnotu závislé proměnné jako lineární kombinaci
+vysvětlujících proměnných. OLS odhaduje parametry minimalizací součtu čtverců reziduí. Regrese může
+sloužit k deskripci, predikci i kauzální analýze, ale kauzální interpretace vyžaduje především
+exogenitu a promyšlený výběr proměnných. Při splnění základních předpokladů je OLS nestranný a
+konzistentní, při homoskedasticitě také BLUE. V praxi je nutné řešit interpretaci koeficientů,
+diagnostiku reziduí, heteroskedasticitu, multikolinearitu, vynechané proměnné, transformace,
+regularizaci, volbu modelu a kvalitu predikce mimo trénovací data.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Lineární regresní model}{Model \(y=X\beta+u\), kde je závislá proměnná vysvětlena lineární
+  kombinací prediktorů a chybovou složkou.}
+  \defterm{OLS}{Metoda nejmenších čtverců; odhad volící parametry tak, aby minimalizoval součet
+  čtverců reziduí.}
+  \defterm{Reziduum}{Rozdíl mezi pozorovanou a modelem predikovanou hodnotou.}
+  \defterm{Exogenita}{Předpoklad, že chyba má nulovou podmíněnou střední hodnotu vzhledem k
+  vysvětlujícím proměnným.}
+  \defterm{Homoskedasticita}{Konstantní rozptyl chyb podmíněně na vysvětlujících proměnných.}
+  \defterm{Heteroskedasticita}{Nekonstantní rozptyl chyb; ovlivňuje standardní chyby a inferenci.}
+  \defterm{Multikolinearita}{Silná lineární závislost mezi vysvětlujícími proměnnými, která zvyšuje
+  nejistotu odhadů.}
+  \defterm{Gaussova-Markovova věta}{Při splnění podmínek je OLS nejlepší lineární nestranný odhad,
+  tedy BLUE.}
+  \defterm{\(R^2\)}{Podíl variability závislé proměnné vysvětlený modelem.}
+  \defterm{t-test}{Test hypotézy o jednom regresním koeficientu.}
+  \defterm{F-test}{Test více omezení nebo společné významnosti skupiny proměnných.}
+  \defterm{Omitted variable bias}{Zkreslení odhadu vzniklé vynecháním relevantní proměnné korelované
+  se zahrnutým regresorem.}
+  \defterm{Ridge}{Lineární regrese s \(L_2\) penalizací velikosti koeficientů.}
+  \defterm{LASSO}{Lineární regrese s \(L_1\) penalizací, která může některé koeficienty stáhnout
+  přesně na nulu.}
+\end{terminy}
+
+\section{Zobecněné lineární regresní modely}
+
+\subsection{Shrnutí}
+Zobecněné lineární modely a modely s omezenou závisle proměnnou se používají tehdy, když klasická
+lineární regrese neodpovídá povaze \(y\). U binární proměnné se modeluje pravděpodobnost jevu:
+LPM je jednoduchý, ale může predikovat hodnoty mimo interval \([0,1]\), zatímco logit a probit
+používají nelineární transformační funkci. Koeficienty logitu se interpretují přes odds ratio, pro
+změnu pravděpodobnosti se používají marginální efekty. U neuspořádaných kategorií se používá
+multinomický logit nebo probit, u čítacích dat Poissonův model, negativně binomický model a varianty
+pro přebytek nul. Prakticky je důležité řešit overdispersion, IIA, expozici, offset a správnou
+interpretaci koeficientů.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{GLM}{Zobecněný lineární model spojující náhodnou složku, lineární prediktor a link funkci.}
+  \defterm{Link funkce}{Funkce propojující střední hodnotu závislé proměnné s lineárním prediktorem.}
+  \defterm{LPM}{Lineární pravděpodobnostní model pro binární \(y\); jednoduchý, ale omezený
+  predikcemi mimo \([0,1]\) a heteroskedasticitou.}
+  \defterm{Logit}{Binární model používající logistickou distribuční funkci pro modelování
+  pravděpodobnosti.}
+  \defterm{Probit}{Binární model používající distribuční funkci standardního normálního rozdělení.}
+  \defterm{Odds}{Poměr pravděpodobnosti jevu a pravděpodobnosti, že jev nenastane.}
+  \defterm{Odds ratio}{Násobná změna odds při jednotkové změně vysvětlující proměnné.}
+  \defterm{Marginální efekt}{Změna predikované pravděpodobnosti nebo očekávané hodnoty při změně
+  vysvětlující proměnné.}
+  \defterm{Multinomický logit}{Model pro neuspořádanou kategoriální závislou proměnnou s více než
+  dvěma kategoriemi.}
+  \defterm{IIA}{Independence of irrelevant alternatives; předpoklad multinomického logitu, že poměr
+  pravděpodobností dvou voleb nezávisí na dalších alternativách.}
+  \defterm{Poissonova regrese}{Model pro čítací data, kde se logaritmus očekávaného počtu modeluje
+  lineárním prediktorem.}
+  \defterm{Overdispersion}{Situace, kdy je rozptyl čítací proměnné větší než její střední hodnota.}
+  \defterm{Negativně binomický model}{Čítací model vhodný při overdispersion.}
+  \defterm{Zero-inflated model}{Model pro čítací data s nadměrným počtem nul.}
+  \defterm{Tobit}{Model pro cenzorovanou závislou proměnnou.}
+\end{terminy}
+
+\section{Časové řady a panelová data}
+
+\subsection{Shrnutí}
+Časové řady řeší závislost pozorování v čase. Před modelováním je nutné řadu vykreslit, posoudit
+trend, sezonnost, stacionaritu a autokorelaci a potom volit mezi AR, MA, ARMA, ARIMA, SARIMA,
+ADL/ARDL, VAR nebo VECM podle cíle a povahy dat. U predikce je důležitá out-of-sample chyba a kontrola
+reziduí, nejen dobrý fit. Panelová data kombinují průřezovou a časovou dimenzi a umožňují kontrolovat
+časově neměnnou nepozorovanou heterogenitu. Pooled OLS je jednoduchý, ale často zkreslený; FD a FE
+odstraňují individuální efekty, RE vyžaduje silnější předpoklad nekorelovanosti a two-way FE přidává
+společné časové šoky.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Časová řada}{Posloupnost pozorování uspořádaných v čase.}
+  \defterm{Trend}{Dlouhodobý systematický vývoj úrovně časové řady.}
+  \defterm{Sezonnost}{Pravidelně se opakující vzorec v čase, například podle měsíců nebo čtvrtletí.}
+  \defterm{Stacionarita}{Vlastnost řady, jejíž základní charakteristiky se v čase nemění.}
+  \defterm{Autokorelace}{Korelace hodnot časové řady s jejími zpožděnými hodnotami.}
+  \defterm{ACF}{Autokorelační funkce ukazující korelace řady s různými zpožděními.}
+  \defterm{PACF}{Parciální autokorelační funkce měřící vztah se zpožděním po očištění o kratší
+  zpoždění.}
+  \defterm{AR model}{Autoregresní model, kde aktuální hodnota závisí na minulých hodnotách řady.}
+  \defterm{MA model}{Model klouzavého průměru, kde aktuální hodnota závisí na minulých šocích.}
+  \defterm{ARIMA}{Model kombinující autoregresi, diferencování a klouzavý průměr.}
+  \defterm{Jednotkový kořen}{Vlastnost nestacionární řady, u které šoky mají trvalý dopad.}
+  \defterm{Kointegrace}{Dlouhodobý rovnovážný vztah mezi nestacionárními řadami.}
+  \defterm{VAR}{Vektorový autoregresní model pro více vzájemně provázaných časových řad.}
+  \defterm{Panelová data}{Data kombinující pozorování více jednotek v čase.}
+  \defterm{Fixed effects}{Panelový odhad odstraňující časově neměnné nepozorované individuální
+  charakteristiky.}
+  \defterm{Random effects}{Panelový model, který individuální efekt chápe jako náhodnou složku
+  nekorelovanou s regresory.}
+  \defterm{Hausmanův test}{Test používaný pro volbu mezi fixed effects a random effects.}
+\end{terminy}
+
+\section{Strojové učení}
+
+\subsection{Shrnutí}
+Strojové učení je přístup, ve kterém se model učí ze vzorových dat a zlepšuje predikce, klasifikace
+nebo rozhodování bez ručního naprogramování všech pravidel. Základní dělení zahrnuje učení s učitelem,
+učení bez učitele, semi-supervised learning, reinforcement learning, doporučování a detekci anomálií.
+Supervised learning řeší hlavně klasifikaci a regresi, unsupervised learning shlukování, asociační
+pravidla a redukci dimenze. Typický projekt odpovídá logice CRISP-DM: business porozumění, data,
+příprava, modelování, vyhodnocení a nasazení. Model se hodnotí na validačních a testovacích datech
+vhodnými metrikami. Klíčová rizika jsou overfitting, data leakage, nevyvážené třídy, špatná metrika
+a přehlédnutí nákladů chyb.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Strojové učení}{Oblast AI, kde se model učí vztahy a vzory z dat.}
+  \defterm{Feature}{Vstupní atribut nebo prediktor používaný modelem.}
+  \defterm{Target}{Cílová proměnná, kterou se model snaží predikovat nebo vysvětlit.}
+  \defterm{Učení s učitelem}{Trénování modelu na datech se známou cílovou proměnnou.}
+  \defterm{Učení bez učitele}{Hledání struktury v datech bez známé cílové proměnné.}
+  \defterm{Klasifikace}{Supervised úloha s kategoriální cílovou proměnnou.}
+  \defterm{Regrese}{Supervised úloha s číselnou cílovou proměnnou.}
+  \defterm{Reinforcement learning}{Učení agenta, který volí akce v prostředí a učí se z odměn a
+  penalizací.}
+  \defterm{Trénovací množina}{Data použitá pro odhad parametrů modelu.}
+  \defterm{Validační množina}{Data použitá pro ladění modelu a hyperparametrů.}
+  \defterm{Testovací množina}{Data použitá pro finální odhad výkonu modelu na nových datech.}
+  \defterm{Overfitting}{Přeučení; model se příliš přizpůsobí trénovacím datům a špatně generalizuje.}
+  \defterm{Data leakage}{Únik informace z budoucnosti nebo z cílové proměnné do trénovacích příznaků.}
+  \defterm{CRISP-DM}{Iterativní metodika datového projektu: business understanding, data understanding,
+  data preparation, modeling, evaluation a deployment.}
+  \defterm{No-Free-Lunch}{Princip, že neexistuje jeden algoritmus nejlepší pro všechny problémy.}
+\end{terminy}
+
+\section{Shlukové a klasifikační úlohy}
+
+\subsection{Shrnutí}
+Klasifikace přiřazuje objekty do předem známých tříd a hodnotí se například přes accuracy, precision,
+recall, \(F_1\), ROC AUC nebo confusion matrix. Rozhodovací stromy jsou interpretovatelné modely,
+které dělí data podle atributů; ID3 používá entropii a information gain, C4.5 přidává gain ratio,
+spojité atributy a pruning. Shlukování je učení bez učitele, jehož cílem je najít homogenní a dobře
+oddělené skupiny. K-means minimalizuje vzdálenost k centroidům, hierarchické shlukování vytváří
+dendrogram a DBSCAN hledá husté oblasti. Asociační pravidla hledají vztahy mezi položkami a hodnotí
+se podporou, confidence a liftem; Apriori využívá anti-monotónní vlastnost podpory.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Klasifikace}{Úloha přiřazení objektu do jedné z předem známých tříd.}
+  \defterm{Confusion matrix}{Tabulka skutečných a predikovaných tříd používaná pro hodnocení
+  klasifikace.}
+  \defterm{Precision}{Podíl správně pozitivních predikcí mezi všemi pozitivními predikcemi.}
+  \defterm{Recall}{Podíl zachycených pozitivních případů mezi všemi skutečně pozitivními případy.}
+  \defterm{\(F_1\) score}{Harmonický průměr precision a recall.}
+  \defterm{Rozhodovací strom}{Model tvořený vnitřními rozhodovacími uzly, větvemi a listy s predikcí.}
+  \defterm{Entropie}{Míra nečistoty nebo nejistoty tříd v uzlu.}
+  \defterm{Information gain}{Snížení entropie po rozdělení uzlu podle atributu.}
+  \defterm{Gain ratio}{Normalizovaná varianta informačního zisku omezující preferenci atributů s
+  mnoha hodnotami.}
+  \defterm{Gini index}{Míra nečistoty uzlu často používaná v algoritmu CART.}
+  \defterm{Pruning}{Prořezávání stromu pro omezení přeučení.}
+  \defterm{Shlukování}{Unsupervised úloha hledající skupiny podobných objektů.}
+  \defterm{Centroid}{Reprezentant shluku, typicky průměr bodů ve shluku.}
+  \defterm{K-means}{Shlukovací algoritmus minimalizující součet čtverců vzdáleností bodů od centroidů.}
+  \defterm{DBSCAN}{Hustotní shlukovací metoda založená na parametrech \(\varepsilon\) a \(minPts\).}
+  \defterm{Asociační pravidlo}{Pravidlo tvaru antecedent \(\Rightarrow\) consequent vyjadřující
+  souvýskyt položek.}
+  \defterm{Support}{Podpora; podíl transakcí obsahujících danou položkovou množinu nebo pravidlo.}
+  \defterm{Confidence}{Spolehlivost pravidla; podmíněná pravděpodobnost consequentu při výskytu
+  antecedentu.}
+  \defterm{Lift}{Poměr skutečného souvýskytu k souvýskytu očekávanému při nezávislosti.}
+\end{terminy}
+
+\section{Ensemblové modelování}
+
+\subsection{Shrnutí}
+Ensemblové modely kombinují více dílčích modelů do jednoho výsledného modelu, aby snížily chybu,
+zvýšily robustnost nebo přesnost. Bagging vytváří bootstrapové vzorky, trénuje modely nezávisle a
+agreguje jejich predikce; typickým příkladem je random forest, který navíc náhodně vybírá atributy
+při dělení stromů. Boosting trénuje modely sekvenčně tak, že každý další model opravuje chyby
+předchozích. Gradient boosting postupně snižuje ztrátovou funkci ve směru záporného gradientu,
+XGBoost je efektivní regularizovaná implementace silná hlavně pro tabulková data. Bagging je obvykle
+robustnější a méně citlivý, boosting často přesnější, ale náročnější na ladění a prevenci přeučení.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Ensemble}{Model kombinující predikce více dílčích modelů.}
+  \defterm{Hard voting}{Hlasování tříd, kde výsledná třída odpovídá většinové predikci modelů.}
+  \defterm{Soft voting}{Agregace predikovaných pravděpodobností tříd.}
+  \defterm{Bagging}{Bootstrap aggregating; trénování modelů na bootstrapových vzorcích a agregace
+  jejich predikcí.}
+  \defterm{Bootstrap sample}{Vzorek vytvořený výběrem s navracením z původních dat.}
+  \defterm{Out-of-bag error}{Odhad chyby u baggingu na pozorováních, která nebyla v bootstrapovém
+  vzorku daného modelu.}
+  \defterm{Random forest}{Ensemble rozhodovacích stromů využívající bagging a náhodný výběr atributů
+  při dělení.}
+  \defterm{Boosting}{Sekvenční ensemble, kde další slabý model zlepšuje chyby předchozího souboru
+  modelů.}
+  \defterm{Weak learner}{Jednoduchý model, který je jen o něco lepší než náhodné hádání, ale v
+  kombinaci může vytvořit silný model.}
+  \defterm{Gradient boosting}{Boosting formulovaný jako postupné minimalizování ztrátové funkce
+  přidáváním modelů ve směru záporného gradientu.}
+  \defterm{Learning rate}{Koeficient zmenšující příspěvek každého dalšího modelu v boostingu.}
+  \defterm{AdaBoost}{Boosting algoritmus zvyšující váhu špatně klasifikovaných pozorování.}
+  \defterm{XGBoost}{Efektivní regularizovaná implementace gradient boostingu se stromy.}
+  \defterm{Stacking}{Kombinace modelů pomocí meta-modelu, který se učí z jejich predikcí.}
+  \defterm{SHAP}{Metoda vysvětlující predikci jako součet příspěvků jednotlivých proměnných.}
+\end{terminy}
+
+\section{Mělké neuronové sítě}
+
+\subsection{Shrnutí}
+Mělká neuronová síť má vstupní vrstvu, jednu skrytou vrstvu a výstupní vrstvu. Neuron počítá lineární
+kombinaci vstupů, přičítá bias a aplikuje aktivační funkci. Díky nelineárním aktivacím síť modeluje
+nelineární vztahy. Predikce vzniká dopředným průchodem, chyba se měří ztrátovou funkcí a váhy se
+upravují optimalizátorem podle gradientů vypočtených backpropagation. Důležitá je volba architektury,
+aktivačních funkcí, výstupní vrstvy, loss function, learning rate, batch velikosti, inicializace vah
+a regularizace. Mělké sítě jsou flexibilní, ale méně interpretovatelné, citlivé na škálování a
+nastavení hyperparametrů a mohou se přeučit.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Neuron}{Výpočetní jednotka počítající \(a=\phi(w^\top x+b)\).}
+  \defterm{Mělká neuronová síť}{Síť s jednou skrytou vrstvou mezi vstupem a výstupem.}
+  \defterm{Váha}{Parametr určující sílu vlivu vstupu na neuron.}
+  \defterm{Bias}{Aditivní parametr posouvající aktivační hodnotu neuronu.}
+  \defterm{Aktivační funkce}{Nelineární funkce umožňující síti modelovat nelineární vztahy.}
+  \defterm{Sigmoid}{Aktivační funkce mapující hodnoty do intervalu \((0,1)\), často pro binární
+  výstup.}
+  \defterm{Tanh}{Aktivační funkce mapující hodnoty do intervalu \((-1,1)\).}
+  \defterm{ReLU}{Aktivační funkce \(\max(0,x)\), běžná ve skrytých vrstvách.}
+  \defterm{Softmax}{Funkce převádějící vektor skóre na pravděpodobnosti tříd.}
+  \defterm{Loss function}{Ztrátová funkce měřící nesoulad mezi predikcí a skutečností.}
+  \defterm{Forward propagation}{Dopředný výpočet predikce přes vrstvy sítě.}
+  \defterm{Backpropagation}{Efektivní výpočet gradientů ztráty podle vah pomocí řetězového pravidla.}
+  \defterm{Gradient descent}{Optimalizační postup aktualizující parametry proti směru gradientu.}
+  \defterm{Learning rate}{Velikost kroku při aktualizaci vah.}
+  \defterm{Epoch}{Jeden průchod celou trénovací množinou.}
+  \defterm{Mini-batch}{Menší dávka pozorování použitá pro jednu aktualizaci vah.}
+  \defterm{Early stopping}{Ukončení trénování při zhoršování nebo stagnaci validační chyby.}
+\end{terminy}
+
+\section{Hluboké učení}
+
+\subsection{Shrnutí}
+Hluboké učení skládá více nelineárních vrstev za sebou a učí se hierarchické reprezentace dat. Je
+úspěšné díky velkým datům, GPU, lepším optimalizátorům, regularizaci a specializovaným architekturám.
+MLP se používá pro obecné dopředné modelování, CNN pro obraz a lokální strukturu, RNN/LSTM/GRU pro
+sekvence, transformery pro jazyk, multimodální data a dlouhé závislosti a autoencodery pro reprezentace,
+rekonstrukci a detekci anomálií. Prakticky je důležité nejen trénování, ale také datové pipeline,
+validace, MLOps, deployment, monitoring, škálování, bezpečnost a interpretovatelnost. Slabiny hlubokého
+učení jsou náročnost na data a výpočet, riziko přeučení, black-box povaha, bias, drift a právní či
+etické dopady.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Hluboká neuronová síť}{Neuronová síť s více skrytými vrstvami.}
+  \defterm{MLP}{Vícevrstvý perceptron; obecná plně propojená dopředná síť.}
+  \defterm{CNN}{Konvoluční neuronová síť vhodná pro data s lokální strukturou, zejména obrazy.}
+  \defterm{Konvoluce}{Operace posuvného filtru nad vstupem, která detekuje lokální vzory.}
+  \defterm{Pooling}{Zmenšení prostorového rozměru reprezentace, například max poolingem.}
+  \defterm{Data augmentation}{Umělé rozšíření trénovacích dat transformacemi, například otočením nebo
+  ořezem obrazu.}
+  \defterm{RNN}{Rekurentní neuronová síť zpracovávající sekvenční data pomocí skrytého stavu.}
+  \defterm{LSTM}{Rekurentní architektura s branami navržená pro lepší zachycení dlouhodobých závislostí.}
+  \defterm{GRU}{Jednodušší bránová rekurentní architektura podobná LSTM.}
+  \defterm{Embedding}{Hustá vektorová reprezentace slov, položek nebo jiných objektů.}
+  \defterm{Transformer}{Architektura založená na attention mechanismu, dobře paralelizovatelná a
+  účinná pro jazykové úlohy.}
+  \defterm{Self-attention}{Mechanismus, ve kterém si prvky sekvence váženě vybírají relevantní
+  informace z ostatních prvků téže sekvence.}
+  \defterm{Transfer learning}{Využití předtrénovaného modelu nebo reprezentace pro novou úlohu.}
+  \defterm{Autoencoder}{Síť učící se zakódovat vstup do latentní reprezentace a rekonstruovat jej.}
+  \defterm{Dropout}{Regularizace náhodným vypínáním neuronů během trénování.}
+  \defterm{Batch normalization}{Normalizace aktivací ve vrstvě pro stabilnější a rychlejší trénování.}
+  \defterm{MLOps}{Soubor postupů pro správu životního cyklu modelu od vývoje po monitoring v produkci.}
+\end{terminy}
+
+\section{Nestrukturovaná a částečně strukturovaná data}
+
+\subsection{Shrnutí}
+Nestrukturovaná a semistrukturovaná data je nutné převést do strojově zpracovatelné podoby.
+Semistrukturovaná data jako XML, JSON a HTML mají vnitřní dokumentovou nebo stromovou strukturu, ale
+ne pevné relační schéma. Nestrukturovaný text se tokenizuje, normalizuje a reprezentuje pomocí termů,
+vah nebo embeddingů. Porovnávání vzorů zahrnuje regulární výrazy, edit distance a sémantickou
+podobnost. Vyhledávání dokumentů stojí na indexování, zejména inverted indexu, a může používat
+booleovský nebo vektorový model. Extrakce informací převádí text na strukturovaná data pomocí NER,
+entity linking, relation extraction nebo template filling. Web scraping získává data z webu, ale je
+nutné řešit technická omezení, kvalitu, právo, etiku a ochranu osobních údajů.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Strukturovaná data}{Data s pevným schématem, typicky relační tabulky.}
+  \defterm{Semistrukturovaná data}{Data s vnitřní strukturou bez pevného tabulkového schématu,
+  například XML, JSON nebo HTML.}
+  \defterm{Nestrukturovaná data}{Data bez pevné tabulkové struktury, například text, dokumenty,
+  obrázky, audio nebo video.}
+  \defterm{XML}{Značkovací jazyk se stromovou strukturou, elementy, atributy a možností validace.}
+  \defterm{JSON}{Lehký dokumentový formát tvořený objekty, poli a dvojicemi klíč-hodnota.}
+  \defterm{CSV}{Jednoduchý textový formát pro tabulková data s oddělovačem sloupců.}
+  \defterm{DOM}{Stromová reprezentace HTML dokumentu používaná pro výběr prvků stránky.}
+  \defterm{Regulární výraz}{Formální textový vzor pro vyhledávání, validaci, extrakci nebo nahrazování
+  částí textu.}
+  \defterm{Edit distance}{Míra rozdílu mezi řetězci, často počet operací potřebných k převodu jednoho
+  řetězce na druhý.}
+  \defterm{Inverted index}{Index mapující termy na dokumenty nebo pozice, ve kterých se vyskytují.}
+  \defterm{Booleovský model vyhledávání}{Model pracující s logickými operátory a přesnou shodou
+  termů.}
+  \defterm{Vektorový model}{Reprezentace dokumentů a dotazů jako vektorů, které se porovnávají
+  podobností.}
+  \defterm{Kosínová podobnost}{Míra podobnosti vektorů založená na kosinu úhlu mezi nimi.}
+  \defterm{NER}{Named entity recognition; rozpoznávání pojmenovaných entit v textu.}
+  \defterm{Entity linking}{Propojení zmínky entity v textu s konkrétní entitou ve znalostní bázi.}
+  \defterm{XPath}{Jazyk pro výběr uzlů ve stromu XML nebo HTML dokumentu.}
+\end{terminy}
+
+\section{Zpracování textových dat}
+
+\subsection{Shrnutí}
+Zpracování textových dat převádí přirozený jazyk do podoby vhodné pro vyhledávání, klasifikaci,
+modelování, sumarizaci nebo extrakci informací. Základní NLP pipeline zahrnuje tokenizaci, rozdělení
+vět, normalizaci, lemmatizaci, POS tagging, syntaktické zpracování, NER, relation extraction a
+coreference resolution. Text lze reprezentovat klasicky pomocí bag-of-words, n-gramů a TF-IDF, nebo
+moderně pomocí embeddingů a transformerů. Word2Vec učí slovní vektory z kontextu, transformery
+vytvářejí kontextové reprezentace pomocí self-attention a RAG kombinuje vyhledávání relevantních
+dokumentů s generováním odpovědi. Mezi hlavní úlohy patří klasifikace textu, sentiment analysis,
+topic modeling, clustering, sémantické vyhledávání, question answering a sumarizace.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{NLP}{Natural language processing; zpracování přirozeného jazyka počítačem.}
+  \defterm{Tokenizace}{Rozdělení textu na tokeny, například slova, interpunkci nebo subword jednotky.}
+  \defterm{Normalizace textu}{Úprava textu do jednotné podoby, například převod velikosti písmen,
+  odstranění šumu nebo sjednocení tvarů.}
+  \defterm{Lemmatizace}{Převedení slova na základní slovníkový tvar.}
+  \defterm{Stemming}{Hrubší ořez slov na kořen nebo kmen, často bez plné lingvistické správnosti.}
+  \defterm{POS tagging}{Přiřazení slovních druhů jednotlivým tokenům.}
+  \defterm{Parsing}{Syntaktická analýza věty a vztahů mezi slovy.}
+  \defterm{Bag-of-words}{Reprezentace textu jako množiny nebo počtů slov bez pořadí.}
+  \defterm{N-gram}{Sekvence \(n\) po sobě jdoucích tokenů.}
+  \defterm{TF-IDF}{Váha termu kombinující četnost v dokumentu a vzácnost v korpusu.}
+  \defterm{Embedding}{Vektorová reprezentace slova, věty nebo dokumentu v hustém spojitém prostoru.}
+  \defterm{Word2Vec}{Metoda učení slovních embeddingů pomocí CBOW nebo Skip-gram úlohy.}
+  \defterm{Transformer}{Architektura založená na self-attention, základ moderních jazykových modelů.}
+  \defterm{Topic modeling}{Metody hledající latentní témata v kolekci dokumentů, například LDA.}
+  \defterm{Sentiment analysis}{Určování postoje, polarity nebo emoce v textu.}
+  \defterm{RAG}{Retrieval-augmented generation; kombinace vyhledání relevantních zdrojů a generování
+  odpovědi.}
+  \defterm{Coreference resolution}{Určování, které výrazy v textu odkazují na stejnou entitu.}
+\end{terminy}
+
+\section{Big data}
+
+\subsection{Shrnutí}
+Big data jsou data, která kvůli objemu, rychlosti, rozmanitosti nebo nárokům na hodnotu a kvalitu
+vyžadují škálovatelné uložení, zpracování a správu. Základní princip spočívá v rozdělení dat na
+partitions, paralelním výpočtu a odolnosti proti výpadkům. Hadoop přinesl HDFS a MapReduce, zatímco
+Spark nabízí rychlejší a pohodlnější zpracování přes RDD, DataFrame, Spark SQL, MLlib a Structured
+Streaming. Streamová data se řeší pomocí Kafky, Spark Structured Streaming nebo Flinku, s důrazem na
+event time, okna, stav, checkpointy a offsety. Pro ukládání se používají data lake, lakehouse,
+Parquet, partitioning a katalogy metadat. Vedle techniky je nutné řešit governance, kvalitu, bezpečnost,
+monitoring, orchestraci, náklady a fyzickou organizaci dat.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Big data}{Data vyžadující škálovatelné technologie pro uložení, zpracování a správu.}
+  \defterm{5V}{Volume, velocity, variety, veracity a value jako charakteristiky velkých dat.}
+  \defterm{Partition}{Část dat umožňující paralelní zpracování a efektivnější čtení.}
+  \defterm{Hadoop}{Ekosystém pro distribuované uložení a dávkové zpracování dat.}
+  \defterm{HDFS}{Distribuovaný souborový systém Hadoopu dělící soubory na bloky ukládané na DataNode.}
+  \defterm{NameNode}{Uzel HDFS spravující metadata o blocích a umístění souborů.}
+  \defterm{MapReduce}{Dávkový výpočetní model s fázemi map, shuffle/sort a reduce.}
+  \defterm{Apache Spark}{Distribuovaný výpočetní engine pro dávkové, interaktivní, ML a streamové
+  zpracování.}
+  \defterm{RDD}{Resilient distributed dataset; základní distribuovaná kolekce ve Sparku.}
+  \defterm{DataFrame}{Tabulková distribuovaná datová struktura ve Sparku s optimalizací dotazů.}
+  \defterm{Lazy evaluation}{Odložené vyhodnocování operací až do okamžiku akce.}
+  \defterm{Apache Kafka}{Distribuovaná event streaming platforma pro publikování, ukládání a čtení
+  událostí.}
+  \defterm{Data lake}{Úložiště velkého množství dat v surovější podobě, často v objektovém úložišti.}
+  \defterm{Lakehouse}{Architektura kombinující flexibilitu data lake s vlastnostmi datového skladu.}
+  \defterm{Parquet}{Sloupcový souborový formát vhodný pro analytické čtení.}
+  \defterm{CAP teorém}{Při síťové partition musí distribuovaný systém volit kompromis mezi konzistencí
+  a dostupností.}
+  \defterm{Medallion architektura}{Vrstvení dat typicky na bronze, silver a gold podle kvality a
+  zpracovanosti.}
+\end{terminy}
+
+\section{Business intelligence}
+
+\subsection{Shrnutí}
+Business intelligence převádí podniková data na informace použitelné pro řízení. Typická architektura
+zahrnuje zdrojové systémy, ETL nebo ELT, staging, ODS, datový sklad nebo lakehouse, sémantickou vrstvu
+a reportovací nástroje. Datový sklad je subjektově orientované, integrované, časově rozlišené a
+relativně neměnné úložiště pro rozhodování. Pro analytické modelování je klíčové rozlišit fakta a
+dimenze. Hvězdicové schéma je jednoduché a výkonné, sněhové schéma normalizuje dimenze. OLAP umožňuje
+multidimenzionální analýzu přes slice, dice, drill-down, roll-up a pivot. Úspěšné BI nestojí pouze na
+nástroji, ale na kvalitních datech, jasných definicích metrik, governance, bezpečnosti, monitoringu a
+vazbě na skutečné rozhodování.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Business intelligence}{Metody, procesy, datové struktury a nástroje převádějící podniková
+  data na informace pro řízení.}
+  \defterm{Zdrojový systém}{Interní nebo externí systém, ze kterého BI čerpá data.}
+  \defterm{Datový sklad}{Centrální analytické úložiště integrovaných historických dat pro podporu
+  rozhodování.}
+  \defterm{Datové tržiště}{Menší analytické úložiště zaměřené na konkrétní proces, oddělení nebo
+  doménu.}
+  \defterm{Sémantická vrstva}{Vrstva převádějící technický datový model na business pojmy, metriky,
+  dimenze a hierarchie.}
+  \defterm{Faktová tabulka}{Tabulka měřitelných událostí nebo stavů, například prodeje, objednávky
+  nebo stavy zásob.}
+  \defterm{Dimenzní tabulka}{Tabulka popisující kontext faktů, například čas, produkt, zákazník nebo
+  region.}
+  \defterm{Granularita faktů}{Úroveň detailu jednoho řádku faktové tabulky.}
+  \defterm{Hvězdicové schéma}{Dimenzionální model s centrální faktovou tabulkou a denormalizovanými
+  dimenzemi.}
+  \defterm{Sněhové schéma}{Dimenzionální model s normalizovanými dimenzemi.}
+  \defterm{OLAP}{Analytické zpracování nad multidimenzionálními daty.}
+  \defterm{KPI}{Klíčový ukazatel výkonnosti navázaný na cíl a rozhodování.}
+  \defterm{Dashboard}{Prezentační vrstva BI s ukazateli, grafy, filtry a interakcemi.}
+  \defterm{Data governance}{Pravidla, role a procesy pro správu kvality, odpovědnosti, bezpečnosti
+  a využívání dat.}
+\end{terminy}
+
+\section{Řízení datového projektu}
+
+\subsection{Shrnutí}
+Řízení datového projektu spojuje projektové řízení, analytiku, data engineering, governance a zavedení
+výsledků do praxe. Základní logiku dobře vystihuje CRISP-DM: porozumění businessu, porozumění datům,
+příprava dat, modelování, evaluace a nasazení. Proces je iterativní, protože cíle, data a modely se
+během práce zpřesňují. Vedle CRISP-DM je dobré znát SEMMA, TDSP, agilní řízení, Scrum, DAMA-DMBOK a
+MLOps. Projekt potřebuje jasné role, backlog, dokumentaci, verzování, orchestrace pipeline,
+experiment tracking, model registry a monitoring. Hlavní rizika jsou nejasný cíl, nekvalitní data,
+právní omezení, špatná evaluace, technický dluh a nepřijetí uživateli.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Datový projekt}{Projekt, jehož výstupem je datový produkt, analytické řešení, model,
+  dashboard, pipeline nebo rozhodovací podpora.}
+  \defterm{Trojimperativ}{Vazba rozsahu, času a nákladů; změna jedné složky ovlivňuje ostatní.}
+  \defterm{CRISP-DM}{Iterativní metodika datového projektu s fázemi business understanding, data
+  understanding, data preparation, modeling, evaluation a deployment.}
+  \defterm{SEMMA}{Metodika sample, explore, modify, model a assess.}
+  \defterm{TDSP}{Team Data Science Process; rámec pro týmovou realizaci datově-vědních projektů.}
+  \defterm{Scrum}{Agilní rámec založený na sprintech, backlogu, rolích a pravidelné inspekci
+  postupu.}
+  \defterm{Stakeholder}{Osoba nebo skupina ovlivněná projektem nebo schopná projekt ovlivnit.}
+  \defterm{Business vlastník}{Role odpovědná za hodnotu, cíle a praktické využití výstupu.}
+  \defterm{Data owner}{Role odpovědná za data, jejich dostupnost, kvalitu, pravidla a oprávnění.}
+  \defterm{Backlog}{Seznam požadavků, úkolů a priorit projektu.}
+  \defterm{Experiment tracking}{Evidence běhů modelování, parametrů, metrik a artefaktů.}
+  \defterm{Model registry}{Správa verzí modelů, jejich stavů, metadat a nasazení.}
+  \defterm{Deployment}{Nasazení analytického řešení nebo modelu do používání.}
+  \defterm{Monitoring modelu}{Sledování výkonu, driftu, chyb, dostupnosti a dopadů modelu po nasazení.}
+  \defterm{Technický dluh}{Budoucí náklady způsobené zkratkami, provizorii a nedostatečnou údržbou
+  řešení.}
+\end{terminy}
+
+\section{Optimalizační modely}
+
+\subsection{Shrnutí}
+Optimalizační model vybírá nejlepší přípustné rozhodnutí vzhledem k účelové funkci a omezením. Lineární
+programování má lineární účelovou funkci a lineární omezení; přípustná množina je konvexní a optimum,
+pokud existuje, leží ve vrcholu. Simplexová metoda postupuje mezi bazickými přípustnými řešeními a
+zlepšuje účelovou funkci. Dualita umožňuje ekonomicky interpretovat duální proměnné jako stínové ceny.
+ILP a MILP přidávají celočíselné a binární proměnné pro výběry, fixní náklady, logické podmínky a
+kombinatorické struktury. LP relaxace poskytuje mez, branch-and-bound větví a ořezává neperspektivní
+větve a cutting planes přidávají platná omezení. Heuristiky a metaheuristiky hledají dobrá řešení bez
+záruky optima, což je důležité u velkých a výpočetně těžkých úloh.
+
+\subsection{Nejdůležitější termíny}
+\begin{terminy}
+  \defterm{Optimalizační model}{Matematický model s rozhodovacími proměnnými, účelovou funkcí a
+  omezeními.}
+  \defterm{Rozhodovací proměnná}{Proměnná reprezentující volbu, kterou model optimalizuje.}
+  \defterm{Účelová funkce}{Kritérium optimalizace, například maximalizace zisku nebo minimalizace
+  nákladů.}
+  \defterm{Omezení}{Podmínka vymezující přípustná rozhodnutí.}
+  \defterm{Lineární programování}{Optimalizace s lineární účelovou funkcí a lineárními omezeními.}
+  \defterm{Přípustná množina}{Množina všech řešení splňujících omezení modelu.}
+  \defterm{Bazické přípustné řešení}{Řešení odpovídající bázi lineárně nezávislých sloupců a splňující
+  omezení včetně nezápornosti.}
+  \defterm{Simplexová metoda}{Algoritmus řešení LP pohybující se mezi vrcholy přípustné množiny.}
+  \defterm{Duální úloha}{Optimalizační úloha přiřazená primalní úloze, často s ekonomickou interpretací
+  omezených zdrojů.}
+  \defterm{Stínová cena}{Duální proměnná vyjadřující změnu optimální hodnoty při malém navýšení
+  pravé strany omezení.}
+  \defterm{MILP}{Mixed-integer linear programming; lineární model se spojitými i celočíselnými nebo
+  binárními proměnnými.}
+  \defterm{LP relaxace}{Model vzniklý odstraněním celočíselných omezení z ILP nebo MILP.}
+  \defterm{Branch-and-bound}{Metoda řešení celočíselných úloh pomocí větvení, LP relaxací a ořezávání
+  větví.}
+  \defterm{Cutting plane}{Platné omezení přidané k odstranění neceločíselného relaxovaného řešení bez
+  ztráty celočíselných řešení.}
+  \defterm{TSP}{Travelling salesman problem; úloha nalezení nejkratší okružní trasy přes daná místa.}
+  \defterm{Metaheuristika}{Obecný heuristický rámec pro hledání dobrých řešení složitých úloh, například
+  simulované žíhání, genetické algoritmy nebo tabu search.}
+  \defterm{Optimality gap}{Rozdíl mezi aktuálním nejlepším řešením a mezí optimální hodnoty.}
+\end{terminy}
+
+\end{document}
