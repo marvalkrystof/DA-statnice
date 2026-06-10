@@ -181,10 +181,25 @@ y = \beta_0+\beta_1x+\beta_2x^2+u.
 
 Tento model je lineární v $\beta$, i když vztah mezi $x$ a $y$ je nelineární.
 
+\paragraph{Při porušení.}
+Pokud má model špatný funkční tvar, neodpovídá správně podmíněné střední hodnotě
+\(\mathrm{E}(y|X)\). OLS potom odhaduje jen nejlepší lineární aproximaci ve vzorku, v reziduích může
+zůstávat systematický vzor a koeficienty mohou být vychýlené vůči zamýšlenému efektu, zejména když
+chybějící nelineární člen souvisí se zahrnutými regresory. Prakticky se kontrolují reziduální grafy a
+podle věcného smyslu se přidávají logaritmy, kvadratické členy, interakce nebo jiné transformace.
+
 \subsubsection{Náhodný výběr}
 
 Pozorování by měla být náhodně vybraná z populace. U průřezových dat se obvykle předpokládá, že jednotky
 jsou nezávislé.
+
+\paragraph{Při porušení.}
+Pokud vzorek nevznikl náhodně nebo je zatížen selekcí, regresní vztah může popisovat jen dostupný vzorek,
+ne cílovou populaci. Jestliže výběr souvisí s nevysvětlenou složkou \(u\), vzniká selection bias a OLS
+může být vychýlený. Pokud jsou pozorování závislá, například v klastrech, čase nebo prostoru, samotné
+koeficienty nemusí být při exogenitě nutně vychýlené, ale běžné standardní chyby a testy bývají
+nespolehlivé. Reakcí jsou výběrové váhy, jasně definovaná cílová populace, klastrované nebo HAC
+standardní chyby a modely pro panelová či časová data.
 
 \subsubsection{Žádná perfektní multikolinearita}
 
@@ -193,6 +208,13 @@ jsou nezávislé.
 \paragraph{Příklad problému.}
 Pokud do modelu dáme zároveň všechny dummy proměnné pro kategorie a konstantu, vznikne perfektní
 multikolinearita. Proto se jedna kategorie vždy vynechává a slouží jako referenční.
+
+\paragraph{Při porušení.}
+Při perfektní multikolinearitě není \(X^\top X\) invertovatelná, takže OLS odhad není jednoznačně
+určený. Software typicky některou proměnnou automaticky vyhodí, nebo model vůbec neodhadne. Silná, ale
+ne perfektní multikolinearita odhad formálně umožňuje a sama o sobě nezpůsobuje vychýlení, zvyšuje ale
+rozptyl odhadů: standardní chyby jsou velké, intervaly spolehlivosti široké a znaménka či velikosti
+jednotlivých koeficientů mohou být nestabilní.
 
 \subsubsection{Exogenita}
 
@@ -211,6 +233,13 @@ Porušení exogenity vzniká například při:
     \item chybě měření ve vysvětlující proměnné.
 \end{itemize}
 
+\paragraph{Při porušení.}
+OLS je obecně vychýlený a nekonzistentní, takže ani velký vzorek problém automaticky neodstraní.
+Koeficient potom směšuje efekt zahrnuté proměnné s vlivem nepozorované složky v chybě a nelze mu dát
+kauzální interpretaci. Formálně významný \(t\)-test v takové situaci jen říká, že je odhad přesný kolem
+špatného cíle. Typické reakce jsou lepší kontrolní proměnné, proxy proměnné, fixní efekty, instrumentální
+proměnné nebo výzkumný design typu difference-in-differences či regression discontinuity.
+
 \subsubsection{Homoskedasticita}
 
 \[
@@ -223,6 +252,13 @@ Pokud rozptyl chyb závisí na $X$, jde o heteroskedasticitu:
 \[
 \mathrm{Var}(u|X)\neq\sigma^2.
 \]
+
+\paragraph{Při porušení.}
+Pokud platí exogenita, heteroskedasticita sama o sobě nemusí způsobit vychýlení ani nekonzistenci OLS
+koeficientů. Problém je v inferenci: obvyklé standardní chyby, \(t\)-testy, \(F\)-testy, intervaly
+spolehlivosti a vlastnost BLUE mohou být špatně. Praktickou reakcí jsou heteroskedasticity-robustní
+standardní chyby, vhodná transformace proměnných, vážená metoda nejmenších čtverců nebo lepší
+specifikace modelu.
 
 Graficky se často projeví tak, že se rozptyl reziduí systematicky mění s hodnotou vysvětlující proměnné
 nebo s predikovanou hodnotou. Typický je \uv{trychtýř}: pro malé hodnoty $x$ jsou rezidua blízko nule,
@@ -237,11 +273,6 @@ pro velké hodnoty $x$ se jejich rozptyl zvětšuje.
   \label{fig:homoscedastic-vs-heteroscedastic}
 \end{figure}
 
-Heteroskedasticita sama o sobě nemusí při exogenitě způsobit vychýlení OLS koeficientů, ale kazí
-obvyklé standardní chyby, $t$-testy, intervaly spolehlivosti a vlastnost BLUE. Praktickou reakcí jsou
-heteroskedasticity-robustní standardní chyby, vhodná transformace proměnných, vážená metoda nejmenších
-čtverců nebo lepší specifikace modelu.
-
 \subsubsection{Normalita chyb}
 
 \[
@@ -250,6 +281,19 @@ u|X \sim N(0,\sigma^2).
 
 Normalita je důležitá hlavně pro přesnou inferenci v malých výběrech. Ve velkých výběrech se často opíráme
 o asymptotickou normalitu.
+
+\paragraph{Při porušení.}
+Nenormalita chyb sama o sobě nemění vypočtené OLS koeficienty a při splnění ostatních klíčových
+předpokladů nebere OLS nestrannost ani konzistenci. V malých vzorcích ale přestávají být přesné klasické
+\(t\)-testy, \(F\)-testy, \(p\)-hodnoty a intervaly spolehlivosti odvozené z normality. Ve velkých
+vzorcích se používá centrální limitní věta a asymptotická normalita; při těžkých ocasech nebo odlehlých
+hodnotách je vhodné zvážit robustní inferenci, bootstrap, transformaci proměnných nebo robustnější
+odhadovou metodu.
+
+\paragraph{Zkoušková zkratka.}
+LRM.1--LRM.4 jsou klíčové pro nestrannost a konzistenci OLS, LRM.5 přidává obvyklé standardní chyby a
+Gaussovu-Markovovu vlastnost BLUE. Normalita chyb není nutná pro velké vzorky, ale dává přesnou
+malovýběrovou inferenci.
 
 \subsection{Vlastnosti OLS odhadů}
 
